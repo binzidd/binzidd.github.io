@@ -4,6 +4,7 @@ import Timeline from "@/components/Timeline";
 import Projects from "@/components/Projects";
 import Skills from "@/components/Skills";
 import GitHubRepos from "@/components/GitHubRepos";
+import HobbyProjects from "@/components/HobbyProjects";
 import Footer from "@/components/Footer";
 import CommandPalette from "@/components/CommandPalette";
 
@@ -18,6 +19,7 @@ export default function Home() {
         <Projects />
         <Skills />
         <GitHubRepos />
+        <HobbyProjects />
       </main>
       <Footer />
     </>
