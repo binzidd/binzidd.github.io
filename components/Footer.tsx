@@ -44,40 +44,21 @@ const links = [
 
 export default function Footer() {
   return (
-    <footer
-      className="py-16 px-6"
-      style={{ background: "#1C1917", borderTop: "1px solid #2C2927" }}
-    >
+    <footer className="py-16 px-6" style={{ background: "#0A0E14", borderTop: "1px solid #21262D" }}>
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10">
-          {/* Left */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h3
-              className="text-3xl md:text-4xl font-light mb-2"
-              style={{ color: "#F8F5F0", fontFamily: "var(--font-cormorant), serif" }}
-            >
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            <h3 className="text-3xl md:text-4xl font-light mb-2" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}>
               Binay Siddharth
             </h3>
-            <p
-              className="text-sm mb-1"
-              style={{ color: "#78716C", fontFamily: "var(--font-inter), sans-serif" }}
-            >
+            <p className="text-xs mb-1" style={{ color: "#484F58", fontFamily: "var(--font-mono), monospace" }}>
               Chapter Area Lead — FS Analytics
             </p>
-            <p
-              className="text-sm"
-              style={{ color: "#5C5650", fontFamily: "var(--font-inter), sans-serif" }}
-            >
+            <p className="text-xs" style={{ color: "#30363D", fontFamily: "var(--font-mono), monospace" }}>
               Commonwealth Bank of Australia · Sydney
             </p>
           </motion.div>
 
-          {/* Links */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -93,18 +74,17 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 title={link.label}
                 className="flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200"
-                style={{
-                  background: "#2C2927",
-                  color: "#78716C",
-                }}
+                style={{ background: "#111720", color: "#484F58", border: "1px solid #21262D" }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#8B7355";
-                  e.currentTarget.style.color = "#F8F5F0";
+                  e.currentTarget.style.background = "rgba(0,217,255,0.1)";
+                  e.currentTarget.style.color = "#00D9FF";
+                  e.currentTarget.style.borderColor = "rgba(0,217,255,0.3)";
                   e.currentTarget.style.transform = "translateY(-2px)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "#2C2927";
-                  e.currentTarget.style.color = "#78716C";
+                  e.currentTarget.style.background = "#111720";
+                  e.currentTarget.style.color = "#484F58";
+                  e.currentTarget.style.borderColor = "#21262D";
                   e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
@@ -114,29 +94,25 @@ export default function Footer() {
           </motion.div>
         </div>
 
-        {/* Bottom strip */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.6 }}
           className="mt-12 pt-6 flex flex-col md:flex-row items-center justify-between gap-3"
-          style={{ borderTop: "1px solid #2C2927" }}
+          style={{ borderTop: "1px solid #21262D" }}
         >
-          <p
-            className="text-xs"
-            style={{ color: "#4A4440", fontFamily: "var(--font-inter), sans-serif" }}
-          >
-            © {new Date().getFullYear()} Binay Siddharth. Built with Next.js & Framer Motion.
+          <p className="text-xs" style={{ color: "#30363D", fontFamily: "var(--font-mono), monospace" }}>
+            © {new Date().getFullYear()} Binay Siddharth — built with Next.js & Framer Motion
           </p>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="flex items-center gap-1.5 text-xs transition-colors duration-200"
-            style={{ color: "#4A4440", fontFamily: "var(--font-inter), sans-serif" }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "#C4A882")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "#4A4440")}
+            style={{ color: "#484F58", fontFamily: "var(--font-mono), monospace" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#00D9FF")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "#484F58")}
           >
-            Back to top
+            scroll_to_top()
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
               <path d="M5 9V1M1 5l4-4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
