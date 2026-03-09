@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-bg-base: #F8F5F0;
+  --color-bg-surface: #EFEBE4;
+  --color-bg-muted: #E8E2D9;
+  --color-text-primary: #1C1917;
+  --color-text-secondary: #78716C;
+  --color-text-muted: #A8A29E;
+  --color-accent: #8B7355;
+  --color-accent-light: #C4A882;
+  --color-accent-dark: #5C4B35;
+  --color-border: #E0D8CF;
+
+  --font-serif: var(--font-cormorant);
+  --font-sans: var(--font-inter);
+
+  --color-background: #F8F5F0;
+  --color-foreground: #1C1917;
+}
+
+:root {
+  --background: #F8F5F0;
+  --foreground: #1C1917;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #F8F5F0;
+  color: #1C1917;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: #C4A882;
+  color: #1C1917;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #F8F5F0;
+}
+::-webkit-scrollbar-thumb {
+  background: #C4A882;
+  border-radius: 3px;
+}
+
+/* Float animations for hero orbs */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) translateX(0px) scale(1); }
+  25% { transform: translateY(-28px) translateX(14px) scale(1.02); }
+  50% { transform: translateY(-12px) translateX(-18px) scale(0.98); }
+  75% { transform: translateY(-32px) translateX(8px) scale(1.01); }
+}
+
+@keyframes float-medium {
+  0%, 100% { transform: translateY(0px) translateX(0px) scale(1); }
+  33% { transform: translateY(18px) translateX(-24px) scale(0.99); }
+  66% { transform: translateY(-18px) translateX(12px) scale(1.01); }
+}
+
+.orb-1 { animation: float-slow 14s ease-in-out infinite; }
+.orb-2 { animation: float-medium 10s ease-in-out infinite; }
+.orb-3 { animation: float-slow 18s ease-in-out infinite reverse; }
+
+/* Cursor blink for terminal */
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Shimmer for cert cards */
+@keyframes shimmer-move {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Progress bar */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, #8B7355, #C4A882, #8B7355);
+  z-index: 1000;
+  transform-origin: left;
+  transform: scaleX(0);
+}
