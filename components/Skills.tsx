@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { skillCategories, certifications } from "@/data/resume";
+import MatrixDecoder from "@/components/MatrixDecoder";
 
 function SkillBar({ name, level, delay }: { name: string; level: number; delay: number }) {
   const ref = useRef(null);
@@ -43,8 +44,8 @@ export default function Skills() {
     <section id="skills" className="py-28 px-6" style={{ background: "#0A0E14" }}>
       <div className="max-w-6xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="mb-16">
-          <p className="text-[10px] tracking-[0.25em] uppercase mb-3" style={{ color: "#00D9FF", fontFamily: "var(--font-mono), monospace" }}>// capabilities.map</p>
-          <h2 className="text-5xl md:text-6xl font-light mb-4" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}>Skills & Certifications</h2>
+          <p className="text-[10px] tracking-[0.25em] uppercase mb-3" style={{ color: "#00D9FF", fontFamily: "var(--font-mono), monospace" }}><MatrixDecoder text="// capabilities.map" /></p>
+          <h2 className="text-5xl md:text-6xl font-light mb-4" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}><MatrixDecoder text="Skills & Certifications" /></h2>
           <p className="text-sm max-w-lg" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
             A decade of deliberate depth across data, AI, and human-centred design.
           </p>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { experience } from "@/data/resume";
+import MatrixDecoder from "@/components/MatrixDecoder";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -24,8 +25,8 @@ export default function Timeline() {
     <section id="timeline" className="py-28 px-6 grid-lines" style={{ background: "#0A0E14" }}>
       <div className="max-w-3xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="mb-20">
-          <p className="text-[10px] tracking-[0.25em] uppercase mb-3" style={{ color: "#00D9FF", fontFamily: "var(--font-mono), monospace" }}>// employment_history</p>
-          <h2 className="text-5xl md:text-6xl font-light mb-4" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}>Where I&apos;ve Been</h2>
+          <p className="text-[10px] tracking-[0.25em] uppercase mb-3" style={{ color: "#00D9FF", fontFamily: "var(--font-mono), monospace" }}><MatrixDecoder text="// employment_history" /></p>
+          <h2 className="text-5xl md:text-6xl font-light mb-4" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}><MatrixDecoder text="Where I've Been" /></h2>
           <p className="text-sm" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>Nine years across finance, academia, and tech. Click any role to explore.</p>
         </motion.div>
 

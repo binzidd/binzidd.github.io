@@ -81,7 +81,7 @@ export const experience: Experience[] = [
   },
   {
     id: "cba-manager-bi",
-    role: "Manager, Business Intelligence Reporting",
+    role: "Chapter Lead",
     company: "Commonwealth Bank of Australia — IB&M Finance",
     location: "Sydney",
     period: "Mar 2020 — Mar 2022",
@@ -359,7 +359,7 @@ export const qaEntries: QAEntry[] = [
   {
     keywords: ["project spur", "spur", "teradata", "ib&m"],
     answer:
-      "Project SPUR (2020–2022) was Binay's flagship initiative as Manager of BI Reporting at CBA's IB&M Finance. He led end-to-end ingestion, modelling and productionisation using SQL & Python to deliver a unified Teradata repository for finance reporting and ELT decision-making — replacing fragmented manual reports with repeatable, auditable pipelines.",
+      "Project SPUR (2020–2022) was Binay's flagship initiative as Chapter Lead at CBA's IB&M Finance. He led end-to-end ingestion, modelling and productionisation using SQL & Python to deliver a unified Teradata repository for finance reporting and ELT decision-making — replacing fragmented manual reports with repeatable, auditable pipelines.",
   },
   {
     keywords: ["nl to sql", "natural language", "sql", "langgraph", "langfuse"],

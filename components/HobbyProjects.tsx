@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import dynamic from "next/dynamic";
+import MatrixDecoder from "@/components/MatrixDecoder";
 
 // ─── Lazy viz imports ─────────────────────────────────────────────────────────
 const F1BarChartRace = dynamic(() => import("@/components/F1BarChartRace"), {
@@ -32,49 +33,6 @@ function VizLoader({ bg = "#0A0E14", border = "#21262D", color = "#1a3a1a", labe
       <span className="text-sm" style={{ color, fontFamily: "var(--font-mono), monospace" }}>{label}</span>
     </div>
   );
-}
-
-// ─── Matrix text decoder ──────────────────────────────────────────────────────
-const DECODE_CHARS = "アカサタナハマヤラワ0123456789ABCDEF#@$%";
-
-function MatrixDecoder({
-  text, trigger, delay = 0, className, style,
-}: {
-  text: string; trigger: boolean; delay?: number;
-  className?: string; style?: React.CSSProperties;
-}) {
-  const scramble = () =>
-    text.split("").map((c) =>
-      c === " " || c === "'" || c === "/" ? c
-        : DECODE_CHARS[Math.floor(Math.random() * DECODE_CHARS.length)]
-    ).join("");
-
-  const [displayed, setDisplayed] = useState(scramble);
-  const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    if (!trigger || done) return;
-    const t = setTimeout(() => {
-      let frame = 0;
-      const total = 36;
-      const iv = setInterval(() => {
-        frame++;
-        const ratio = frame / total;
-        setDisplayed(
-          text.split("").map((char, i) => {
-            if (char === " " || char === "'" || char === "/") return char;
-            if (i < Math.floor(ratio * text.length)) return char;
-            return DECODE_CHARS[Math.floor(Math.random() * DECODE_CHARS.length)];
-          }).join("")
-        );
-        if (frame >= total) { setDisplayed(text); setDone(true); clearInterval(iv); }
-      }, 45);
-      return () => clearInterval(iv);
-    }, delay * 1000);
-    return () => clearTimeout(t);
-  }, [trigger, text, delay, done]);
-
-  return <span className={className} style={style}>{displayed}</span>;
 }
 
 // ─── Palette ──────────────────────────────────────────────────────────────────
