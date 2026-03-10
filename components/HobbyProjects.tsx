@@ -1,50 +1,90 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import dynamic from "next/dynamic";
 
+// ─── Lazy viz imports ─────────────────────────────────────────────────────────
 const F1BarChartRace = dynamic(() => import("@/components/F1BarChartRace"), {
   ssr: false,
-  loading: () => (
-    <div className="rounded-3xl h-96 flex items-center justify-center" style={{ background: "#0A0E14", border: "1px solid #21262D" }}>
-      <div className="flex items-center gap-3">
-        <motion.div className="w-2 h-2 rounded-full" style={{ background: "#3671C6" }}
-          animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-          transition={{ duration: 1, repeat: Infinity }} />
-        <span className="text-sm" style={{ color: "#484F58", fontFamily: "var(--font-mono), monospace" }}>loading race data...</span>
-      </div>
-    </div>
-  ),
+  loading: () => <VizLoader color="#3671C6" label="loading race data..." />,
 });
-
 const StarlinkViz = dynamic(() => import("@/components/StarlinkViz"), {
   ssr: false,
-  loading: () => (
-    <div className="rounded-3xl h-64 flex items-center justify-center" style={{ background: "#050e1f", border: "1px solid #1a3a6a" }}>
-      <span className="text-sm" style={{ color: "#484F58", fontFamily: "var(--font-mono), monospace" }}>initialising orbit data...</span>
-    </div>
-  ),
+  loading: () => <VizLoader bg="#050e1f" border="#1a3a6a" label="initialising orbit data..." />,
 });
-
 const BankingViz = dynamic(() => import("@/components/BankingViz"), {
   ssr: false,
-  loading: () => (
-    <div className="rounded-3xl h-64 flex items-center justify-center" style={{ background: "#0A0E14", border: "1px solid #21262D" }}>
-      <span className="text-sm" style={{ color: "#484F58", fontFamily: "var(--font-mono), monospace" }}>loading market data...</span>
-    </div>
-  ),
+  loading: () => <VizLoader label="loading market data..." />,
 });
-
 const MotoViz = dynamic(() => import("@/components/MotoViz"), {
   ssr: false,
-  loading: () => (
-    <div className="rounded-3xl h-64 flex items-center justify-center" style={{ background: "#120C04", border: "1px solid #3D2E18" }}>
-      <span className="text-sm" style={{ color: "#8B7040", fontFamily: "Georgia, serif" }}>firing up the engine...</span>
-    </div>
-  ),
+  loading: () => <VizLoader bg="#120C04" border="#3D2E18" color="#8B7040" label="firing up the engine..." />,
 });
+const MatrixRain = dynamic(() => import("@/components/MatrixRain"), { ssr: false });
 
+function VizLoader({ bg = "#0A0E14", border = "#21262D", color = "#1a3a1a", label }: {
+  bg?: string; border?: string; color?: string; label: string;
+}) {
+  return (
+    <div className="rounded-3xl h-64 flex items-center justify-center"
+      style={{ background: bg, border: `1px solid ${border}` }}>
+      <span className="text-sm" style={{ color, fontFamily: "var(--font-mono), monospace" }}>{label}</span>
+    </div>
+  );
+}
+
+// ─── Matrix text decoder ──────────────────────────────────────────────────────
+const DECODE_CHARS = "アカサタナハマヤラワ0123456789ABCDEF#@$%";
+
+function MatrixDecoder({
+  text, trigger, delay = 0, className, style,
+}: {
+  text: string; trigger: boolean; delay?: number;
+  className?: string; style?: React.CSSProperties;
+}) {
+  const scramble = () =>
+    text.split("").map((c) =>
+      c === " " || c === "'" || c === "/"
+        ? c : DECODE_CHARS[Math.floor(Math.random() * DECODE_CHARS.length)]
+    ).join("");
+
+  const [displayed, setDisplayed] = useState(scramble);
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    if (!trigger || done) return;
+    const t = setTimeout(() => {
+      let frame = 0;
+      const total = 36;
+      const iv = setInterval(() => {
+        frame++;
+        const ratio = frame / total;
+        setDisplayed(
+          text.split("").map((char, i) => {
+            if (char === " " || char === "'" || char === "/") return char;
+            if (i < Math.floor(ratio * text.length)) return char;
+            return DECODE_CHARS[Math.floor(Math.random() * DECODE_CHARS.length)];
+          }).join("")
+        );
+        if (frame >= total) { setDisplayed(text); setDone(true); clearInterval(iv); }
+      }, 45);
+      return () => clearInterval(iv);
+    }, delay * 1000);
+    return () => clearTimeout(t);
+  }, [trigger, text, delay, done]);
+
+  return <span className={className} style={style}>{displayed}</span>;
+}
+
+// ─── Project data ─────────────────────────────────────────────────────────────
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+const MG  = "#00FF41";
+const MD  = "#008F11";
+const MBG = "#000500";
+const MC  = "#020c02";
+const MB  = "#003300";
 
 const projects = [
   {
@@ -52,14 +92,14 @@ const projects = [
     icon: "🏎️",
     title: "F1 2025 — Championship Bar Chart Race",
     tags: ["Data Viz", "React", "Framer Motion", "F1 2025"],
+    githubUrl: "https://github.com/binzidd/f1-2025-championship-race",
     story: (
       <>
         <span style={{ color: "#3671C6", fontWeight: 600 }}>The story in data:</span>{" "}
-        Verstappen started the 2025 season P5 in the standings after two rounds, with McLarens
-        dominating. Race by race, through wins in Japan, Miami, Imola, Spain, Austria, Belgium
-        and Netherlands — he clawed back the deficit. The Monza masterclass, where Norris retired,
-        handed Max the championship lead for the first time all season.{" "}
-        <span style={{ color: "#00D9FF" }}>Press play and watch it unfold — bar by bar.</span>
+        Verstappen started the 2025 season P5 in the standings after two rounds, with McLarens dominating.
+        Race by race — wins in Japan, Miami, Imola, Spain, Austria, Belgium, Netherlands — he clawed back the
+        deficit. Monza masterclass, Norris DNF, Max leads for the first time all season.{" "}
+        <span style={{ color: MG }}>Press play and watch it unfold — bar by bar.</span>
       </>
     ),
     component: <F1BarChartRace />,
@@ -69,14 +109,14 @@ const projects = [
     icon: "🛰️",
     title: "Starlink Constellation — Satellite Growth & NSW Passes",
     tags: ["Space Data", "Orbital Mechanics", "React", "SVG Viz"],
+    githubUrl: "https://github.com/binzidd/starlink-constellation-viz",
     story: (
       <>
         <span style={{ color: "#00D9FF", fontWeight: 600 }}>From 60 to 7,000+:</span>{" "}
-        SpaceX has deployed the world's largest satellite constellation in under 6 years.
-        This viz tracks each batch launch, orbital shell distribution, and how often
-        Starlink satellites now pass over{" "}
-        <span style={{ color: "#3FB950" }}>Sydney / NSW (34°S)</span> every single day.
-        Spoiler: you can see them with the naked eye on any clear night.
+        SpaceX deployed the world&apos;s largest satellite constellation in under 6 years.
+        Launch timeline, orbital shell breakdown, and how often Starlink now passes over{" "}
+        <span style={{ color: "#3FB950" }}>Sydney / NSW (34°S)</span> daily.
+        You can see them with the naked eye on any clear night.
       </>
     ),
     component: <StarlinkViz />,
@@ -86,15 +126,14 @@ const projects = [
     icon: "🏦",
     title: "Big 4 + Macquarie — Post-COVID Rate Cycle & Deposit Wars",
     tags: ["APRA Data", "Finance", "Rate Analysis", "Market Share"],
+    githubUrl: "https://github.com/binzidd/au-banking-rate-analysis",
     story: (
       <>
         <span style={{ color: "#F0A742", fontWeight: 600 }}>From 0.10% to 4.35%:</span>{" "}
-        The RBA cut rates to a historic low during COVID (Nov 2020), then embarked on the most
-        aggressive tightening cycle in 30 years (May 2022 – Nov 2023). This viz maps how the
-        Big 4 and Macquarie responded to depositors, and how Macquarie&apos;s consistently higher
-        rates translated to a{" "}
+        The RBA cut to a historic low (Nov 2020), then the most aggressive hike cycle in 30 years
+        (May 2022–Nov 2023). Macquarie&apos;s consistently higher rates translated to a{" "}
         <span style={{ color: "#00D9FF" }}>+133% relative deposit market share gain</span>{" "}
-        while the majors played catch-up.
+        while the Big 4 played catch-up.
       </>
     ),
     component: <BankingViz />,
@@ -104,86 +143,233 @@ const projects = [
     icon: "🏍️",
     title: "Yamaha MT-10 2023 — Hypernaked Class Head-to-Head",
     tags: ["Retro Viz", "Motorbikes", "Spec Analysis", "Spider Chart"],
+    githubUrl: "https://github.com/binzidd/mt10-hypernaked-showdown",
     story: (
       <>
         <span style={{ color: "#E8A020", fontWeight: 600 }}>The Dark Side of Japan:</span>{" "}
-        My MT-10&apos;s 998cc CP4 engine — same block as the YZF-R1 — stacks up against the
-        finest hypernakeds on the market. Interactive gauges, retro-styled spec bars, a responsive
-        spider chart, and a full electronics feature matrix compare the MT-10 against the Kawasaki Z H2,
-        BMW S1000R, Ducati Streetfighter V4, KTM 1290 Super Duke R, and Aprilia Tuono V4.{" "}
-        <span style={{ color: "#E8A020" }}>Spoiler: best value-per-hp in the class.</span>
+        My MT-10&apos;s 998cc CP4 — same block as the YZF-R1 — vs Kawasaki Z H2, BMW S1000R,
+        Ducati Streetfighter V4, KTM 1290 Super Duke R, Aprilia Tuono V4. Gauges, spec bars,
+        spider chart, full electronics matrix.{" "}
+        <span style={{ color: "#E8A020" }}>Best value-per-hp in the class.</span>
       </>
     ),
     component: <MotoViz />,
   },
 ];
 
+// ─── Main component ───────────────────────────────────────────────────────────
 export default function HobbyProjects() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const inView = useInView(sectionRef, { once: true, margin: "-120px" });
+
+  const [phase, setPhase] = useState<"idle" | "rain" | "reveal" | "done">("idle");
+
+  useEffect(() => {
+    if (!inView || phase !== "idle") return;
+    setPhase("rain");
+    const t1 = setTimeout(() => setPhase("reveal"), 1400);
+    const t2 = setTimeout(() => setPhase("done"), 3200);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [inView, phase]);
+
+  const rainOpacity  = phase === "rain" ? 0.55 : phase === "reveal" ? 0.20 : phase === "done" ? 0.07 : 0;
+  const showContent  = phase === "reveal" || phase === "done";
+  const showRainMsg  = phase === "rain";
+
   return (
-    <section id="hobbies" className="py-28 px-6 grid-lines" style={{ background: "#0A0E14" }}>
-      <div className="max-w-4xl mx-auto">
+    <section
+      ref={sectionRef}
+      id="hobbies"
+      className="py-28 px-6 relative overflow-hidden"
+      style={{ background: MBG, minHeight: "100vh" }}
+    >
+      {/* Matrix rain — full section */}
+      {phase !== "idle" && (
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="mb-20">
-          <p className="text-[10px] tracking-[0.25em] uppercase mb-3" style={{ color: "#00D9FF", fontFamily: "var(--font-mono), monospace" }}>// hobby.projects</p>
-          <h2 className="text-5xl md:text-6xl font-light mb-4" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}>Hobby Projects</h2>
-          <p className="text-sm max-w-lg" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
-            Data viz doesn&apos;t stop at 5pm. F1 championship races, satellite constellations,
-            post-COVID banking dynamics, and motorbike spec battles — all built with the same
-            rigour as production code.
-          </p>
+          className="absolute inset-0"
+          style={{ zIndex: 0 }}
+          animate={{ opacity: rainOpacity }}
+          transition={{ duration: 1.4, ease: "easeInOut" }}
+        >
+          <MatrixRain opacity={1} speed={1.1} color={MG} fontSize={13} />
         </motion.div>
+      )}
 
-        <div className="space-y-20">
-          {projects.map((proj, idx) => (
-            <motion.div key={proj.id}
-              initial={{ opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.7, ease: EASE }}>
-              {/* Project meta */}
-              <div className="flex items-start gap-4 mb-6">
-                <span className="text-3xl mt-1">{proj.icon}</span>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold mb-2" style={{ color: "#E6EDF3", fontFamily: "var(--font-inter), sans-serif" }}>
-                    {proj.title}
-                  </h3>
-                  <div className="flex flex-wrap items-center gap-2">
-                    {proj.tags.map((tag) => (
-                      <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full"
-                        style={{ background: "#111720", color: "#484F58", border: "1px solid #21262D", fontFamily: "var(--font-mono), monospace" }}>
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+      {/* Entrance scan line */}
+      <AnimatePresence>
+        {phase === "rain" && (
+          <motion.div
+            className="absolute left-0 right-0 pointer-events-none"
+            style={{ height: 2, background: `linear-gradient(90deg, transparent, ${MG}, transparent)`, zIndex: 5, top: 0 }}
+            initial={{ top: 0 }}
+            animate={{ top: "100%" }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.35, ease: "linear" }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Content */}
+      <div className="relative max-w-4xl mx-auto" style={{ zIndex: 1 }}>
+
+        {/* Header */}
+        <div className="mb-20">
+          {/* Always render so MatrixDecoder can pre-scramble */}
+          <motion.div
+            animate={{ opacity: showContent ? 1 : 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <motion.p
+              className="text-[10px] tracking-[0.35em] uppercase mb-3"
+              style={{ color: MG, fontFamily: "var(--font-mono), monospace" }}
+              initial={{ opacity: 0, x: -20 }}
+              animate={showContent ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <MatrixDecoder text="// hobby.projects" trigger={showContent} delay={0.1} />
+            </motion.p>
+
+            <h2
+              className="text-5xl md:text-6xl font-light mb-4"
+              style={{ color: MG, fontFamily: "var(--font-cormorant), serif", textShadow: `0 0 20px ${MG}44` }}
+            >
+              <MatrixDecoder text="Hobby Projects" trigger={showContent} delay={0.3} />
+            </h2>
+
+            <motion.p
+              className="text-sm max-w-lg"
+              style={{ color: MD, fontFamily: "var(--font-inter), sans-serif" }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={showContent ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.9 }}
+            >
+              Data viz doesn&apos;t stop at 5pm. F1 championship races, satellite constellations,
+              post-COVID banking dynamics, and motorbike spec battles — all built with the same
+              rigour as production code.
+            </motion.p>
+          </motion.div>
+
+          {/* Loading bar during rain */}
+          <AnimatePresence>
+            {showRainMsg && (
+              <motion.div exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
+                <div className="mt-8 h-px" style={{ background: MB }}>
+                  <motion.div
+                    className="h-full"
+                    style={{ background: `linear-gradient(90deg, ${MG}, ${MD})` }}
+                    initial={{ width: "0%" }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 1.3, ease: "linear" }}
+                  />
                 </div>
-                <div className="flex-shrink-0 text-[10px] px-2 py-1 rounded-full" style={{ background: "rgba(0,217,255,0.08)", color: "#00D9FF", border: "1px solid rgba(0,217,255,0.2)", fontFamily: "var(--font-mono), monospace" }}>
-                  #{String(idx + 1).padStart(2, "0")}
-                </div>
-              </div>
-
-              {/* The viz */}
-              {proj.component}
-
-              {/* Story caption */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3, duration: 0.6 }}
-                className="mt-5 p-5 rounded-2xl"
-                style={{ background: "#111720", border: "1px solid #21262D" }}>
-                <p className="text-sm leading-relaxed" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
-                  {proj.story}
-                </p>
+                <motion.p
+                  className="mt-4 text-xs"
+                  style={{ color: MD, fontFamily: "var(--font-mono), monospace" }}
+                  animate={{ opacity: [0.4, 1, 0.4] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                >
+                  &gt; decrypting_projects --matrix --init
+                </motion.p>
               </motion.div>
-            </motion.div>
-          ))}
+            )}
+          </AnimatePresence>
         </div>
+
+        {/* Project cards */}
+        <AnimatePresence>
+          {showContent && (
+            <div className="space-y-20">
+              {projects.map((proj, idx) => (
+                <motion.div
+                  key={proj.id}
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.6 + idx * 0.18, ease: EASE }}
+                >
+                  {/* Meta bar */}
+                  <div className="flex items-start gap-4 mb-5">
+                    <span className="text-3xl mt-1">{proj.icon}</span>
+                    <div className="flex-1">
+                      <h3 className="text-base font-semibold mb-2"
+                        style={{ color: "#E6EDF3", fontFamily: "var(--font-inter), sans-serif" }}>
+                        {proj.title}
+                      </h3>
+                      <div className="flex flex-wrap items-center gap-2">
+                        {proj.tags.map((tag) => (
+                          <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full"
+                            style={{ background: MC, color: MD, border: `1px solid ${MB}`, fontFamily: "var(--font-mono), monospace" }}>
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Badges */}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className="text-[10px] px-2 py-1 rounded-full hidden sm:inline"
+                        style={{ background: `${MG}12`, color: MG, border: `1px solid ${MG}30`, fontFamily: "var(--font-mono), monospace" }}>
+                        #{String(idx + 1).padStart(2, "0")}
+                      </span>
+                      <a
+                        href={proj.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-medium transition-all duration-200"
+                        style={{ background: `${MG}10`, color: MG, border: `1px solid ${MG}35`, fontFamily: "var(--font-mono), monospace", textDecoration: "none" }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = `${MG}22`; e.currentTarget.style.boxShadow = `0 0 14px ${MG}25`; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = `${MG}10`; e.currentTarget.style.boxShadow = "none"; }}
+                      >
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                        </svg>
+                        view_source
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Viz */}
+                  <motion.div
+                    className="rounded-3xl overflow-hidden"
+                    style={{ border: `1px solid ${MB}` }}
+                    whileHover={{ boxShadow: `0 0 40px ${MG}10` }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {proj.component}
+                  </motion.div>
+
+                  {/* Story */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.0 + idx * 0.18, duration: 0.5 }}
+                    className="mt-5 p-5 rounded-2xl"
+                    style={{ background: MC, border: `1px solid ${MB}` }}
+                  >
+                    <p className="text-sm leading-relaxed"
+                      style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
+                      {proj.story}
+                    </p>
+                  </motion.div>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </AnimatePresence>
       </div>
+
+      {/* HUD corners */}
+      {showContent && (
+        <>
+          <p className="absolute top-5 left-6 text-[9px] pointer-events-none select-none"
+            style={{ color: MB, fontFamily: "var(--font-mono), monospace", zIndex: 1 }}>
+            SYS:HOBBY_MATRIX v2.5.0 [ACTIVE]
+          </p>
+          <p className="absolute top-5 right-6 text-[9px] pointer-events-none select-none"
+            style={{ color: MB, fontFamily: "var(--font-mono), monospace", zIndex: 1 }}>
+            NODES: 4 | STATUS: ONLINE
+          </p>
+        </>
+      )}
     </section>
   );
 }
