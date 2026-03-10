@@ -35,6 +35,15 @@ const BankingViz = dynamic(() => import("@/components/BankingViz"), {
   ),
 });
 
+const MotoViz = dynamic(() => import("@/components/MotoViz"), {
+  ssr: false,
+  loading: () => (
+    <div className="rounded-3xl h-64 flex items-center justify-center" style={{ background: "#120C04", border: "1px solid #3D2E18" }}>
+      <span className="text-sm" style={{ color: "#8B7040", fontFamily: "Georgia, serif" }}>firing up the engine...</span>
+    </div>
+  ),
+});
+
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const projects = [
@@ -90,6 +99,23 @@ const projects = [
     ),
     component: <BankingViz />,
   },
+  {
+    id: "moto",
+    icon: "🏍️",
+    title: "Yamaha MT-10 2023 — Hypernaked Class Head-to-Head",
+    tags: ["Retro Viz", "Motorbikes", "Spec Analysis", "Spider Chart"],
+    story: (
+      <>
+        <span style={{ color: "#E8A020", fontWeight: 600 }}>The Dark Side of Japan:</span>{" "}
+        My MT-10&apos;s 998cc CP4 engine — same block as the YZF-R1 — stacks up against the
+        finest hypernakeds on the market. Interactive gauges, retro-styled spec bars, a responsive
+        spider chart, and a full electronics feature matrix compare the MT-10 against the Kawasaki Z H2,
+        BMW S1000R, Ducati Streetfighter V4, KTM 1290 Super Duke R, and Aprilia Tuono V4.{" "}
+        <span style={{ color: "#E8A020" }}>Spoiler: best value-per-hp in the class.</span>
+      </>
+    ),
+    component: <MotoViz />,
+  },
 ];
 
 export default function HobbyProjects() {
@@ -106,7 +132,8 @@ export default function HobbyProjects() {
           <h2 className="text-5xl md:text-6xl font-light mb-4" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}>Hobby Projects</h2>
           <p className="text-sm max-w-lg" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
             Data viz doesn&apos;t stop at 5pm. F1 championship races, satellite constellations,
-            and post-COVID banking dynamics — all explored with the same rigour as production code.
+            post-COVID banking dynamics, and motorbike spec battles — all built with the same
+            rigour as production code.
           </p>
         </motion.div>
 
