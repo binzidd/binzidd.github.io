@@ -45,8 +45,8 @@ function MatrixDecoder({
 }) {
   const scramble = () =>
     text.split("").map((c) =>
-      c === " " || c === "'" || c === "/"
-        ? c : DECODE_CHARS[Math.floor(Math.random() * DECODE_CHARS.length)]
+      c === " " || c === "'" || c === "/" ? c
+        : DECODE_CHARS[Math.floor(Math.random() * DECODE_CHARS.length)]
     ).join("");
 
   const [displayed, setDisplayed] = useState(scramble);
@@ -77,15 +77,15 @@ function MatrixDecoder({
   return <span className={className} style={style}>{displayed}</span>;
 }
 
-// ─── Project data ─────────────────────────────────────────────────────────────
+// ─── Palette ──────────────────────────────────────────────────────────────────
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const MG  = "#00FF41";   // matrix green
+const MD  = "#008F11";   // dim green
+const MBG = "#000500";   // bg
+const MC  = "#020c02";   // card bg
+const MB  = "#003300";   // border
 
-const MG  = "#00FF41";
-const MD  = "#008F11";
-const MBG = "#000500";
-const MC  = "#020c02";
-const MB  = "#003300";
-
+// ─── Projects ─────────────────────────────────────────────────────────────────
 const projects = [
   {
     id: "f1",
@@ -96,9 +96,9 @@ const projects = [
     story: (
       <>
         <span style={{ color: "#3671C6", fontWeight: 600 }}>The story in data:</span>{" "}
-        Verstappen started the 2025 season P5 in the standings after two rounds, with McLarens dominating.
-        Race by race — wins in Japan, Miami, Imola, Spain, Austria, Belgium, Netherlands — he clawed back the
-        deficit. Monza masterclass, Norris DNF, Max leads for the first time all season.{" "}
+        Verstappen started P5 after Round 2 with McLarens dominating. Wins in Japan, Miami, Imola,
+        Spain, Austria, Belgium, Netherlands — he clawed back the deficit. Monza masterclass,
+        Norris DNF, Max leads for the first time all season.{" "}
         <span style={{ color: MG }}>Press play and watch it unfold — bar by bar.</span>
       </>
     ),
@@ -114,9 +114,9 @@ const projects = [
       <>
         <span style={{ color: "#00D9FF", fontWeight: 600 }}>From 60 to 7,000+:</span>{" "}
         SpaceX deployed the world&apos;s largest satellite constellation in under 6 years.
-        Launch timeline, orbital shell breakdown, and how often Starlink now passes over{" "}
-        <span style={{ color: "#3FB950" }}>Sydney / NSW (34°S)</span> daily.
-        You can see them with the naked eye on any clear night.
+        Launch timeline, orbital shell breakdown, and daily pass frequency over{" "}
+        <span style={{ color: "#3FB950" }}>Sydney / NSW (34°S)</span>.
+        Visible with the naked eye on any clear night.
       </>
     ),
     component: <StarlinkViz />,
@@ -130,7 +130,7 @@ const projects = [
     story: (
       <>
         <span style={{ color: "#F0A742", fontWeight: 600 }}>From 0.10% to 4.35%:</span>{" "}
-        The RBA cut to a historic low (Nov 2020), then the most aggressive hike cycle in 30 years
+        RBA cut to historic low (Nov 2020), then the most aggressive hike cycle in 30 years
         (May 2022–Nov 2023). Macquarie&apos;s consistently higher rates translated to a{" "}
         <span style={{ color: "#00D9FF" }}>+133% relative deposit market share gain</span>{" "}
         while the Big 4 played catch-up.
@@ -160,21 +160,24 @@ const projects = [
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function HobbyProjects() {
   const sectionRef = useRef<HTMLElement>(null);
-  const inView = useInView(sectionRef, { once: true, margin: "-120px" });
+  const inView     = useInView(sectionRef, { once: true, margin: "-100px" });
 
+  // Use a ref to fire the sequence exactly once — avoids cleanup bug from deps re-running
+  const started = useRef(false);
   const [phase, setPhase] = useState<"idle" | "rain" | "reveal" | "done">("idle");
 
   useEffect(() => {
-    if (!inView || phase !== "idle") return;
+    if (!inView || started.current) return;
+    started.current = true;
     setPhase("rain");
-    const t1 = setTimeout(() => setPhase("reveal"), 1400);
-    const t2 = setTimeout(() => setPhase("done"), 3200);
+    const t1 = setTimeout(() => setPhase("reveal"), 1500);
+    const t2 = setTimeout(() => setPhase("done"),   3400);
+    // Only clean up on unmount, not on re-renders
     return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, [inView, phase]);
+  }, [inView]); // inView only — phase intentionally excluded
 
-  const rainOpacity  = phase === "rain" ? 0.55 : phase === "reveal" ? 0.20 : phase === "done" ? 0.07 : 0;
-  const showContent  = phase === "reveal" || phase === "done";
-  const showRainMsg  = phase === "rain";
+  const rainOpacity = phase === "rain" ? 0.55 : phase === "reveal" ? 0.18 : phase === "done" ? 0.07 : 0;
+  const revealed    = phase === "reveal" || phase === "done";
 
   return (
     <section
@@ -183,65 +186,65 @@ export default function HobbyProjects() {
       className="py-28 px-6 relative overflow-hidden"
       style={{ background: MBG, minHeight: "100vh" }}
     >
-      {/* Matrix rain — full section */}
-      {phase !== "idle" && (
-        <motion.div
-          className="absolute inset-0"
-          style={{ zIndex: 0 }}
-          animate={{ opacity: rainOpacity }}
-          transition={{ duration: 1.4, ease: "easeInOut" }}
-        >
-          <MatrixRain opacity={1} speed={1.1} color={MG} fontSize={13} />
-        </motion.div>
-      )}
+      {/* ── Matrix rain background ── */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{ zIndex: 0 }}
+        animate={{ opacity: rainOpacity }}
+        transition={{ duration: 1.4, ease: "easeInOut" }}
+      >
+        {phase !== "idle" && <MatrixRain opacity={1} speed={1.1} color={MG} fontSize={13} />}
+      </motion.div>
 
-      {/* Entrance scan line */}
+      {/* ── Scan-line sweep on entrance ── */}
       <AnimatePresence>
         {phase === "rain" && (
           <motion.div
+            key="scanline"
             className="absolute left-0 right-0 pointer-events-none"
-            style={{ height: 2, background: `linear-gradient(90deg, transparent, ${MG}, transparent)`, zIndex: 5, top: 0 }}
+            style={{
+              height: 2,
+              background: `linear-gradient(90deg, transparent, ${MG}, transparent)`,
+              zIndex: 5,
+            }}
             initial={{ top: 0 }}
             animate={{ top: "100%" }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.35, ease: "linear" }}
+            transition={{ duration: 1.4, ease: "linear" }}
           />
         )}
       </AnimatePresence>
 
-      {/* Content */}
+      {/* ── All content — always mounted, opacity-driven ── */}
       <div className="relative max-w-4xl mx-auto" style={{ zIndex: 1 }}>
 
         {/* Header */}
         <div className="mb-20">
-          {/* Always render so MatrixDecoder can pre-scramble */}
           <motion.div
-            animate={{ opacity: showContent ? 1 : 0 }}
-            transition={{ duration: 0.5 }}
+            animate={{ opacity: revealed ? 1 : 0 }}
+            transition={{ duration: 0.6 }}
           >
             <motion.p
               className="text-[10px] tracking-[0.35em] uppercase mb-3"
               style={{ color: MG, fontFamily: "var(--font-mono), monospace" }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={showContent ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              animate={{ opacity: revealed ? 1 : 0, x: revealed ? 0 : -20 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <MatrixDecoder text="// hobby.projects" trigger={showContent} delay={0.1} />
+              <MatrixDecoder text="// hobby.projects" trigger={revealed} delay={0.1} />
             </motion.p>
 
             <h2
               className="text-5xl md:text-6xl font-light mb-4"
               style={{ color: MG, fontFamily: "var(--font-cormorant), serif", textShadow: `0 0 20px ${MG}44` }}
             >
-              <MatrixDecoder text="Hobby Projects" trigger={showContent} delay={0.3} />
+              <MatrixDecoder text="Hobby Projects" trigger={revealed} delay={0.3} />
             </h2>
 
             <motion.p
               className="text-sm max-w-lg"
               style={{ color: MD, fontFamily: "var(--font-inter), sans-serif" }}
-              initial={{ opacity: 0, y: 10 }}
-              animate={showContent ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.9 }}
+              animate={{ opacity: revealed ? 1 : 0, y: revealed ? 0 : 10 }}
+              transition={{ duration: 0.6, delay: 0.9 }}
             >
               Data viz doesn&apos;t stop at 5pm. F1 championship races, satellite constellations,
               post-COVID banking dynamics, and motorbike spec battles — all built with the same
@@ -249,24 +252,31 @@ export default function HobbyProjects() {
             </motion.p>
           </motion.div>
 
-          {/* Loading bar during rain */}
+          {/* Rain-phase loading indicator */}
           <AnimatePresence>
-            {showRainMsg && (
-              <motion.div exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
-                <div className="mt-8 h-px" style={{ background: MB }}>
+            {phase === "rain" && (
+              <motion.div
+                key="loader"
+                className="mt-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="h-px mb-4" style={{ background: MB }}>
                   <motion.div
                     className="h-full"
                     style={{ background: `linear-gradient(90deg, ${MG}, ${MD})` }}
                     initial={{ width: "0%" }}
                     animate={{ width: "100%" }}
-                    transition={{ duration: 1.3, ease: "linear" }}
+                    transition={{ duration: 1.4, ease: "linear" }}
                   />
                 </div>
                 <motion.p
-                  className="mt-4 text-xs"
+                  className="text-xs"
                   style={{ color: MD, fontFamily: "var(--font-mono), monospace" }}
                   animate={{ opacity: [0.4, 1, 0.4] }}
-                  transition={{ duration: 1, repeat: Infinity }}
+                  transition={{ duration: 0.9, repeat: Infinity }}
                 >
                   &gt; decrypting_projects --matrix --init
                 </motion.p>
@@ -275,101 +285,112 @@ export default function HobbyProjects() {
           </AnimatePresence>
         </div>
 
-        {/* Project cards */}
-        <AnimatePresence>
-          {showContent && (
-            <div className="space-y-20">
-              {projects.map((proj, idx) => (
-                <motion.div
-                  key={proj.id}
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: 0.6 + idx * 0.18, ease: EASE }}
-                >
-                  {/* Meta bar */}
-                  <div className="flex items-start gap-4 mb-5">
-                    <span className="text-3xl mt-1">{proj.icon}</span>
-                    <div className="flex-1">
-                      <h3 className="text-base font-semibold mb-2"
-                        style={{ color: "#E6EDF3", fontFamily: "var(--font-inter), sans-serif" }}>
-                        {proj.title}
-                      </h3>
-                      <div className="flex flex-wrap items-center gap-2">
-                        {proj.tags.map((tag) => (
-                          <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full"
-                            style={{ background: MC, color: MD, border: `1px solid ${MB}`, fontFamily: "var(--font-mono), monospace" }}>
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Badges */}
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <span className="text-[10px] px-2 py-1 rounded-full hidden sm:inline"
-                        style={{ background: `${MG}12`, color: MG, border: `1px solid ${MG}30`, fontFamily: "var(--font-mono), monospace" }}>
-                        #{String(idx + 1).padStart(2, "0")}
+        {/* ── Projects — always rendered, stagger in on reveal ── */}
+        <div className="space-y-20">
+          {projects.map((proj, idx) => (
+            <motion.div
+              key={proj.id}
+              animate={{
+                opacity: revealed ? 1 : 0,
+                y: revealed ? 0 : 32,
+              }}
+              transition={{ duration: 0.7, delay: revealed ? 0.5 + idx * 0.2 : 0, ease: EASE }}
+            >
+              {/* Meta bar */}
+              <div className="flex items-start gap-4 mb-5">
+                <span className="text-3xl mt-1">{proj.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base font-semibold mb-2"
+                    style={{ color: "#E6EDF3", fontFamily: "var(--font-inter), sans-serif" }}>
+                    {proj.title}
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {proj.tags.map((tag) => (
+                      <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full"
+                        style={{ background: MC, color: MD, border: `1px solid ${MB}`, fontFamily: "var(--font-mono), monospace" }}>
+                        {tag}
                       </span>
-                      <a
-                        href={proj.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-medium transition-all duration-200"
-                        style={{ background: `${MG}10`, color: MG, border: `1px solid ${MG}35`, fontFamily: "var(--font-mono), monospace", textDecoration: "none" }}
-                        onMouseEnter={(e) => { e.currentTarget.style.background = `${MG}22`; e.currentTarget.style.boxShadow = `0 0 14px ${MG}25`; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.background = `${MG}10`; e.currentTarget.style.boxShadow = "none"; }}
-                      >
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-                        </svg>
-                        view_source
-                      </a>
-                    </div>
+                    ))}
                   </div>
+                </div>
 
-                  {/* Viz */}
-                  <motion.div
-                    className="rounded-3xl overflow-hidden"
-                    style={{ border: `1px solid ${MB}` }}
-                    whileHover={{ boxShadow: `0 0 40px ${MG}10` }}
-                    transition={{ duration: 0.3 }}
+                {/* Number + GitHub link */}
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <span className="text-[10px] px-2 py-1 rounded-full hidden sm:inline"
+                    style={{ background: `${MG}12`, color: MG, border: `1px solid ${MG}30`, fontFamily: "var(--font-mono), monospace" }}>
+                    #{String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <a
+                    href={proj.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-medium transition-all duration-200"
+                    style={{ background: `${MG}10`, color: MG, border: `1px solid ${MG}35`, fontFamily: "var(--font-mono), monospace", textDecoration: "none" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = `${MG}25`; e.currentTarget.style.boxShadow = `0 0 14px ${MG}30`; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = `${MG}10`; e.currentTarget.style.boxShadow = "none"; }}
                   >
-                    {proj.component}
-                  </motion.div>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                    </svg>
+                    view_source
+                  </a>
+                </div>
+              </div>
 
-                  {/* Story */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.0 + idx * 0.18, duration: 0.5 }}
-                    className="mt-5 p-5 rounded-2xl"
-                    style={{ background: MC, border: `1px solid ${MB}` }}
-                  >
-                    <p className="text-sm leading-relaxed"
-                      style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
-                      {proj.story}
-                    </p>
-                  </motion.div>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </AnimatePresence>
+              {/* Viz component */}
+              <motion.div
+                className="rounded-3xl overflow-hidden"
+                style={{ border: `1px solid ${MB}` }}
+                whileHover={{ boxShadow: `0 0 40px ${MG}12` }}
+                transition={{ duration: 0.3 }}
+              >
+                {proj.component}
+              </motion.div>
+
+              {/* Story caption */}
+              <motion.div
+                className="mt-5 p-5 rounded-2xl"
+                style={{ background: MC, border: `1px solid ${MB}` }}
+                animate={{ opacity: revealed ? 1 : 0 }}
+                transition={{ delay: revealed ? 0.8 + idx * 0.2 : 0, duration: 0.5 }}
+              >
+                <p className="text-sm leading-relaxed"
+                  style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
+                  {proj.story}
+                </p>
+              </motion.div>
+            </motion.div>
+          ))}
+        </div>
       </div>
 
       {/* HUD corners */}
-      {showContent && (
-        <>
-          <p className="absolute top-5 left-6 text-[9px] pointer-events-none select-none"
-            style={{ color: MB, fontFamily: "var(--font-mono), monospace", zIndex: 1 }}>
-            SYS:HOBBY_MATRIX v2.5.0 [ACTIVE]
-          </p>
-          <p className="absolute top-5 right-6 text-[9px] pointer-events-none select-none"
-            style={{ color: MB, fontFamily: "var(--font-mono), monospace", zIndex: 1 }}>
-            NODES: 4 | STATUS: ONLINE
-          </p>
-        </>
-      )}
+      <AnimatePresence>
+        {revealed && (
+          <>
+            <motion.p
+              key="hud-left"
+              className="absolute top-5 left-6 text-[9px] pointer-events-none select-none"
+              style={{ color: MB, fontFamily: "var(--font-mono), monospace", zIndex: 1 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+            >
+              SYS:HOBBY_MATRIX v2.5.0 [ACTIVE]
+            </motion.p>
+            <motion.p
+              key="hud-right"
+              className="absolute top-5 right-6 text-[9px] pointer-events-none select-none"
+              style={{ color: MB, fontFamily: "var(--font-mono), monospace", zIndex: 1 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+            >
+              NODES: 4 | STATUS: ONLINE
+            </motion.p>
+          </>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
