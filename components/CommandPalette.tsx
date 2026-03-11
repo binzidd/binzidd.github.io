@@ -26,7 +26,7 @@ function findAnswer(query: string): string {
       return entry.answer;
     }
   }
-  return "I don't have a specific answer for that, but feel free to reach out to Binay directly at binay.siddharth@gmail.com or connect on LinkedIn. You can also explore the timeline and projects sections above for more detail.";
+  return "No direct match found. Reach Binay at binay.siddharth@gmail.com or connect on LinkedIn. Explore the timeline and projects sections for more detail.";
 }
 
 function TypewriterText({ text, onDone }: { text: string; onDone?: () => void }) {
@@ -45,7 +45,7 @@ function TypewriterText({ text, onDone }: { text: string; onDone?: () => void })
         setDone(true);
         onDone?.();
       }
-    }, 12);
+    }, 10);
     return () => clearInterval(interval);
   }, [text, onDone]);
 
@@ -54,8 +54,8 @@ function TypewriterText({ text, onDone }: { text: string; onDone?: () => void })
       {displayed}
       {!done && (
         <span
-          className="cursor-blink inline-block w-[2px] h-3.5 ml-0.5 align-middle"
-          style={{ background: "#8B7355" }}
+          className="inline-block w-[2px] h-3.5 ml-0.5 align-middle"
+          style={{ background: "#00FF41", animation: "blink 1s step-end infinite" }}
         />
       )}
     </span>
@@ -113,9 +113,7 @@ export default function CommandPalette() {
   useEffect(() => {
     const handler = (e: CustomEvent) => {
       setOpen(true);
-      setTimeout(() => {
-        handleSubmit(e.detail as string);
-      }, 200);
+      setTimeout(() => handleSubmit(e.detail as string), 200);
     };
     document.addEventListener("palette-query", handler as EventListener);
     return () => document.removeEventListener("palette-query", handler as EventListener);
@@ -136,7 +134,7 @@ export default function CommandPalette() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[90]"
-            style={{ background: "rgba(28,25,23,0.45)", backdropFilter: "blur(4px)" }}
+            style={{ background: "rgba(0,5,0,0.75)", backdropFilter: "blur(4px)" }}
             onClick={handleClose}
           />
 
@@ -145,38 +143,37 @@ export default function CommandPalette() {
             initial={{ opacity: 0, scale: 0.96, y: -16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -16 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
             className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] w-full max-w-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div
               className="rounded-2xl overflow-hidden"
               style={{
-                background: "#F8F5F0",
-                border: "1px solid #E0D8CF",
-                boxShadow: "0 24px 64px rgba(28,25,23,0.18)",
+                background: "#000500",
+                border: "1px solid #003300",
+                boxShadow: "0 0 60px rgba(0,255,65,0.08), 0 24px 64px rgba(0,0,0,0.8)",
               }}
             >
-              {/* Terminal header bar */}
+              {/* Terminal title bar */}
               <div
-                className="flex items-center gap-2 px-4 py-3"
-                style={{ background: "#1C1917", borderBottom: "1px solid #2C2927" }}
+                className="flex items-center gap-2 px-4 py-2.5"
+                style={{ background: "#020c02", borderBottom: "1px solid #003300" }}
               >
                 <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#CC5533" }} />
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#C4A882" }} />
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#2E6B43" }} />
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#003300" }} />
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#003300" }} />
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#003300" }} />
                 </div>
-                <span
-                  className="text-xs ml-2"
-                  style={{ color: "#A8A29E", fontFamily: "monospace" }}
-                >
-                  binay@portfolio ~ Ask Me Anything
+                <span className="text-xs ml-2" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>
+                  binay@portfolio:~$ ask_me_anything
                 </span>
                 <button
                   onClick={handleClose}
-                  className="ml-auto text-xs px-2 py-0.5 rounded"
-                  style={{ color: "#78716C", fontFamily: "monospace" }}
+                  className="ml-auto text-[10px] px-2 py-0.5 rounded transition-colors"
+                  style={{ color: "#006600", border: "1px solid #003300", fontFamily: "var(--font-mono), monospace" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = "#00FF41"; e.currentTarget.style.borderColor = "rgba(0,255,65,0.3)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = "#006600"; e.currentTarget.style.borderColor = "#003300"; }}
                 >
                   esc
                 </button>
@@ -189,28 +186,35 @@ export default function CommandPalette() {
               >
                 {messages.length === 0 && (
                   <div>
-                    <p
-                      className="text-sm mb-4"
-                      style={{ color: "#A8A29E", fontFamily: "var(--font-inter), sans-serif" }}
-                    >
-                      Ask about Binay&apos;s experience, projects, or skills. Try:
+                    <p className="text-xs mb-4" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>
+                      <span style={{ color: "#00FF41" }}>$</span> query --about binay.siddharth
+                      <br />
+                      <span style={{ color: "#003300" }}>// suggestions:</span>
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {SUGGESTIONS.slice(0, 5).map((s) => (
                         <button
                           key={s}
                           onClick={() => handleSubmit(s)}
-                          className="px-3 py-1.5 rounded-full text-xs transition-colors duration-150"
+                          className="px-3 py-1.5 rounded-full text-[11px] transition-all duration-150"
                           style={{
-                            background: "#EFEBE4",
-                            color: "#5C4B35",
-                            border: "1px solid #E0D8CF",
-                            fontFamily: "var(--font-inter), sans-serif",
+                            background: "transparent",
+                            color: "#008F11",
+                            border: "1px solid #003300",
+                            fontFamily: "var(--font-mono), monospace",
                           }}
-                          onMouseEnter={(e) => (e.currentTarget.style.background = "#E8E2D9")}
-                          onMouseLeave={(e) => (e.currentTarget.style.background = "#EFEBE4")}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = "#00FF41";
+                            e.currentTarget.style.borderColor = "rgba(0,255,65,0.35)";
+                            e.currentTarget.style.background = "rgba(0,255,65,0.05)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = "#008F11";
+                            e.currentTarget.style.borderColor = "#003300";
+                            e.currentTarget.style.background = "transparent";
+                          }}
                         >
-                          {s}
+                          &gt; {s}
                         </button>
                       ))}
                     </div>
@@ -220,43 +224,40 @@ export default function CommandPalette() {
                 {messages.map((msg, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, y: 8 }}
+                    initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`mb-4 flex ${msg.type === "user" ? "justify-end" : "justify-start"}`}
+                    className="mb-4"
                   >
-                    <div
-                      className="max-w-[90%] rounded-xl px-4 py-2.5 text-sm leading-relaxed"
-                      style={
-                        msg.type === "user"
-                          ? {
-                              background: "#1C1917",
-                              color: "#F8F5F0",
-                              fontFamily: "var(--font-inter), sans-serif",
-                            }
-                          : {
-                              background: "#EFEBE4",
-                              color: "#1C1917",
-                              fontFamily: "var(--font-inter), sans-serif",
-                            }
-                      }
-                    >
-                      {msg.type === "assistant" && i === messages.length - 1 ? (
-                        <TypewriterText text={msg.text} />
-                      ) : (
-                        msg.text
-                      )}
-                    </div>
+                    {msg.type === "user" ? (
+                      <div className="flex items-start gap-2">
+                        <span style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace", fontSize: 11 }}>$</span>
+                        <span className="text-sm leading-relaxed" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>
+                          {msg.text}
+                        </span>
+                      </div>
+                    ) : (
+                      <div
+                        className="rounded-xl px-4 py-3 text-sm leading-relaxed"
+                        style={{ background: "#020c02", color: "#008F11", border: "1px solid #003300", fontFamily: "var(--font-inter), sans-serif" }}
+                      >
+                        {i === messages.length - 1 ? (
+                          <TypewriterText text={msg.text} />
+                        ) : (
+                          msg.text
+                        )}
+                      </div>
+                    )}
                   </motion.div>
                 ))}
 
                 {typing && (
-                  <div className="flex gap-1.5 px-4 py-3">
+                  <div className="flex gap-1.5 px-1 py-2">
                     {[0, 1, 2].map((dot) => (
                       <motion.div
                         key={dot}
                         className="w-1.5 h-1.5 rounded-full"
-                        style={{ background: "#C4A882" }}
-                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        style={{ background: "#003300" }}
+                        animate={{ background: ["#003300", "#00FF41", "#003300"] }}
                         transition={{ duration: 1, delay: dot * 0.2, repeat: Infinity }}
                       />
                     ))}
@@ -268,44 +269,30 @@ export default function CommandPalette() {
               {/* Input */}
               <div
                 className="flex items-center gap-3 px-4 py-3"
-                style={{ borderTop: "1px solid #E0D8CF" }}
+                style={{ borderTop: "1px solid #003300" }}
               >
-                <span
-                  className="text-sm"
-                  style={{ color: "#C4A882", fontFamily: "monospace" }}
-                >
-                  ›
-                </span>
+                <span style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace", fontSize: 13 }}>›</span>
                 <input
                   ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleSubmit();
-                  }}
-                  placeholder="Ask anything about Binay's experience..."
-                  className="flex-1 bg-transparent outline-none text-sm placeholder:text-[#A8A29E]"
+                  onKeyDown={(e) => { if (e.key === "Enter") handleSubmit(); }}
+                  placeholder="query --anything..."
+                  className="flex-1 bg-transparent outline-none text-sm"
                   style={{
-                    color: "#1C1917",
-                    fontFamily: "var(--font-inter), sans-serif",
+                    color: "#00FF41",
+                    fontFamily: "var(--font-mono), monospace",
+                    caretColor: "#00FF41",
                   }}
                 />
                 <button
                   onClick={() => handleSubmit()}
                   disabled={!input.trim()}
                   className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-150"
-                  style={{
-                    background: input.trim() ? "#8B7355" : "#E8E2D9",
-                  }}
+                  style={{ background: input.trim() ? "rgba(0,255,65,0.15)" : "transparent", border: `1px solid ${input.trim() ? "rgba(0,255,65,0.4)" : "#003300"}` }}
                 >
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path
-                      d="M1 11L11 1M11 1H4M11 1V8"
-                      stroke={input.trim() ? "#F8F5F0" : "#A8A29E"}
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
+                    <path d="M1 11L11 1M11 1H4M11 1V8" stroke={input.trim() ? "#00FF41" : "#003300"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
               </div>
