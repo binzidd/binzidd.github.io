@@ -29,8 +29,8 @@ function RepoCard({ repo }: { repo: GitHubRepo }) {
       rel="noopener noreferrer"
       variants={cardVariants}
       className="group block rounded-2xl p-6"
-      style={{ background: "#111720", border: "1px solid #21262D", textDecoration: "none" }}
-      whileHover={{ y: -5, boxShadow: "0 12px 32px rgba(0,217,255,0.06), 0 0 0 1px rgba(0,217,255,0.15)", borderColor: "rgba(0,217,255,0.2)" }}
+      style={{ background: "#020c02", border: "1px solid #003300", textDecoration: "none" }}
+      whileHover={{ y: -5, boxShadow: "0 12px 32px rgba(0,255,65,0.06), 0 0 0 1px rgba(0,255,65,0.15)", borderColor: "rgba(0,255,65,0.2)" }}
       transition={{ duration: 0.25 }}
     >
       <div className="flex items-start justify-between mb-3">
@@ -39,7 +39,7 @@ function RepoCard({ repo }: { repo: GitHubRepo }) {
         </h3>
         <div className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M1 13L13 1M13 1H5M13 1V9" stroke="#00D9FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M1 13L13 1M13 1H5M13 1V9" stroke="#00FF41" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
       </div>
