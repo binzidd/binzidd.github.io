@@ -74,17 +74,17 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 title={link.label}
                 className="flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200"
-                style={{ background: "#111720", color: "#484F58", border: "1px solid #21262D" }}
+                style={{ background: "#020c02", color: "#006600", border: "1px solid #003300" }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(0,217,255,0.1)";
-                  e.currentTarget.style.color = "#00D9FF";
-                  e.currentTarget.style.borderColor = "rgba(0,217,255,0.3)";
+                  e.currentTarget.style.background = "rgba(0,255,65,0.1)";
+                  e.currentTarget.style.color = "#00FF41";
+                  e.currentTarget.style.borderColor = "rgba(0,255,65,0.3)";
                   e.currentTarget.style.transform = "translateY(-2px)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "#111720";
-                  e.currentTarget.style.color = "#484F58";
-                  e.currentTarget.style.borderColor = "#21262D";
+                  e.currentTarget.style.background = "#020c02";
+                  e.currentTarget.style.color = "#006600";
+                  e.currentTarget.style.borderColor = "#003300";
                   e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
@@ -100,17 +100,17 @@ export default function Footer() {
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.6 }}
           className="mt-12 pt-6 flex flex-col md:flex-row items-center justify-between gap-3"
-          style={{ borderTop: "1px solid #21262D" }}
+          style={{ borderTop: "1px solid #003300" }}
         >
-          <p className="text-xs" style={{ color: "#30363D", fontFamily: "var(--font-mono), monospace" }}>
+          <p className="text-xs" style={{ color: "#003300", fontFamily: "var(--font-mono), monospace" }}>
             © {new Date().getFullYear()} Binay Siddharth — built with Next.js & Framer Motion
           </p>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="flex items-center gap-1.5 text-xs transition-colors duration-200"
-            style={{ color: "#484F58", fontFamily: "var(--font-mono), monospace" }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "#00D9FF")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "#484F58")}
+            style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#00FF41")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "#006600")}
           >
             scroll_to_top()
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none">

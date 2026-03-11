@@ -1,30 +1,30 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-bg-base:       #0A0E14;
-  --color-bg-surface:    #111720;
-  --color-bg-elevated:   #161C26;
-  --color-bg-muted:      #1A2030;
+  --color-bg-base:       #000500;
+  --color-bg-surface:    #020c02;
+  --color-bg-elevated:   #020c02;
+  --color-bg-muted:      #031203;
   --color-text-primary:  #E6EDF3;
   --color-text-secondary:#8B949E;
-  --color-text-muted:    #484F58;
-  --color-accent:        #00D9FF;
-  --color-accent-dim:    #0099B3;
-  --color-accent-glow:   rgba(0,217,255,0.12);
-  --color-accent-alt:    #7C3AED;
+  --color-text-muted:    #006600;
+  --color-accent:        #00FF41;
+  --color-accent-dim:    #008F11;
+  --color-accent-glow:   rgba(0,255,65,0.12);
+  --color-accent-alt:    #008F11;
   --color-green:         #3FB950;
   --color-amber:         #F0A742;
-  --color-border:        #21262D;
-  --color-border-bright: #30363D;
+  --color-border:        #003300;
+  --color-border-bright: #003300;
   --font-serif: var(--font-cormorant);
   --font-sans:  var(--font-inter);
   --font-mono:  var(--font-mono);
-  --color-background: #0A0E14;
+  --color-background: #000500;
   --color-foreground: #E6EDF3;
 }
 
 :root {
-  --background: #0A0E14;
+  --background: #000500;
   --foreground: #E6EDF3;
 }
 
@@ -32,7 +32,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background-color: #0A0E14;
+  background-color: #000500;
   color: #E6EDF3;
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -41,31 +41,31 @@ body {
 
 /* Dot grid backgrounds */
 .dot-grid {
-  background-image: radial-gradient(circle, #21262D 1px, transparent 1px);
+  background-image: radial-gradient(circle, #003300 1px, transparent 1px);
   background-size: 24px 24px;
 }
 .grid-lines {
   background-image:
-    linear-gradient(rgba(0,217,255,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,217,255,0.025) 1px, transparent 1px);
+    linear-gradient(rgba(0,255,65,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,65,0.025) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
-::selection { background-color: rgba(0,217,255,0.25); color: #E6EDF3; }
+::selection { background-color: rgba(0,255,65,0.25); color: #E6EDF3; }
 
 ::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #0A0E14; }
-::-webkit-scrollbar-thumb { background: #21262D; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(0,217,255,0.3); }
+::-webkit-scrollbar-track { background: #000500; }
+::-webkit-scrollbar-thumb { background: #003300; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,255,65,0.3); }
 
 /* Glow card */
 .glow-card {
-  border: 1px solid #21262D;
+  border: 1px solid #003300;
   transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 .glow-card:hover {
-  border-color: rgba(0,217,255,0.25);
-  box-shadow: 0 0 32px rgba(0,217,255,0.06), 0 8px 32px rgba(0,0,0,0.5);
+  border-color: rgba(0,255,65,0.25);
+  box-shadow: 0 0 32px rgba(0,255,65,0.06), 0 8px 32px rgba(0,0,0,0.5);
   transform: translateY(-4px);
 }
 
@@ -91,8 +91,8 @@ body {
 
 /* Glow pulse */
 @keyframes glow-pulse {
-  0%,100% { box-shadow:0 0 8px rgba(0,217,255,0.3); }
-  50%      { box-shadow:0 0 20px rgba(0,217,255,0.6); }
+  0%,100% { box-shadow:0 0 8px rgba(0,255,65,0.3); }
+  50%      { box-shadow:0 0 20px rgba(0,255,65,0.6); }
 }
 .glow-pulse { animation: glow-pulse 2s ease-in-out infinite; }
 
@@ -105,5 +105,5 @@ body {
 /* Scroll progress */
 #scroll-progress {
   position: fixed; top: 0; left: 0; right: 0; height: 1px; z-index: 60;
-  background: #21262D;
+  background: #003300;
 }
