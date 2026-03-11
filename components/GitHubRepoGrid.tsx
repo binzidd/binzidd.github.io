@@ -63,7 +63,7 @@ function RepoCard({ repo }: { repo: GitHubRepo }) {
         {repo.language && (
           <div className="flex items-center gap-1.5">
             <div className="w-2.5 h-2.5 rounded-full" style={{ background: langColor }} />
-            <span className="text-[11px]" style={{ color: "#484F58", fontFamily: "var(--font-mono), monospace" }}>
+            <span className="text-[11px]" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>
               {repo.language}
             </span>
           </div>
@@ -73,12 +73,12 @@ function RepoCard({ repo }: { repo: GitHubRepo }) {
             <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
               <path d="M5.5 1L6.9 4.1H10.3L7.6 6.2L8.6 9.4L5.5 7.4L2.4 9.4L3.4 6.2L0.7 4.1H4.1L5.5 1Z" fill="#F0A742" />
             </svg>
-            <span className="text-[11px]" style={{ color: "#484F58", fontFamily: "var(--font-mono), monospace" }}>
+            <span className="text-[11px]" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>
               {repo.stargazers_count}
             </span>
           </div>
         )}
-        <span className="text-[11px] ml-auto" style={{ color: "#484F58", fontFamily: "var(--font-mono), monospace" }}>
+        <span className="text-[11px] ml-auto" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>
           {updatedDate}
         </span>
       </div>
