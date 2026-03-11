@@ -44,17 +44,17 @@ const links = [
 
 export default function Footer() {
   return (
-    <footer className="py-16 px-6" style={{ background: "#0A0E14", borderTop: "1px solid #21262D" }}>
+    <footer className="py-16 px-6" style={{ background: "#000500", borderTop: "1px solid #003300" }}>
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
             <h3 className="text-3xl md:text-4xl font-light mb-2" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}>
               Binay Siddharth
             </h3>
-            <p className="text-xs mb-1" style={{ color: "#484F58", fontFamily: "var(--font-mono), monospace" }}>
+            <p className="text-xs mb-1" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>
               Chapter Area Lead — FS Analytics
             </p>
-            <p className="text-xs" style={{ color: "#30363D", fontFamily: "var(--font-mono), monospace" }}>
+            <p className="text-xs" style={{ color: "#003300", fontFamily: "var(--font-mono), monospace" }}>
               Commonwealth Bank of Australia · Sydney
             </p>
           </motion.div>
