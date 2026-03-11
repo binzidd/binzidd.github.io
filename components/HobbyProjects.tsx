@@ -50,6 +50,23 @@ const MB  = "#003300";   // border
 // ─── Projects ─────────────────────────────────────────────────────────────────
 const projects = [
   {
+    id: "budget",
+    icon: "🏛️",
+    title: "AU Federal Budget 2024-25 — Trace the Money",
+    tags: ["Gov Data", "Sankey", "SVG Viz", "Tax & Spending"],
+    githubUrl: "https://github.com/binzidd/au-govt-budget-sankey",
+    story: (
+      <>
+        <span style={{ color: MG, fontWeight: 600 }}>$738.5B — where does it go?</span>{" "}
+        4-level interactive Sankey: revenue buckets → sources → spending portfolios → sub-programs.
+        Hover any node or ribbon to trace a dollar&apos;s journey from your tax return to NDIS, hospitals,
+        defence, or debt servicing.{" "}
+        <span style={{ color: MG }}>Click any node to zoom in and trace connected flows.</span>
+      </>
+    ),
+    component: <SankeyViz />,
+  },
+  {
     id: "f1",
     icon: "🏎️",
     title: "F1 2025 — Championship Bar Chart Race",
@@ -116,23 +133,6 @@ const projects = [
       </>
     ),
     component: <MotoViz />,
-  },
-  {
-    id: "budget",
-    icon: "🏛️",
-    title: "AU Federal Budget 2024-25 — Trace the Money",
-    tags: ["Gov Data", "Sankey", "SVG Viz", "Tax & Spending"],
-    githubUrl: "https://github.com/binzidd/au-govt-budget-sankey",
-    story: (
-      <>
-        <span style={{ color: MG, fontWeight: 600 }}>$738.5B — where does it go?</span>{" "}
-        4-level interactive Sankey: revenue buckets → sources → spending portfolios → sub-programs.
-        Hover any node or ribbon to trace a dollar&apos;s journey from your tax return to NDIS, hospitals,
-        defence, or debt servicing.{" "}
-        <span style={{ color: MG }}>Click &ldquo;you_are_here()&rdquo; to see your ~$23,650 avg share.</span>
-      </>
-    ),
-    component: <SankeyViz />,
   },
 ];
 
