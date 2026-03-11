@@ -161,6 +161,13 @@ export const experience: Experience[] = [
           "Implemented reconciliation checks and data-quality SLIs to validate inputs and detect anomalies before downstream reporting.",
         ],
       },
+      {
+        heading: "Process & Operationalisation",
+        bullets: [
+          "Replaced ad-hoc manual processes with standardised runbooks and repeatable report development practices (SQL libraries, report templates, scheduling conventions).",
+          "Defined SLA expectations for daily reporting and implemented alerting and owner-based remediation flow to reduce incidents and improve reliability.",
+        ],
+      },
     ],
   },
   {

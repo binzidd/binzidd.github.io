@@ -22,6 +22,10 @@ const MotoViz = dynamic(() => import("@/components/MotoViz"), {
   ssr: false,
   loading: () => <VizLoader bg="#120C04" border="#3D2E18" color="#8B7040" label="firing up the engine..." />,
 });
+const SankeyViz = dynamic(() => import("@/components/SankeyViz"), {
+  ssr: false,
+  loading: () => <VizLoader label="loading budget data..." />,
+});
 const MatrixRain = dynamic(() => import("@/components/MatrixRain"), { ssr: false });
 
 function VizLoader({ bg = "#0A0E14", border = "#21262D", color = "#1a3a1a", label }: {
@@ -112,6 +116,23 @@ const projects = [
       </>
     ),
     component: <MotoViz />,
+  },
+  {
+    id: "budget",
+    icon: "🏛️",
+    title: "AU Federal Budget 2024-25 — Trace the Money",
+    tags: ["Gov Data", "Sankey", "SVG Viz", "Tax & Spending"],
+    githubUrl: "https://github.com/binzidd/au-govt-budget-sankey",
+    story: (
+      <>
+        <span style={{ color: MG, fontWeight: 600 }}>$738.5B — where does it go?</span>{" "}
+        4-level interactive Sankey: revenue buckets → sources → spending portfolios → sub-programs.
+        Hover any node or ribbon to trace a dollar&apos;s journey from your tax return to NDIS, hospitals,
+        defence, or debt servicing.{" "}
+        <span style={{ color: MG }}>Click &ldquo;you_are_here()&rdquo; to see your ~$23,650 avg share.</span>
+      </>
+    ),
+    component: <SankeyViz />,
   },
 ];
 

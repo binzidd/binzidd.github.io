@@ -56,6 +56,17 @@ export async function fetchGitHubRepos(): Promise<GitHubRepo[]> {
 
 const FALLBACK_REPOS: GitHubRepo[] = [
   {
+    id: 11,
+    name: "au-govt-budget-sankey",
+    description: "4-level interactive Sankey tracing AU Federal Budget 2024-25 — $738.5B from revenue to sub-programs",
+    html_url: "https://github.com/binzidd/au-govt-budget-sankey",
+    stargazers_count: 0,
+    forks_count: 0,
+    language: "TypeScript",
+    updated_at: "2026-03-11T00:00:00Z",
+    topics: ["react", "sankey", "gov-data", "data-viz", "australia"],
+  },
+  {
     id: 10,
     name: "mt10-hypernaked-showdown",
     description: "Retro viz comparing Yamaha MT-10 2023 vs Z H2, S1000R, Streetfighter V4, 1290 Super Duke R & Tuono V4",
