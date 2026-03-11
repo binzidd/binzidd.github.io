@@ -43,13 +43,43 @@ export interface QAEntry {
 // ─── Experience ────────────────────────────────────────────────────────────────
 export const experience: Experience[] = [
   {
-    id: "cba-chapter-lead",
-    role: "Chapter Area Lead — FS Analytics",
+    id: "cba-chapter-area-lead",
+    role: "Chapter Area Lead",
     company: "Commonwealth Bank of Australia",
     location: "Sydney",
-    period: "Mar 2022 — Present",
+    period: "Feb 2026 — Present",
     current: true,
-    color: "#8B7355",
+    color: "#00FF41",
+    sections: [
+      {
+        heading: "Management & Leadership",
+        bullets: [
+          "Provide system-level stewardship to build scalable analytics/engineering capability across domains and deliver long-term business outcomes.",
+          "Strengthen leadership across chapters by improving prioritisation discipline, delivery standards and capability benches for current demand and future strategy.",
+          "Translate innovation into sustainable BAU by establishing clear ownership, operating rhythms, monitoring and lifecycle management from day one.",
+          "Align delivery to governance, risk and control expectations; make trade-offs explicit and ensure accountability is clear when demand exceeds capacity.",
+          "Anchor investment and sequencing decisions to measurable business impact, resilience and maintainability at scale.",
+        ],
+      },
+      {
+        heading: "Technical & Engineering",
+        bullets: [
+          "Build strong engineering foundations through disciplined data engineering, governed pipelines and robust feature engineering practices.",
+          "Ensure AI/ML techniques are embedded deliberately and responsibly within production environments (not as isolated initiatives).",
+          "Drive production-grade design standards for reliability, observability, security and operability across data/ML systems.",
+          "Establish patterns for reusable data products and fit-for-purpose platforms that improve productivity and decision-making in measurable ways.",
+        ],
+      },
+    ],
+  },
+  {
+    id: "cba-chapter-lead",
+    role: "Chapter Lead, FS Analytics",
+    company: "Commonwealth Bank of Australia",
+    location: "Sydney",
+    period: "Mar 2022 — Jan 2026",
+    current: false,
+    color: "#008F11",
     sections: [
       {
         heading: "Chapter Management",
@@ -59,6 +89,7 @@ export const experience: Experience[] = [
           "Standardised tooling & ways of working (Tableau, Alteryx, DHP and GenAI patterns); created shared playbook and peer-review process.",
           "Designed chapter capability uplift roadmap: competency bands, learning pathways, staged assessments.",
           "Launched technical guilds, mentoring and cross-chapter forums; ran finance-cohort ML/GenAI training and manager coaching clinics.",
+          "Established clear escalation paths between squads not operating in PACE, and chapters to protect delivery velocity.",
         ],
       },
       {
@@ -81,12 +112,12 @@ export const experience: Experience[] = [
   },
   {
     id: "cba-manager-bi",
-    role: "Chapter Lead",
+    role: "Manager, Business Intelligence Reporting",
     company: "Commonwealth Bank of Australia — IB&M Finance",
     location: "Sydney",
-    period: "Mar 2020 — Mar 2022",
+    period: "Mar 2020 — 2022",
     current: false,
-    color: "#A08060",
+    color: "#006600",
     sections: [
       {
         heading: "Process Optimisation & Strategic Data",

@@ -22,16 +22,16 @@ export default function Timeline() {
   const [chatOpen, setChatOpen] = useState(false);
 
   return (
-    <section id="timeline" className="py-28 px-6 grid-lines" style={{ background: "#0A0E14" }}>
+    <section id="timeline" className="py-28 px-6 grid-lines" style={{ background: "#000500" }}>
       <div className="max-w-3xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="mb-20">
-          <p className="text-[10px] tracking-[0.25em] uppercase mb-3" style={{ color: "#00D9FF", fontFamily: "var(--font-mono), monospace" }}><MatrixDecoder text="// employment_history" /></p>
+          <p className="text-[10px] tracking-[0.25em] uppercase mb-3" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}><MatrixDecoder text="// employment_history" /></p>
           <h2 className="text-5xl md:text-6xl font-light mb-4" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}><MatrixDecoder text="Where I've Been" /></h2>
           <p className="text-sm" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>Nine years across finance, academia, and tech. Click any role to explore.</p>
         </motion.div>
 
         <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="relative">
-          <div className="absolute left-[11px] top-3 bottom-3 w-px" style={{ background: "linear-gradient(to bottom, #00D9FF44, #21262D, transparent)" }} />
+          <div className="absolute left-[11px] top-3 bottom-3 w-px" style={{ background: "linear-gradient(to bottom, #00FF4144, #003300, transparent)" }} />
 
           <div className="space-y-3">
             {experience.map((exp) => {
@@ -41,15 +41,15 @@ export default function Timeline() {
                   <div className="relative pl-8">
                     <motion.div
                       className="absolute left-0 top-5 w-[22px] h-[22px] rounded-full flex items-center justify-center"
-                      style={{ background: isOpen ? "#0A0E14" : "#111720", border: `1.5px solid ${isOpen ? "#00D9FF" : "#21262D"}`, transition: "all 0.3s ease", boxShadow: isOpen ? "0 0 12px rgba(0,217,255,0.3)" : "none" }}
+                      style={{ background: isOpen ? "#000500" : "#020c02", border: `1.5px solid ${isOpen ? "#00FF41" : "#003300"}`, transition: "all 0.3s ease", boxShadow: isOpen ? "0 0 12px rgba(0,255,65,0.3)" : "none" }}
                       animate={{ scale: isOpen ? 1.1 : 1 }}>
-                      {isOpen && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-2 h-2 rounded-full" style={{ background: "#00D9FF" }} />}
+                      {isOpen && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-2 h-2 rounded-full" style={{ background: "#00FF41" }} />}
                     </motion.div>
 
                     <motion.div
                       className="rounded-2xl overflow-hidden cursor-pointer transition-all duration-300"
-                      style={{ background: isOpen ? "#111720" : "transparent", border: `1px solid ${isOpen ? "#21262D" : "transparent"}`, boxShadow: isOpen ? "0 0 24px rgba(0,217,255,0.04)" : "none" }}
-                      whileHover={{ background: isOpen ? "#111720" : "#111720AA", border: "1px solid #21262D" }}
+                      style={{ background: isOpen ? "#020c02" : "transparent", border: `1px solid ${isOpen ? "#003300" : "transparent"}`, boxShadow: isOpen ? "0 0 24px rgba(0,255,65,0.04)" : "none" }}
+                      whileHover={{ background: isOpen ? "#020c02" : "#020c02AA", border: "1px solid #003300" }}
                       onClick={() => setOpenId(isOpen ? "" : exp.id)}>
 
                       <div className="px-6 py-5">
@@ -57,7 +57,7 @@ export default function Timeline() {
                           <div>
                             <div className="flex items-center gap-2 mb-1">
                               {exp.current && (
-                                <span className="text-[9px] px-2 py-0.5 rounded-full font-medium" style={{ background: "rgba(0,217,255,0.1)", color: "#00D9FF", border: "1px solid rgba(0,217,255,0.2)", fontFamily: "var(--font-mono), monospace" }}>CURRENT</span>
+                                <span className="text-[9px] px-2 py-0.5 rounded-full font-medium" style={{ background: "rgba(0,255,65,0.1)", color: "#00FF41", border: "1px solid rgba(0,255,65,0.2)", fontFamily: "var(--font-mono), monospace" }}>CURRENT</span>
                               )}
                               <span className="text-[10px]" style={{ color: "#484F58", fontFamily: "var(--font-mono), monospace" }}>{exp.period}</span>
                             </div>
