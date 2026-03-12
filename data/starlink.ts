@@ -73,3 +73,43 @@ export const MILESTONES = [
   { cumulative: 5000, label: "5,000\noperational",     year: 2023 },
   { cumulative: 7000, label: "Gen2 V3\ndeployment",    year: 2025 },
 ];
+
+// ─── Pricing history ───────────────────────────────────────────────────────────
+export interface PricingPoint {
+  month: string;
+  monthly: number;         // USD/month — Residential/Standard
+  monthlyBasic: number | null; // USD/month — Basic plan (null before launch)
+  hardware: number;        // USD — dish + router kit
+  note?: string;
+}
+
+export const pricingHistory: PricingPoint[] = [
+  { month: "Oct '20", monthly: 99,  monthlyBasic: null, hardware: 499, note: "Better Than Nothing Beta" },
+  { month: "Feb '21", monthly: 99,  monthlyBasic: null, hardware: 499 },
+  { month: "Aug '21", monthly: 99,  monthlyBasic: null, hardware: 299, note: "Hardware $499→$299 🎉" },
+  { month: "May '22", monthly: 110, monthlyBasic: null, hardware: 599, note: "Price rise + new Gen2 dish" },
+  { month: "Feb '23", monthly: 120, monthlyBasic: null, hardware: 599 },
+  { month: "Mar '23", monthly: 120, monthlyBasic: 50,   hardware: 599, note: "Basic $50/mo plan 🆕" },
+  { month: "Mar '24", monthly: 120, monthlyBasic: 50,   hardware: 349, note: "Hardware drops to $349 📉" },
+  { month: "Mar '25", monthly: 120, monthlyBasic: 50,   hardware: 299, note: "Hardware $299 — 40% off peak" },
+];
+
+// ─── Subscriber adoption ───────────────────────────────────────────────────────
+export interface AdoptionPoint {
+  month: string;
+  subscribersK: number; // thousands of subscribers
+  milestone?: string;
+}
+
+export const adoptionData: AdoptionPoint[] = [
+  { month: "Oct '20", subscribersK: 10,   milestone: "Beta 🛰️" },
+  { month: "Jun '21", subscribersK: 250 },
+  { month: "Dec '21", subscribersK: 500 },
+  { month: "Jun '22", subscribersK: 750 },
+  { month: "Dec '22", subscribersK: 1000,  milestone: "1M 🎉" },
+  { month: "Jun '23", subscribersK: 1500 },
+  { month: "Dec '23", subscribersK: 2300,  milestone: "2.3M" },
+  { month: "Jun '24", subscribersK: 3500 },
+  { month: "Dec '24", subscribersK: 4500,  milestone: "4.5M" },
+  { month: "Mar '25", subscribersK: 5000,  milestone: "5M 🚀" },
+];
