@@ -26,6 +26,10 @@ const SankeyViz = dynamic(() => import("@/components/SankeyViz"), {
   ssr: false,
   loading: () => <VizLoader label="loading budget data..." />,
 });
+const AgentsViz = dynamic(() => import("@/components/AgentsViz"), {
+  ssr: false,
+  loading: () => <VizLoader label="initialising agent network..." />,
+});
 const MatrixRain = dynamic(() => import("@/components/MatrixRain"), { ssr: false });
 
 function VizLoader({ bg = "#0A0E14", border = "#21262D", color = "#1a3a1a", label }: {
@@ -49,6 +53,23 @@ const MB  = "#003300";   // border
 
 // ─── Projects ─────────────────────────────────────────────────────────────────
 const projects = [
+  {
+    id: "agents",
+    icon: "🤖",
+    title: "Story of Agents — From Chat AI to the Autonomous Enterprise",
+    tags: ["Multi-Agent", "MCP", "LangGraph", "A2A", "LLM Observability"],
+    githubUrl: "https://github.com/binzidd/storyofagents",
+    story: (
+      <>
+        <span style={{ color: MG, fontWeight: 600 }}>Six capabilities. One journey.</span>{" "}
+        An interactive briefing tracing the evolution from tool calling to full agent-to-agent networks —
+        covering LangGraph orchestration, Model Context Protocol as the universal enterprise connector,
+        and A2A as the virtual firm that runs at machine speed.{" "}
+        <span style={{ color: MG }}>Built for financial services. Applies everywhere.</span>
+      </>
+    ),
+    component: <AgentsViz />,
+  },
   {
     id: "budget",
     icon: "🏛️",
@@ -225,9 +246,9 @@ export default function HobbyProjects() {
               animate={{ opacity: revealed ? 1 : 0, y: revealed ? 0 : 10 }}
               transition={{ duration: 0.6, delay: 0.9 }}
             >
-              Data viz doesn&apos;t stop at 5pm. F1 championship races, satellite constellations,
-              post-COVID banking dynamics, and motorbike spec battles — all built with the same
-              rigour as production code.
+              Data viz doesn&apos;t stop at 5pm. Multi-agent briefings, F1 championship races,
+              satellite constellations, post-COVID banking dynamics, and motorbike spec battles —
+              all built with the same rigour as production code.
             </motion.p>
           </motion.div>
 
@@ -365,7 +386,7 @@ export default function HobbyProjects() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              NODES: 4 | STATUS: ONLINE
+              NODES: 5 | STATUS: ONLINE
             </motion.p>
           </>
         )}
