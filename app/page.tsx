@@ -7,14 +7,14 @@ import GitHubRepos from "@/components/GitHubRepos";
 import HobbyProjects from "@/components/HobbyProjects";
 import Footer from "@/components/Footer";
 import CommandPalette from "@/components/CommandPalette";
-import TermColumns from "@/components/TermColumns";
+import ParticleField from "@/components/ParticleField";
 
 export default function Home() {
   return (
     <>
-      {/* Fixed domain-vocabulary columns — DOM text, screen-blend, visible on mobile */}
-      <TermColumns />
-      {/* Nav and palette stay above TermRain (z-index: 40+) */}
+      {/* 3D depth particle constellation — fixed canvas, z-index:1, visible everywhere */}
+      <ParticleField />
+      {/* Nav and palette stay above ParticleField (z-index: 40+) */}
       <Navigation />
       <CommandPalette />
       <main>
