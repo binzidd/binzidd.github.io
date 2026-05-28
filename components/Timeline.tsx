@@ -9,8 +9,8 @@ const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.1 } } };
 const cardVariants = {
-  hidden: { opacity: 0, x: -24 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: EASE } },
+  hidden: { opacity: 0, x: -24, rotateY: -6 },
+  visible: { opacity: 1, x: 0, rotateY: 0, transition: { duration: 0.65, ease: EASE } },
 };
 const bulletVariants = {
   hidden: { opacity: 0, x: -12 },
@@ -30,26 +30,32 @@ export default function Timeline() {
           <p className="text-sm" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>Nine years across finance, academia, and tech. Click any role to explore.</p>
         </motion.div>
 
-        <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="relative">
+        <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="relative" style={{ perspective: "1200px" }}>
           <div className="absolute left-[11px] top-3 bottom-3 w-px" style={{ background: "linear-gradient(to bottom, #00FF4144, #003300, transparent)" }} />
 
           <div className="space-y-3">
             {experience.map((exp) => {
               const isOpen = openId === exp.id;
               return (
-                <motion.div key={exp.id} variants={cardVariants}>
+                <motion.div key={exp.id} variants={cardVariants} style={{ transformPerspective: 1200 }}>
                   <div className="relative pl-8">
                     <motion.div
                       className="absolute left-0 top-5 w-[22px] h-[22px] rounded-full flex items-center justify-center"
-                      style={{ background: isOpen ? "#000500" : "#020c02", border: `1.5px solid ${isOpen ? "#00FF41" : "#003300"}`, transition: "all 0.3s ease", boxShadow: isOpen ? "0 0 12px rgba(0,255,65,0.3)" : "none" }}
+                      style={{ background: isOpen ? "#000500" : "#020c02", border: `1.5px solid ${isOpen ? "#00FF41" : "#003300"}`, transition: "all 0.3s ease", boxShadow: isOpen ? "0 0 14px rgba(0,255,65,0.4)" : "none" }}
                       animate={{ scale: isOpen ? 1.1 : 1 }}>
                       {isOpen && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-2 h-2 rounded-full" style={{ background: "#00FF41" }} />}
                     </motion.div>
 
                     <motion.div
-                      className="rounded-2xl overflow-hidden cursor-pointer transition-all duration-300"
-                      style={{ background: isOpen ? "#020c02" : "transparent", border: `1px solid ${isOpen ? "#003300" : "transparent"}`, boxShadow: isOpen ? "0 0 24px rgba(0,255,65,0.04)" : "none" }}
-                      whileHover={{ background: isOpen ? "#020c02" : "#020c02AA", border: "1px solid #003300" }}
+                      className="rounded-2xl overflow-hidden cursor-pointer"
+                      style={{ background: isOpen ? "#020c02" : "transparent", border: `1px solid ${isOpen ? "#003300" : "transparent"}`, boxShadow: isOpen ? "0 0 30px rgba(0,255,65,0.05)" : "none", transition: "background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease" }}
+                      whileHover={!isOpen ? {
+                        background: "#020c02AA",
+                        borderColor: "#003300",
+                        rotateY: 1,
+                        transformPerspective: 1200,
+                        transition: { duration: 0.2 },
+                      } : undefined}
                       onClick={() => setOpenId(isOpen ? "" : exp.id)}>
 
                       <div className="px-6 py-5">

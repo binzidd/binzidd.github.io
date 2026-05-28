@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { skillCategories, certifications } from "@/data/resume";
+import { motion, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { skillCategories, certifications, type SkillCategory, type Certification } from "@/data/resume";
 import MatrixDecoder from "@/components/MatrixDecoder";
 
 function SkillBar({ name, level, delay }: { name: string; level: number; delay: number }) {
@@ -12,12 +12,8 @@ function SkillBar({ name, level, delay }: { name: string; level: number; delay: 
   return (
     <div ref={ref} className="mb-4">
       <div className="flex justify-between mb-1.5">
-        <span className="text-sm" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
-          {name}
-        </span>
-        <span className="text-xs" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>
-          {level}%
-        </span>
+        <span className="text-sm" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>{name}</span>
+        <span className="text-xs" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>{level}%</span>
       </div>
       <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "#003300" }}>
         <motion.div
@@ -32,12 +28,91 @@ function SkillBar({ name, level, delay }: { name: string; level: number; delay: 
   );
 }
 
+function SkillCategoryCard({ category, index }: { category: SkillCategory; index: number }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [6, -6]), { stiffness: 300, damping: 30 });
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-6, 6]), { stiffness: 300, damping: 30 });
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, duration: 0.6 }}
+      style={{
+        rotateX,
+        rotateY,
+        transformPerspective: 1000,
+        background: "#020c02",
+        border: "1px solid #003300",
+      }}
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        x.set((e.clientX - rect.left) / rect.width - 0.5);
+        y.set((e.clientY - rect.top) / rect.height - 0.5);
+      }}
+      onMouseLeave={() => { x.set(0); y.set(0); }}
+      whileHover={{ boxShadow: "0 16px 40px rgba(0,255,65,0.05), 0 0 0 1px rgba(0,255,65,0.15)" }}
+      className="rounded-2xl p-7"
+    >
+      <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-5" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>
+        // {category.name.toLowerCase().replace(/ /g, "_")}
+      </p>
+      {category.skills.map((skill, si) => (
+        <SkillBar key={skill.name} name={skill.name} level={skill.level} delay={si * 0.07} />
+      ))}
+    </motion.div>
+  );
+}
+
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } };
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
 };
+
+function CertCard({ cert }: { cert: Certification }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [12, -12]), { stiffness: 420, damping: 28 });
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-12, 12]), { stiffness: 420, damping: 28 });
+
+  return (
+    <motion.div
+      variants={itemVariants}
+      style={{
+        rotateX,
+        rotateY,
+        transformPerspective: 800,
+        background: "#020c02",
+        border: "1px solid #003300",
+      }}
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        x.set((e.clientX - rect.left) / rect.width - 0.5);
+        y.set((e.clientY - rect.top) / rect.height - 0.5);
+      }}
+      onMouseLeave={() => { x.set(0); y.set(0); }}
+      whileHover={{
+        y: -6,
+        boxShadow: "0 16px 36px rgba(0,255,65,0.08), 0 0 0 1px rgba(0,255,65,0.28)",
+        borderColor: "rgba(0,255,65,0.28)",
+      }}
+      className="group rounded-2xl p-4 cursor-default"
+    >
+      <div className="flex flex-col items-start gap-2">
+        <div className="flex items-center gap-2">
+          <span className="text-xl">{cert.icon}</span>
+          <div className="w-1 h-1 rounded-full" style={{ background: cert.color }} />
+        </div>
+        <p className="text-xs font-medium leading-snug" style={{ color: "#E6EDF3", fontFamily: "var(--font-inter), sans-serif" }}>{cert.name}</p>
+        <p className="text-[10px]" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>{cert.issuer}</p>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function Skills() {
   return (
@@ -51,25 +126,10 @@ export default function Skills() {
           </p>
         </motion.div>
 
-        {/* Skills grid */}
+        {/* Skills grid — each card tilts in 3D on hover */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
           {skillCategories.map((category, ci) => (
-            <motion.div
-              key={category.name}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: ci * 0.1, duration: 0.6 }}
-              className="rounded-2xl p-7"
-              style={{ background: "#020c02", border: "1px solid #003300" }}
-            >
-              <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-5" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>
-                // {category.name.toLowerCase().replace(/ /g, "_")}
-              </p>
-              {category.skills.map((skill, si) => (
-                <SkillBar key={skill.name} name={skill.name} level={skill.level} delay={si * 0.07} />
-              ))}
-            </motion.div>
+            <SkillCategoryCard key={category.name} category={category} index={ci} />
           ))}
         </div>
 
@@ -86,26 +146,7 @@ export default function Skills() {
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
         >
           {certifications.map((cert) => (
-            <motion.div
-              key={cert.name}
-              variants={itemVariants}
-              className="group rounded-2xl p-4 transition-all duration-300 cursor-default"
-              style={{ background: "#020c02", border: "1px solid #003300" }}
-              whileHover={{ y: -3, boxShadow: "0 8px 24px rgba(0,255,65,0.06)", borderColor: "rgba(0,255,65,0.25)" }}
-            >
-              <div className="flex flex-col items-start gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">{cert.icon}</span>
-                  <div className="w-1 h-1 rounded-full" style={{ background: cert.color }} />
-                </div>
-                <p className="text-xs font-medium leading-snug" style={{ color: "#E6EDF3", fontFamily: "var(--font-inter), sans-serif" }}>
-                  {cert.name}
-                </p>
-                <p className="text-[10px]" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>
-                  {cert.issuer}
-                </p>
-              </div>
-            </motion.div>
+            <CertCard key={cert.name} cert={cert} />
           ))}
         </motion.div>
 

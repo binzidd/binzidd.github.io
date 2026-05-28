@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useMotionTemplate } from "framer-motion";
 import { projects, type Project } from "@/data/resume";
 import MatrixDecoder from "@/components/MatrixDecoder";
 
@@ -67,6 +67,69 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   );
 }
 
+function ProjectCard3D({ project, onClick }: { project: Project; onClick: () => void }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [10, -10]), { stiffness: 360, damping: 30 });
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-10, 10]), { stiffness: 360, damping: 30 });
+
+  // Gradient shine follows the cursor inside the card
+  const shineX = useTransform(x, [-0.5, 0.5], [0, 100]);
+  const shineY = useTransform(y, [-0.5, 0.5], [0, 100]);
+  const shine = useMotionTemplate`radial-gradient(circle at ${shineX}% ${shineY}%, rgba(0,255,65,0.11) 0%, transparent 60%)`;
+  const shineOpacity = useSpring(0, { stiffness: 320, damping: 26 });
+
+  const status = statusConfig[project.status];
+
+  return (
+    <motion.div
+      variants={cardVariants}
+      style={{ rotateX, rotateY, transformPerspective: 900 }}
+      className="group relative rounded-2xl cursor-pointer"
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        x.set((e.clientX - rect.left) / rect.width - 0.5);
+        y.set((e.clientY - rect.top) / rect.height - 0.5);
+        shineOpacity.set(1);
+      }}
+      onMouseLeave={() => { x.set(0); y.set(0); shineOpacity.set(0); }}
+      onClick={onClick}
+      whileHover={{
+        scale: 1.025,
+        boxShadow: "0 24px 64px rgba(0,255,65,0.08), 0 0 0 1px rgba(0,255,65,0.22)",
+        transition: { duration: 0.2 },
+      }}
+    >
+      <div className="relative rounded-2xl p-6 overflow-hidden" style={{ background: "#000500", border: "1px solid #003300" }}>
+        {/* Cursor-tracked shine overlay */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none rounded-2xl"
+          style={{ background: shine, opacity: shineOpacity }}
+        />
+
+        <div className="relative">
+          <div className="flex items-start justify-between mb-4">
+            <span className="text-3xl">{project.icon}</span>
+            <span className="text-[9px] font-medium px-2 py-0.5 rounded-full" style={{ background: status.bg, color: status.color, fontFamily: "var(--font-mono), monospace", border: `1px solid ${status.color}33` }}>{status.label}</span>
+          </div>
+          <h3 className="text-sm font-semibold mb-2 leading-snug" style={{ color: "#E6EDF3", fontFamily: "var(--font-inter), sans-serif" }}>{project.title}</h3>
+          <p className="text-xs leading-relaxed mb-5" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>{project.tagline}</p>
+          <div className="flex flex-wrap gap-1.5 mb-5">
+            {project.tech.slice(0, 3).map((t) => (
+              <span key={t} className="px-2.5 py-0.5 rounded-full text-[10px]" style={{ background: "#020c02", color: "#006600", fontFamily: "var(--font-mono), monospace", border: "1px solid #003300" }}>{t}</span>
+            ))}
+            {project.tech.length > 3 && <span className="px-2.5 py-0.5 rounded-full text-[10px]" style={{ background: "#020c02", color: "#006600", fontFamily: "var(--font-mono), monospace" }}>+{project.tech.length - 3}</span>}
+          </div>
+          <div className="flex items-center gap-1.5 text-[11px] font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>
+            view_details()
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Projects() {
   const [selected, setSelected] = useState<Project | null>(null);
 
@@ -80,33 +143,9 @@ export default function Projects() {
         </motion.div>
 
         <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {projects.map((project) => {
-            const status = statusConfig[project.status];
-            return (
-              <motion.div key={project.id} variants={cardVariants}
-                className="group relative rounded-2xl p-6 cursor-pointer transition-all duration-300"
-                style={{ background: "#000500", border: "1px solid #003300" }}
-                whileHover={{ y: -5, boxShadow: "0 0 32px rgba(0,255,65,0.05), 0 12px 32px rgba(0,0,0,0.4)", borderColor: "rgba(0,255,65,0.2)" }}
-                onClick={() => setSelected(project)}>
-                <div className="flex items-start justify-between mb-4">
-                  <span className="text-3xl">{project.icon}</span>
-                  <span className="text-[9px] font-medium px-2 py-0.5 rounded-full" style={{ background: status.bg, color: status.color, fontFamily: "var(--font-mono), monospace", border: `1px solid ${status.color}33` }}>{status.label}</span>
-                </div>
-                <h3 className="text-sm font-semibold mb-2 leading-snug" style={{ color: "#E6EDF3", fontFamily: "var(--font-inter), sans-serif" }}>{project.title}</h3>
-                <p className="text-xs leading-relaxed mb-5" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>{project.tagline}</p>
-                <div className="flex flex-wrap gap-1.5 mb-5">
-                  {project.tech.slice(0, 3).map((t) => (
-                    <span key={t} className="px-2.5 py-0.5 rounded-full text-[10px]" style={{ background: "#020c02", color: "#006600", fontFamily: "var(--font-mono), monospace", border: "1px solid #003300" }}>{t}</span>
-                  ))}
-                  {project.tech.length > 3 && <span className="px-2.5 py-0.5 rounded-full text-[10px]" style={{ background: "#020c02", color: "#006600", fontFamily: "var(--font-mono), monospace" }}>+{project.tech.length - 3}</span>}
-                </div>
-                <div className="flex items-center gap-1.5 text-[11px] font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>
-                  view_details()
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                </div>
-              </motion.div>
-            );
-          })}
+          {projects.map((project) => (
+            <ProjectCard3D key={project.id} project={project} onClick={() => setSelected(project)} />
+          ))}
         </motion.div>
       </div>
 
