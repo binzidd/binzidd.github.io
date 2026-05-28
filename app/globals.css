@@ -102,6 +102,12 @@ body {
   to   { transform: rotate(360deg) translateX(var(--orbit-r)) rotate(-360deg); }
 }
 
+/* TermColumns: seamless vertical scroll — content is duplicated so -50% = same position as 0% */
+@keyframes term-scroll-up {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+
 /* Scroll progress */
 #scroll-progress {
   position: fixed; top: 0; left: 0; right: 0; height: 1px; z-index: 60;
