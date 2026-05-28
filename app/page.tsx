@@ -7,10 +7,14 @@ import GitHubRepos from "@/components/GitHubRepos";
 import HobbyProjects from "@/components/HobbyProjects";
 import Footer from "@/components/Footer";
 import CommandPalette from "@/components/CommandPalette";
+import TermRain from "@/components/TermRain";
 
 export default function Home() {
   return (
     <>
+      {/* Fixed domain-vocabulary rain — screen-blends over all sections */}
+      <TermRain />
+      {/* Nav and palette stay above TermRain (z-index: 40+) */}
       <Navigation />
       <CommandPalette />
       <main>
