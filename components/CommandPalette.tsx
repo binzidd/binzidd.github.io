@@ -19,8 +19,29 @@ const SUGGESTIONS = [
   "What skills does he have?",
 ];
 
+const HP_RESPONSES: [string[], string][] = [
+  [["lumos"],           "✨ Lumos! — I'm not technically a wizard, but I do work in the dark. Close this palette and type 'lumos' on the page (outside inputs) to cast the real spell."],
+  [["nox"],             "🌑 Nox. — The counter-charm to Lumos. Close this palette and type 'nox' on the page to cast."],
+  [["expecto patronum"],"🦌 Expecto Patronum! — My Patronus is probably a recursive function. Close this palette and type the full incantation on the page for the real effect."],
+  [["alohomora"],       "🔓 Alohomora! — Opens locks. This portfolio is already open, but type it on the page (outside this box) for a proper casting."],
+  [["accio"],           "🪄 Accio! — I would Accio my next role, but that's what this portfolio is for. Type the spell on the page to cast it."],
+  [["obliviate"],       "😶 Obliviate. — The memory charm. If you forget visiting this site, I'll take it as a compliment that it felt like a dream. Type it on the page to cast."],
+  [["wingardium leviosa", "leviosa", "wingardium"], "🪶 Wingardium Leviosa! — It's Levi-O-sa, not Levio-SA. Type any spell on the page (outside inputs) to cast it for real."],
+  [["mischief managed"], "🗺️ Mischief Managed. — The Marauder's Map goes blank. Type it on the page for the full effect."],
+  [["expelliarmus"],     "⚡ Expelliarmus! — The Disarming Charm. Nothing has been disarmed here, but your curiosity is noted."],
+  [["voldemort", "he who must not be named"], "😬 He Who Must Not Be Named. — Brave of you. Most people don't say it."],
+  [["hogwarts"],         "🏰 Hogwarts — Not listed on my CV, but I hear the data analytics programme is excellent. Owl post unavailable."],
+  [["quidditch"],        "🏆 Quidditch! — Fastest sport on a broomstick. The closest equivalent in my career is a sprint ceremony that actually finishes on time."],
+  [["patronus"],         "🦌 A Patronus takes the form of what brings you joy. Mine is probably a clean test suite."],
+  [["horcrux"],          "💀 Seven Horcruxes — I have seven GitHub repositories. Coincidence? Probably."],
+  [["dumbledore"],       "🧙 Dumbledore — 'It does not do to dwell on dreams and forget to live.' Good advice for any engineer lost in ticket backlogs."],
+];
+
 function findAnswer(query: string): string {
-  const q = query.toLowerCase();
+  const q = query.toLowerCase().trim();
+  for (const [keywords, response] of HP_RESPONSES) {
+    if (keywords.some((kw) => q.includes(kw))) return response;
+  }
   for (const entry of qaEntries) {
     if (entry.keywords.some((kw) => q.includes(kw.toLowerCase()))) {
       return entry.answer;

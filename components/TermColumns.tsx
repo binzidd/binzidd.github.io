@@ -30,6 +30,15 @@ const AGENTS_TERMS = [
   "reasoning", "self_critique", "tool_call", "agentic_loop",
 ];
 
+// 🧙 hidden HP spell column — appears as domain vocab in the rain
+const SPELLS_TERMS = [
+  "lumos", "nox", "accio", "expecto", "patronum",
+  "expelliarmus", "alohomora", "obliviate", "stupefy", "incendio",
+  "wingardium", "leviosa", "riddikulus", "silencio", "aguamenti",
+  "sectumsempra", "fidelius", "protego", "crucio", "voldemort",
+  "dumbledore", "hermione", "hogwarts", "quidditch", "horcrux",
+];
+
 // ── Column configs: [terms, duration(s), startDelay(s)] ───────────────────
 // Negative delay = animation starts partway through, so columns are spread
 // across the loop on load rather than all entering from the top together.
@@ -43,6 +52,7 @@ const DESKTOP_COLS: ColDef[] = [
   { terms: [...HCI_TERMS.slice(8),    ...HCI_TERMS.slice(0, 8)],   dur: 50, delay: -17  },
   { terms: [...AGENTS_TERMS.slice(6), ...AGENTS_TERMS.slice(0, 6)],dur: 36, delay: -29  },
   { terms: [...DATA_TERMS.slice(12),  ...DATA_TERMS.slice(0, 12)], dur: 42, delay: -4   },
+  { terms: SPELLS_TERMS,                                            dur: 55, delay: -31  },
 ];
 
 const MOBILE_COLS: ColDef[] = [
