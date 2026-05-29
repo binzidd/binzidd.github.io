@@ -44,17 +44,25 @@ const links = [
 
 export default function Footer() {
   return (
-    <footer className="py-16 px-6" style={{ background: "#000500", borderTop: "1px solid #003300" }}>
+    <footer className="py-16 px-6 md:px-8" style={{ background: "#0D0D0D", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-            <h3 className="text-3xl md:text-4xl font-light mb-2" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h3
+              className="text-3xl md:text-4xl font-light mb-2"
+              style={{ color: "#F6F3EE", fontFamily: "var(--font-cormorant), serif" }}
+            >
               Binay Siddharth
             </h3>
-            <p className="text-xs mb-1" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>
+            <p className="text-xs mb-1" style={{ color: "rgba(246,243,238,0.35)", fontFamily: "var(--font-inter), sans-serif" }}>
               Chapter Area Lead — FS Analytics
             </p>
-            <p className="text-xs" style={{ color: "#003300", fontFamily: "var(--font-mono), monospace" }}>
+            <p className="text-xs" style={{ color: "rgba(246,243,238,0.18)", fontFamily: "var(--font-inter), sans-serif" }}>
               Commonwealth Bank of Australia · Sydney
             </p>
           </motion.div>
@@ -74,17 +82,17 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 title={link.label}
                 className="flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200"
-                style={{ background: "#020c02", color: "#006600", border: "1px solid #003300" }}
+                style={{ background: "rgba(255,255,255,0.05)", color: "rgba(246,243,238,0.32)", border: "1px solid rgba(255,255,255,0.08)" }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(0,255,65,0.1)";
-                  e.currentTarget.style.color = "#00FF41";
-                  e.currentTarget.style.borderColor = "rgba(0,255,65,0.3)";
+                  e.currentTarget.style.background = "rgba(201,106,54,0.12)";
+                  e.currentTarget.style.color = "#C96A36";
+                  e.currentTarget.style.borderColor = "rgba(201,106,54,0.3)";
                   e.currentTarget.style.transform = "translateY(-2px)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "#020c02";
-                  e.currentTarget.style.color = "#006600";
-                  e.currentTarget.style.borderColor = "#003300";
+                  e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+                  e.currentTarget.style.color = "rgba(246,243,238,0.32)";
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
                   e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
@@ -100,19 +108,19 @@ export default function Footer() {
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.6 }}
           className="mt-12 pt-6 flex flex-col md:flex-row items-center justify-between gap-3"
-          style={{ borderTop: "1px solid #003300" }}
+          style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
         >
-          <p className="text-xs" style={{ color: "#003300", fontFamily: "var(--font-mono), monospace" }}>
+          <p className="text-xs" style={{ color: "rgba(246,243,238,0.15)", fontFamily: "var(--font-mono), monospace" }}>
             © {new Date().getFullYear()} Binay Siddharth — built with Next.js & Framer Motion
           </p>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="flex items-center gap-1.5 text-xs transition-colors duration-200"
-            style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "#00FF41")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "#006600")}
+            style={{ color: "rgba(246,243,238,0.25)", fontFamily: "var(--font-inter), sans-serif" }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "#C96A36"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(246,243,238,0.25)"; }}
           >
-            scroll_to_top()
+            Back to top
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
               <path d="M5 9V1M1 5l4-4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

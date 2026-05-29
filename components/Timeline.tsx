@@ -3,18 +3,17 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { experience } from "@/data/resume";
-import MatrixDecoder from "@/components/MatrixDecoder";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.1 } } };
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.09 } } };
 const cardVariants = {
-  hidden: { opacity: 0, x: -24, rotateY: -6 },
-  visible: { opacity: 1, x: 0, rotateY: 0, transition: { duration: 0.65, ease: EASE } },
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 };
 const bulletVariants = {
-  hidden: { opacity: 0, x: -12 },
-  visible: (i: number) => ({ opacity: 1, x: 0, transition: { delay: i * 0.05, duration: 0.4 } }),
+  hidden: { opacity: 0, x: -10 },
+  visible: (i: number) => ({ opacity: 1, x: 0, transition: { delay: i * 0.04, duration: 0.35 } }),
 };
 
 export default function Timeline() {
@@ -22,75 +21,162 @@ export default function Timeline() {
   const [chatOpen, setChatOpen] = useState(false);
 
   return (
-    <section id="timeline" className="py-28 px-6 grid-lines" style={{ background: "#000500" }}>
+    <section id="timeline" className="py-28 px-6 md:px-8" style={{ background: "#F6F3EE" }}>
       <div className="max-w-3xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="mb-20">
-          <p className="text-[10px] tracking-[0.25em] uppercase mb-3" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}><MatrixDecoder text="// employment_history" /></p>
-          <h2 className="text-5xl md:text-6xl font-light mb-4" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}><MatrixDecoder text="Where I've Been" /></h2>
-          <p className="text-sm" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>Nine years across finance, academia, and tech. Click any role to explore.</p>
+
+        {/* Section header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="mb-20"
+        >
+          <p className="text-[10px] tracking-[0.28em] uppercase mb-4" style={{ color: "#C96A36", fontFamily: "var(--font-mono), monospace" }}>
+            Employment
+          </p>
+          <h2 className="text-5xl md:text-6xl font-light mb-4 leading-tight" style={{ color: "#0D0D0D", fontFamily: "var(--font-cormorant), serif" }}>
+            Where I&apos;ve Been
+          </h2>
+          <p className="text-sm" style={{ color: "#5A5A5A", fontFamily: "var(--font-inter), sans-serif" }}>
+            Nine years across finance, academia, and tech. Click any role to explore.
+          </p>
         </motion.div>
 
-        <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="relative" style={{ perspective: "1200px" }}>
-          <div className="absolute left-[11px] top-3 bottom-3 w-px" style={{ background: "linear-gradient(to bottom, #00FF4144, #003300, transparent)" }} />
+        {/* Timeline entries */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          className="relative"
+        >
+          {/* Vertical line */}
+          <div
+            className="absolute left-[11px] top-3 bottom-3 w-px"
+            style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.12), rgba(0,0,0,0.04), transparent)" }}
+          />
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             {experience.map((exp) => {
               const isOpen = openId === exp.id;
               return (
-                <motion.div key={exp.id} variants={cardVariants} style={{ transformPerspective: 1200 }}>
+                <motion.div key={exp.id} variants={cardVariants}>
                   <div className="relative pl-8">
+                    {/* Timeline dot */}
                     <motion.div
                       className="absolute left-0 top-5 w-[22px] h-[22px] rounded-full flex items-center justify-center"
-                      style={{ background: isOpen ? "#000500" : "#020c02", border: `1.5px solid ${isOpen ? "#00FF41" : "#003300"}`, transition: "all 0.3s ease", boxShadow: isOpen ? "0 0 14px rgba(0,255,65,0.4)" : "none" }}
-                      animate={{ scale: isOpen ? 1.1 : 1 }}>
-                      {isOpen && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-2 h-2 rounded-full" style={{ background: "#00FF41" }} />}
+                      style={{
+                        background: isOpen ? "#F6F3EE" : "#EDEAE4",
+                        border: `1.5px solid ${isOpen ? "#C96A36" : "rgba(0,0,0,0.12)"}`,
+                        transition: "all 0.3s ease",
+                        boxShadow: isOpen ? "0 0 0 4px rgba(201,106,54,0.1)" : "none",
+                      }}
+                      animate={{ scale: isOpen ? 1.1 : 1 }}
+                    >
+                      {isOpen && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="w-2 h-2 rounded-full"
+                          style={{ background: "#C96A36" }}
+                        />
+                      )}
                     </motion.div>
 
+                    {/* Card */}
                     <motion.div
                       className="rounded-2xl overflow-hidden cursor-pointer"
-                      style={{ background: isOpen ? "#020c02" : "transparent", border: `1px solid ${isOpen ? "#003300" : "transparent"}`, boxShadow: isOpen ? "0 0 30px rgba(0,255,65,0.05)" : "none", transition: "background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease" }}
+                      style={{
+                        background: isOpen ? "#FFFFFF" : "transparent",
+                        border: `1px solid ${isOpen ? "rgba(0,0,0,0.07)" : "transparent"}`,
+                        boxShadow: isOpen ? "0 4px 24px rgba(0,0,0,0.06)" : "none",
+                        transition: "background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
+                      }}
                       whileHover={!isOpen ? {
-                        background: "#020c02AA",
-                        borderColor: "#003300",
-                        rotateY: 1,
-                        transformPerspective: 1200,
+                        background: "rgba(255,255,255,0.6)",
+                        borderColor: "rgba(0,0,0,0.06)",
                         transition: { duration: 0.2 },
                       } : undefined}
-                      onClick={() => setOpenId(isOpen ? "" : exp.id)}>
-
+                      onClick={() => setOpenId(isOpen ? "" : exp.id)}
+                    >
                       <div className="px-6 py-5">
                         <div className="flex items-start justify-between gap-4">
                           <div>
-                            <div className="flex items-center gap-2 mb-1">
+                            <div className="flex items-center gap-2 mb-1.5">
                               {exp.current && (
-                                <span className="text-[9px] px-2 py-0.5 rounded-full font-medium" style={{ background: "rgba(0,255,65,0.1)", color: "#00FF41", border: "1px solid rgba(0,255,65,0.2)", fontFamily: "var(--font-mono), monospace" }}>CURRENT</span>
+                                <span
+                                  className="text-[9px] px-2 py-0.5 rounded-full font-medium"
+                                  style={{
+                                    background: "rgba(201,106,54,0.1)",
+                                    color: "#C96A36",
+                                    border: "1px solid rgba(201,106,54,0.2)",
+                                    fontFamily: "var(--font-mono), monospace",
+                                  }}
+                                >
+                                  CURRENT
+                                </span>
                               )}
-                              <span className="text-[10px]" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>{exp.period}</span>
+                              <span className="text-[10px]" style={{ color: "#888888", fontFamily: "var(--font-mono), monospace" }}>
+                                {exp.period}
+                              </span>
                             </div>
-                            <h3 className="text-base font-semibold leading-snug" style={{ color: "#E6EDF3", fontFamily: "var(--font-inter), sans-serif" }}>{exp.role}</h3>
-                            <p className="text-xs mt-0.5" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>{exp.company} · {exp.location}</p>
+                            <h3 className="text-[15px] font-semibold leading-snug" style={{ color: "#0D0D0D", fontFamily: "var(--font-inter), sans-serif" }}>
+                              {exp.role}
+                            </h3>
+                            <p className="text-xs mt-0.5" style={{ color: "#5A5A5A", fontFamily: "var(--font-inter), sans-serif" }}>
+                              {exp.company} · {exp.location}
+                            </p>
                           </div>
-                          <motion.div animate={{ rotate: isOpen ? 45 : 0 }} transition={{ duration: 0.25 }}
+                          <motion.div
+                            animate={{ rotate: isOpen ? 45 : 0 }}
+                            transition={{ duration: 0.25 }}
                             className="mt-1 flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full"
-                            style={{ background: isOpen ? "rgba(0,255,65,0.1)" : "transparent" }}>
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke={isOpen ? "#00FF41" : "#006600"} strokeWidth="1.5" strokeLinecap="round" /></svg>
+                            style={{ background: isOpen ? "rgba(201,106,54,0.1)" : "transparent" }}
+                          >
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                              <path d="M6 1v10M1 6h10" stroke={isOpen ? "#C96A36" : "#888888"} strokeWidth="1.5" strokeLinecap="round" />
+                            </svg>
                           </motion.div>
                         </div>
                       </div>
 
+                      {/* Expanded content */}
                       <AnimatePresence initial={false}>
                         {isOpen && (
-                          <motion.div key="content" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.4, ease: EASE }} style={{ overflow: "hidden" }}>
+                          <motion.div
+                            key="content"
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.4, ease: EASE }}
+                            style={{ overflow: "hidden" }}
+                          >
                             <div className="px-6 pb-6 space-y-5">
-                              <div className="h-px" style={{ background: "#003300" }} />
+                              <div className="h-px" style={{ background: "rgba(0,0,0,0.06)" }} />
                               {exp.sections.map((section, si) => (
                                 <div key={si}>
-                                  <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-3" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>{section.heading}</p>
+                                  <p
+                                    className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-3"
+                                    style={{ color: "#C96A36", fontFamily: "var(--font-mono), monospace" }}
+                                  >
+                                    {section.heading}
+                                  </p>
                                   <ul className="space-y-2">
                                     {section.bullets.map((bullet, bi) => (
-                                      <motion.li key={bi} custom={si * 10 + bi} variants={bulletVariants} initial="hidden" animate="visible"
-                                        className="flex gap-3 text-xs leading-relaxed" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
-                                        <span className="mt-2 flex-shrink-0 w-1 h-1 rounded-full" style={{ background: "#00FF4144" }} />
+                                      <motion.li
+                                        key={bi}
+                                        custom={si * 10 + bi}
+                                        variants={bulletVariants}
+                                        initial="hidden"
+                                        animate="visible"
+                                        className="flex gap-3 text-xs leading-relaxed"
+                                        style={{ color: "#5A5A5A", fontFamily: "var(--font-inter), sans-serif" }}
+                                      >
+                                        <span
+                                          className="mt-2 flex-shrink-0 w-1 h-1 rounded-full"
+                                          style={{ background: "rgba(201,106,54,0.4)" }}
+                                        />
                                         {bullet}
                                       </motion.li>
                                     ))}
@@ -109,36 +195,92 @@ export default function Timeline() {
           </div>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3, duration: 0.6 }} className="mt-14 flex justify-center">
-          <button onClick={() => setChatOpen(true)}
+        {/* Ask me anything CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="mt-14 flex justify-center"
+        >
+          <button
+            onClick={() => setChatOpen(true)}
             className="flex items-center gap-3 px-6 py-3 rounded-full transition-all duration-300"
-            style={{ background: "#020c02", border: "1px solid #003300", fontFamily: "var(--font-mono), monospace" }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(0,255,65,0.3)"; e.currentTarget.style.boxShadow = "0 0 20px rgba(0,255,65,0.06)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#003300"; e.currentTarget.style.boxShadow = "none"; }}>
-            <span className="text-lg">💬</span>
-            <span className="text-xs font-medium" style={{ color: "#8B949E" }}>ask_me_anything --about-my-experience</span>
-            <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: "rgba(0,255,65,0.08)", color: "#00FF41", border: "1px solid rgba(0,255,65,0.15)" }}>⌘K</span>
+            style={{
+              background: "#FFFFFF",
+              border: "1px solid rgba(0,0,0,0.08)",
+              boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "rgba(201,106,54,0.3)";
+              e.currentTarget.style.boxShadow = "0 4px 20px rgba(201,106,54,0.08)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "rgba(0,0,0,0.08)";
+              e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.04)";
+            }}
+          >
+            <span className="text-base">💬</span>
+            <span className="text-xs font-medium" style={{ color: "#5A5A5A", fontFamily: "var(--font-inter), sans-serif" }}>
+              Ask about my experience
+            </span>
+            <span
+              className="text-[10px] px-2 py-0.5 rounded-full"
+              style={{
+                background: "rgba(201,106,54,0.08)",
+                color: "#C96A36",
+                border: "1px solid rgba(201,106,54,0.15)",
+                fontFamily: "var(--font-mono), monospace",
+              }}
+            >
+              ⌘K
+            </span>
           </button>
         </motion.div>
       </div>
 
+      {/* Chat modal */}
       {chatOpen && (
-        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.7)" }} onClick={() => setChatOpen(false)}>
-          <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 40 }} onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-lg rounded-2xl p-6" style={{ background: "#020c02", border: "1px solid #003300" }}>
-            <p className="text-xs mb-2" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>// Press ⌘K for the full terminal Q&A interface</p>
-            <div className="mt-4 space-y-2">
+        <div
+          className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-4"
+          style={{ background: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)" }}
+          onClick={() => setChatOpen(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 40 }}
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-lg rounded-2xl p-6"
+            style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 24px 48px rgba(0,0,0,0.12)" }}
+          >
+            <p className="text-xs mb-4" style={{ color: "#888888", fontFamily: "var(--font-inter), sans-serif" }}>
+              Use ⌘K to open the full Q&A interface
+            </p>
+            <div className="space-y-2">
               {["Tell me about Adobe", "What is Project SPUR?", "What GenAI projects has he built?"].map((q) => (
-                <button key={q} onClick={() => { setChatOpen(false); setTimeout(() => { document.dispatchEvent(new CustomEvent("palette-query", { detail: q })); }, 200); }}
-                  className="w-full text-left px-4 py-2.5 rounded-xl text-xs transition-colors duration-150"
-                  style={{ background: "#020c02", color: "#8B949E", fontFamily: "var(--font-mono), monospace", border: "1px solid #003300" }}
-                  onMouseEnter={(e) => e.currentTarget.style.borderColor = "rgba(0,255,65,0.2)"}
-                  onMouseLeave={(e) => e.currentTarget.style.borderColor = "#003300"}>
-                  &gt; &ldquo;{q}&rdquo;
+                <button
+                  key={q}
+                  onClick={() => {
+                    setChatOpen(false);
+                    setTimeout(() => { document.dispatchEvent(new CustomEvent("palette-query", { detail: q })); }, 200);
+                  }}
+                  className="w-full text-left px-4 py-2.5 rounded-xl text-xs transition-all duration-150"
+                  style={{ background: "#F6F3EE", color: "#5A5A5A", fontFamily: "var(--font-inter), sans-serif", border: "1px solid rgba(0,0,0,0.06)" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(201,106,54,0.25)"; e.currentTarget.style.color = "#0D0D0D"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)"; e.currentTarget.style.color = "#5A5A5A"; }}
+                >
+                  &ldquo;{q}&rdquo;
                 </button>
               ))}
             </div>
-            <button onClick={() => setChatOpen(false)} className="mt-4 w-full py-2 text-xs rounded-full" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>// close</button>
+            <button
+              onClick={() => setChatOpen(false)}
+              className="mt-4 w-full py-2 text-xs rounded-full"
+              style={{ color: "#888888", fontFamily: "var(--font-inter), sans-serif" }}
+            >
+              Close
+            </button>
           </motion.div>
         </div>
       )}
