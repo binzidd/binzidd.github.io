@@ -9,11 +9,13 @@ import Footer from "@/components/Footer";
 import CommandPalette from "@/components/CommandPalette";
 import TermColumns from "@/components/TermColumns";
 import HarryPotterEggs from "@/components/HarryPotterEggs";
+import IntroLoader from "@/components/IntroLoader";
 
 export default function Home() {
   return (
     <>
       {/* Fixed domain-vocabulary columns — DOM text, screen-blend, visible on mobile */}
+      <IntroLoader />
       <TermColumns />
       <HarryPotterEggs />
       {/* Nav and palette stay above TermRain (z-index: 40+) */}

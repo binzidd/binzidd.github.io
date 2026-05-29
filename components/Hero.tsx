@@ -5,9 +5,9 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 const roles = [
   "Data & Analytics Lead",
-  "GenAI Architect",
   "HCI-Driven Leader",
   "Chapter Area Lead @ CBA",
+  "AI Engineering Lead",
 ];
 
 const stats = [
