@@ -27,112 +27,83 @@ export interface Race2026 {
   engineNote: string;
 }
 
-// ─── Drivers 2026 - new lineups after regulation reset ──────────────────────
+// 8 key championship drivers — 2026 regulation reset lineups
 export const DRIVERS_2026: Driver2026[] = [
-  { id: "NOR", name: "Lando Norris",     short: "NOR", team: "McLaren",        teamShort: "McLaren",     color: "#FF8000", flag: "🇬🇧", puSupplier: "Mercedes",  isLead: true },
-  { id: "HAM", name: "Lewis Hamilton",   short: "HAM", team: "Ferrari",        teamShort: "Ferrari",     color: "#E8002D", flag: "🇬🇧", puSupplier: "Ferrari"  },
-  { id: "VER", name: "Max Verstappen",   short: "VER", team: "Red Bull",       teamShort: "Red Bull",    color: "#3671C6", flag: "🇳🇱", puSupplier: "Ford/RBPT" },
-  { id: "LEC", name: "Charles Leclerc", short: "LEC", team: "Ferrari",        teamShort: "Ferrari",     color: "#E8002D", flag: "🇲🇨", puSupplier: "Ferrari"  },
-  { id: "PIA", name: "Oscar Piastri",    short: "PIA", team: "McLaren",        teamShort: "McLaren",     color: "#FF8000", flag: "🇦🇺", puSupplier: "Mercedes" },
-  { id: "RUS", name: "George Russell",   short: "RUS", team: "Mercedes",       teamShort: "Mercedes",    color: "#27F4D2", flag: "🇬🇧", puSupplier: "Mercedes" },
-  { id: "ALO", name: "Fernando Alonso",  short: "ALO", team: "Aston Martin",   teamShort: "Aston",       color: "#229971", flag: "🇪🇸", puSupplier: "Honda"    },
-  { id: "ANT", name: "Kimi Antonelli",   short: "ANT", team: "Mercedes",       teamShort: "Mercedes",    color: "#27F4D2", flag: "🇮🇹", puSupplier: "Mercedes" },
+  { id: "ANT", name: "Kimi Antonelli",   short: "ANT", team: "Mercedes",  teamShort: "Mercedes", color: "#27F4D2", flag: "🇮🇹", puSupplier: "Mercedes", isLead: true },
+  { id: "RUS", name: "George Russell",   short: "RUS", team: "Mercedes",  teamShort: "Mercedes", color: "#27F4D2", flag: "🇬🇧", puSupplier: "Mercedes" },
+  { id: "LEC", name: "Charles Leclerc", short: "LEC", team: "Ferrari",   teamShort: "Ferrari",  color: "#E8002D", flag: "🇲🇨", puSupplier: "Ferrari"  },
+  { id: "HAM", name: "Lewis Hamilton",  short: "HAM", team: "Ferrari",   teamShort: "Ferrari",  color: "#E8002D", flag: "🇬🇧", puSupplier: "Ferrari"  },
+  { id: "NOR", name: "Lando Norris",    short: "NOR", team: "McLaren",   teamShort: "McLaren",  color: "#FF8000", flag: "🇬🇧", puSupplier: "Mercedes" },
+  { id: "PIA", name: "Oscar Piastri",   short: "PIA", team: "McLaren",   teamShort: "McLaren",  color: "#FF8000", flag: "🇦🇺", puSupplier: "Mercedes" },
+  { id: "VER", name: "Max Verstappen",  short: "VER", team: "Red Bull",  teamShort: "Red Bull", color: "#3671C6", flag: "🇳🇱", puSupplier: "Ford/RBPT"},
+  { id: "HAD", name: "Isack Hadjar",    short: "HAD", team: "Red Bull",  teamShort: "Red Bull", color: "#6B91D6", flag: "🇫🇷", puSupplier: "Ford/RBPT"},
 ];
 
-// ─── 2026 Race Calendar (rounds 1–8, season in progress as of May 2026) ─────
+// 2026 Race Calendar — 5 rounds completed as of May 29 2026
+// Bahrain and Saudi Arabian GPs removed from original calendar.
+// China, Miami, Canada are sprint weekends.
 export const RACES_2026: Race2026[] = [
   {
-    round: 1,  name: "Australia",    flag: "🇦🇺", date: "Mar 15",  circuit: "Melbourne",
-    winner: "NOR",
-    fastestLap: { driverId: "NOR", time: "1:19.783" },
-    topSpeed:   { driverId: "VER", kmh: 326 },
-    narrative: "The 2026 reset is here. McLaren-Mercedes arrives with the fastest package. Norris leads lights-to-flag. Hamilton impresses on his Ferrari debut - P2. VER P7 as RBPT Ford PU needs time.",
+    round: 1,  name: "Australia", flag: "🇦🇺", date: "Mar 8",  circuit: "Melbourne",
+    winner: "RUS",
+    fastestLap: { driverId: "ANT", time: "1:21.934" },
+    topSpeed:   { driverId: "RUS", kmh: 321 },
+    narrative: "The 2026 era opens with a Mercedes 1-2. Russell wins, Antonelli P2. Hamilton takes P4 on his Ferrari debut. Verstappen recovers from P20 to P6. Piastri does not start after a sighting-lap crash.",
     narrativePhase: "reset",
-    leadMoment: "🏆 NOR wins - championship lead from Rd 1",
-    engineNote: "X-Mode active aero makes the new cars visibly faster in sectors 1 & 3. RBPT-Ford PU 8% down on power vs Mercedes - calibration incomplete.",
+    leadMoment: "🏆 RUS wins — Mercedes 1-2 on opening day",
+    engineNote: "Mercedes' integrated MGU-H and X-Mode active aero package arrives as the most complete on the grid. Red Bull-Ford PU visibly down on top-end power in sectors 1 and 3.",
   },
   {
-    round: 2,  name: "China",        flag: "🇨🇳", date: "Mar 22",  circuit: "Shanghai",
-    winner: "HAM",
-    fastestLap: { driverId: "HAM", time: "1:31.412" },
-    topSpeed:   { driverId: "NOR", kmh: 331 },
-    narrative: "HAMILTON WINS FOR FERRARI. Lewis's first Ferrari victory in only his second race. The crowd erupts. Norris P3, Verstappen fights to P5 - RBPT engineers working overnight on fuel maps.",
+    round: 2,  name: "China",     flag: "🇨🇳", date: "Mar 15", circuit: "Shanghai",
+    winner: "ANT",
+    fastestLap: { driverId: "ANT", time: "1:33.847" },
+    topSpeed:   { driverId: "NOR", kmh: 329 },
+    narrative: "ANTONELLI WINS HIS MAIDEN GRAND PRIX. At 19 years and 202 days, the youngest polesitter in F1 history converts pole to victory. Hamilton takes his first Ferrari podium (P3). Mercedes 1-2 again.",
     narrativePhase: "reset",
-    leadMoment: "🏆 HAM wins - Ferrari's 2026 statement",
-    engineNote: "Ferrari's MGU-H upgrade unlocks 15kW extra deployment in Turn 14 hairpin. Hamilton specifically credits the engine braking stability.",
+    leadMoment: "🏆 ANT wins — maiden victory, youngest polesitter ever",
+    engineNote: "Antonelli's mastery of the MGU-H harvest-and-deploy cycle through Shanghai's final sector shows Mercedes' decade of PU expertise transferred to a 19-year-old in six months.",
   },
   {
-    round: 3,  name: "Japan",        flag: "🇯🇵", date: "Apr 6",   circuit: "Suzuka",
-    winner: "NOR",
-    fastestLap: { driverId: "VER", time: "1:27.218" },
-    topSpeed:   { driverId: "VER", kmh: 324 },
-    narrative: "Norris wins at Suzuka. VER fights back to P3 - the RBPT-Ford PU finding performance. Fastest lap for VER signals Red Bull closing the gap.",
+    round: 3,  name: "Japan",     flag: "🇯🇵", date: "Mar 29", circuit: "Suzuka",
+    winner: "ANT",
+    fastestLap: { driverId: "ANT", time: "1:32.442" },
+    topSpeed:   { driverId: "RUS", kmh: 316 },
+    narrative: "Consecutive wins for Antonelli. A Bearman crash triggers a safety car that breaks the race open. Piastri P2, Leclerc P3. Verstappen P8 — Red Bull exposed at a power circuit. ANT takes the championship lead.",
     narrativePhase: "surge",
-    leadMoment: "P3 - VER clawing back",
-    engineNote: "Verstappen's fastest lap (1:27.218) is 1.1s quicker than the 2025 Suzuka benchmark - the new 800kW power unit in full effect through Suzuka's high-speed sweeps.",
+    leadMoment: "🏆 ANT wins — youngest championship leader in F1 history",
+    engineNote: "Mercedes X-Mode aero through 130R and Spoon curves is 0.4s per lap quicker than Red Bull. Ford PU's peak power deficit is most visible at Suzuka's sustained high-load sections.",
   },
   {
-    round: 4,  name: "Bahrain",      flag: "🇧🇭", date: "Apr 20",  circuit: "Sakhir",
-    winner: "VER",
-    fastestLap: { driverId: "VER", time: "1:32.087" },
-    topSpeed:   { driverId: "VER", kmh: 351 },
-    narrative: "VERSTAPPEN WINS! RBPT-Ford breakthrough. The Ford PU hits its target power output. Norris P2, Hamilton P3. Championship starts to tighten. Top speed of 351 km/h - new circuit record.",
+    round: 4,  name: "Miami",     flag: "🇺🇸", date: "May 3",  circuit: "Miami",
+    winner: "ANT",
+    fastestLap: { driverId: "NOR", time: "1:31.869" },
+    topSpeed:   { driverId: "ANT", kmh: 328 },
+    narrative: "Three wins in a row for Antonelli on a chaotic sprint weekend. Leclerc leads late before a nightmare final lap hands P3 to Piastri. Norris P2. ANT leads the championship by 25 points.",
     narrativePhase: "surge",
-    leadMoment: "🏆 VER wins - RBPT breakthrough race",
-    engineNote: "Ford PU reaches design power target. Top speed 351 km/h (2025 record: 343 km/h) - X-Mode combined with Ford PU torque delivering record-breaking straights.",
+    leadMoment: "ANT leads: RUS by 25 pts after Miami",
+    engineNote: "Three PU suppliers in the top 3 (Mercedes works, McLaren-Mercedes, McLaren-Mercedes). Ferrari's MGU-K deployment timing costs Leclerc the podium on the final lap.",
   },
   {
-    round: 5,  name: "Saudi Arabia", flag: "🇸🇦", date: "Apr 27",  circuit: "Jeddah",
-    winner: "NOR",
-    fastestLap: { driverId: "HAM", time: "1:26.541" },
-    topSpeed:   { driverId: "VER", kmh: 357 },
-    narrative: "Norris wins a chaotic Saudi race. Hamilton sets the fastest lap - Ferrari's pace in low-drag configs impressive. Top speed 357 km/h on the back straight - new Jeddah benchmark by 10 km/h.",
-    narrativePhase: "surge",
-    leadMoment: "NOR leads: 103 pts - HAM 89 - VER 78",
-    engineNote: "357 km/h top speed - the highest in F1 since 2004 Monza era. Active aero in X-Mode fully eliminating drag. Ferrari's MGU-H deploying 40kJ of extra energy through S1.",
-  },
-  {
-    round: 6,  name: "Miami",        flag: "🇺🇸", date: "May 11",  circuit: "Miami",
-    winner: "VER",
-    fastestLap: { driverId: "VER", time: "1:28.623" },
-    topSpeed:   { driverId: "NOR", kmh: 333 },
-    narrative: "VER WINS MIAMI - now within 7 points of Norris! Hamilton P2 battling all race. Piastri P3. The championship is officially a three-way fight.",
-    narrativePhase: "challenge",
-    leadMoment: "🏆 VER wins - NOR lead cut to 7 pts",
-    engineNote: "Red Bull deploys new-spec Ford PU diffuser integration. 40% reduction in thermal degradation vs R1. The learning curve from 2026 regs is steeper than 2022 - but faster.",
-  },
-  {
-    round: 7,  name: "Monaco",       flag: "🇲🇨", date: "May 25",  circuit: "Monte Carlo",
-    winner: "HAM",
-    fastestLap: { driverId: "LEC", time: "1:10.924" },
-    topSpeed:   { driverId: "HAM", kmh: 291 },
-    narrative: "HAMILTON WINS MONACO. Lewis masters the streets at the wheel of the Scuderia. Leclerc sets the fastest lap for Ferrari 1-2. Emotional podium for Hamilton as Verstappen P4.",
-    narrativePhase: "challenge",
-    leadMoment: "🏆 HAM wins Monaco - 3-way title fight",
-    engineNote: "Monaco expo for ERS management: Hamilton deploying MGU-K out of Portier with surgical precision. Ferrari's 50/50 PU balance ideal for stop-start Monaco rhythm.",
-  },
-  {
-    round: 8,  name: "Spain",        flag: "🇪🇸", date: "Jun 8",   circuit: "Barcelona",
-    winner: "NOR",
-    fastestLap: { driverId: "VER", time: "1:15.689" },
-    topSpeed:   { driverId: "VER", kmh: 330 },
-    narrative: "Norris wins Spain - consolidating his championship lead. VER fastest lap again. Championship: NOR 161 pts · HAM 132 pts · VER 118 pts. Season resumes after summer break.",
+    round: 5,  name: "Canada",    flag: "🇨🇦", date: "May 24", circuit: "Montreal",
+    winner: "ANT",
+    fastestLap: { driverId: "ANT", time: "1:14.210" },
+    topSpeed:   { driverId: "HAM", kmh: 334 },
+    narrative: "FOUR WINS IN A ROW. Russell leads then DNFs on lap 30 with a PU failure — Antonelli wins with the same engine. Hamilton P2 for Ferrari. Verstappen P3: his first 2026 podium in five races. ANT leads by 43 pts.",
     narrativePhase: "momentum",
-    leadMoment: "NOR leads: 161 · HAM 132 · VER 118",
-    engineNote: "Mercedes PU active aero advantage most visible at Barcelona - McLaren's rear wing X-Mode transition 12ms faster than rivals. Wind tunnel correlation paying dividends.",
+    leadMoment: "🏆 ANT wins — RUS DNF, championship lead extends to 43 pts",
+    engineNote: "Russell's PU failure on lap 30 is a reminder that even the class-leading Mercedes power unit carries reliability risk at high-output circuits. Ford-RBPT finally delivers a clean race — Verstappen takes the podium.",
   },
 ];
 
-// Race results: [P1..P8] by driver ID
+// Race results P1..P8 by driver ID
+// Note: sprint points not modelled — race-only standings shown.
+// Reflects actual finishing order for tracked drivers.
 const RACE_RESULTS_2026: { [round: number]: string[] } = {
-  1: ["NOR", "HAM", "LEC", "PIA", "RUS", "ANT", "VER", "ALO"],
-  2: ["HAM", "LEC", "NOR", "PIA", "VER", "RUS", "ALO", "ANT"],
-  3: ["NOR", "PIA", "VER", "HAM", "LEC", "RUS", "ANT", "ALO"],
-  4: ["VER", "NOR", "HAM", "LEC", "PIA", "RUS", "ALO", "ANT"],
-  5: ["NOR", "VER", "LEC", "HAM", "PIA", "RUS", "ANT", "ALO"],
-  6: ["VER", "HAM", "PIA", "NOR", "LEC", "RUS", "ALO", "ANT"],
-  7: ["HAM", "LEC", "NOR", "RUS", "VER", "PIA", "ANT", "ALO"],
-  8: ["NOR", "VER", "HAM", "PIA", "LEC", "RUS", "ALO", "ANT"],
+  1: ["RUS", "ANT", "LEC", "HAM", "NOR", "VER", "HAD", "PIA"],
+  2: ["ANT", "RUS", "HAM", "LEC", "NOR", "PIA", "HAD", "VER"],
+  3: ["ANT", "PIA", "LEC", "RUS", "NOR", "HAM", "VER", "HAD"],
+  4: ["ANT", "NOR", "PIA", "RUS", "LEC", "VER", "HAM", "HAD"],
+  5: ["ANT", "HAM", "VER", "LEC", "HAD", "NOR", "PIA", "RUS"],
 };
 
 const POINTS_MAP = [25, 18, 15, 12, 10, 8, 6, 4];
@@ -154,55 +125,55 @@ export const STANDINGS_BY_RACE_2026: StandingsEntry[][] = buildStandings2026();
 
 export const NARRATIVE_COLORS_2026: Record<Race2026["narrativePhase"], string> = {
   reset:       "#8B6914",
-  surge:       "#4A7C59",
+  surge:       "#27F4D2",
   challenge:   "#7055A8",
   fight:       "#8B455A",
   momentum:    "#3671C6",
   revelation:  "#C96A36",
 };
 
-// ─── Engine Regulation Comparison Data ────────────────────────────────────────
+// Engine Regulation Comparison — 2025 vs 2026
 export const ENGINE_CHANGES = {
   title: "The 2026 Power Unit Revolution",
-  subtitle: "Biggest regulation change since 2014 turbo hybrid era",
+  subtitle: "Biggest regulation change since the 2014 turbo-hybrid era",
   changes: [
     {
       category: "Power Split",
       icon: "⚡",
       v2025: { label: "80% ICE / 20% Electric", value: 80, color: "#CC5533", detail: "~600kW ICE + ~150kW ERS = ~750kW total" },
-      v2026: { label: "50% ICE / 50% Electric", value: 50, color: "#3671C6", detail: "~400kW ICE + ~400kW electric = ~800kW total" },
+      v2026: { label: "50% ICE / 50% Electric", value: 50, color: "#27F4D2", detail: "~400kW ICE + ~400kW electric = ~800kW total" },
     },
     {
       category: "Top Speed",
       icon: "🚀",
       v2025: { label: "avg ~336 km/h", value: 336, color: "#CC5533", detail: "Peak: 364 km/h at Monza (Verstappen)" },
-      v2026: { label: "avg ~341 km/h", value: 341, color: "#3671C6", detail: "Peak: 357 km/h at Jeddah (+X-Mode)" },
+      v2026: { label: "avg ~326 km/h", value: 326, color: "#27F4D2", detail: "Peak: 334 km/h at Montreal (Hamilton) — heavier cars, active aero trade-off" },
     },
     {
       category: "Fastest Lap delta",
       icon: "⏱️",
       v2025: { label: "Baseline", value: 0, color: "#CC5533", detail: "2025 season lap records" },
-      v2026: { label: "~1.1s quicker", value: 1.1, color: "#3671C6", detail: "Average improvement across comparable circuits" },
+      v2026: { label: "~0.9s quicker", value: 0.9, color: "#27F4D2", detail: "Average improvement across comparable circuits (Suzuka, Shanghai)" },
     },
     {
       category: "Aerodynamics",
       icon: "✈️",
-      v2025: { label: "Fixed DRS (80mm gap)", value: 0, color: "#CC5533", detail: "Push-button DRS on designated zones" },
-      v2026: { label: "Active X-Mode aero", value: 1, color: "#3671C6", detail: "Full-body active aero - front + rear morph for straights" },
+      v2025: { label: "Fixed DRS (80mm gap)", value: 0, color: "#CC5533", detail: "Push-button DRS on designated zones only" },
+      v2026: { label: "Active X-Mode aero", value: 1, color: "#27F4D2", detail: "Full-body active aero — front + rear morph continuously for straights vs corners" },
     },
     {
       category: "MGU-H",
       icon: "🔄",
-      v2025: { label: "Banned (2014–2025)", value: 0, color: "#CC5533", detail: "Removed from PU regs due to cost & complexity" },
-      v2026: { label: "Reintroduced (standardised)", value: 1, color: "#3671C6", detail: "FIA spec MGU-H, energy recovery from exhaust gases" },
+      v2025: { label: "Banned (2014-2025)", value: 0, color: "#CC5533", detail: "Removed from PU regs due to cost and complexity" },
+      v2026: { label: "Reintroduced (standardised)", value: 1, color: "#27F4D2", detail: "FIA-spec MGU-H — Mercedes' 2014-2021 expertise is a clear early-season advantage" },
     },
   ],
   puSuppliers: [
-    { team: "Red Bull", v2025: "Honda/RBPT", v2026: "Ford/RBPT", change: "new", note: "New Ford partnership, PU struggled R1-R3" },
-    { team: "Ferrari",  v2025: "Ferrari",    v2026: "Ferrari",   change: "upgraded", note: "MGU-H expertise gave early edge" },
-    { team: "McLaren",  v2025: "Mercedes",   v2026: "Mercedes",  change: "same",    note: "Best integrated X-Mode package at season start" },
-    { team: "Mercedes", v2025: "Mercedes",   v2026: "Mercedes",  change: "same",    note: "Reliable but car lacks Ferrari/McLaren downforce" },
-    { team: "Aston Martin", v2025: "Mercedes", v2026: "Honda",   change: "new",    note: "Newey design + Honda PU - mid-season dark horse" },
-    { team: "Sauber/Audi",  v2025: "Ferrari",  v2026: "Audi",    change: "new",    note: "Full manufacturer entry, maiden season" },
+    { team: "Red Bull",      v2025: "Honda/RBPT", v2026: "Ford/RBPT", change: "new",      note: "Ford partnership struggling — peak power deficit through R1-R5; VER first podium only in R5" },
+    { team: "Ferrari",       v2025: "Ferrari",    v2026: "Ferrari",   change: "upgraded", note: "Competitive MGU-H integration; Hamilton and Leclerc both on the podium in early rounds" },
+    { team: "McLaren",       v2025: "Mercedes",   v2026: "Mercedes",  change: "same",     note: "Mercedes customer PU; Norris P2 in Miami shows second-best pace behind the works team" },
+    { team: "Mercedes",      v2025: "Mercedes",   v2026: "Mercedes",  change: "same",     note: "Clear class of the field — Antonelli wins 4 of 5 races, RUS leads constructors before Canada DNF" },
+    { team: "Aston Martin",  v2025: "Mercedes",   v2026: "Honda",     change: "new",      note: "Newey-designed chassis plus returning Honda PU — tipped as a second-half dark horse" },
+    { team: "Sauber / Audi", v2025: "Ferrari",    v2026: "Audi",      change: "new",      note: "Full Audi works entry in its maiden season; building toward competitiveness over the year" },
   ],
 };

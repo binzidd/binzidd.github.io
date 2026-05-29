@@ -66,7 +66,7 @@ function TermCol({ terms, dur, delay }: ColDef) {
       >
         {looped.map((term, i) => {
           // Three brightness levels create a visual rhythm / heartbeat
-          const alpha = i % 5 === 0 ? 0.22 : i % 3 === 0 ? 0.15 : 0.09;
+          const alpha = i % 5 === 0 ? 0.10 : i % 3 === 0 ? 0.06 : 0.03;
           return (
             <div
               key={i}

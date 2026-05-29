@@ -497,7 +497,7 @@ export default function F1BarChartRace() {
           </span>
         </div>
         <h3 className="text-xl font-light mb-4" style={{ color: "#F8F5F0", fontFamily: "var(--font-cormorant), serif" }}>
-          {activeTab === "2025" ? "The Verstappen Comeback" : activeTab === "2026" ? "The 2026 Reset - New Era" : "2025 vs 2026 - Regulation Shift"}
+          {activeTab === "2025" ? "The Verstappen Comeback" : activeTab === "2026" ? "The Antonelli Era Begins" : "2025 vs 2026 - Regulation Shift"}
         </h3>
 
         {/* Tabs */}
@@ -542,8 +542,8 @@ export default function F1BarChartRace() {
               races={RACES_2026}
               standings={STANDINGS_BY_RACE_2026}
               narrativeColors={NARRATIVE_COLORS_2026}
-              highlightDriverId="NOR"
-              accentColor="#C96A36"
+              highlightDriverId="ANT"
+              accentColor="#27F4D2"
             />
           </motion.div>
         )}
@@ -558,7 +558,7 @@ export default function F1BarChartRace() {
       <div className="px-5 py-3" style={{ borderTop: "1px solid #1E1A17" }}>
         <p className="text-[9px]" style={{ color: "#3C3530", fontFamily: "var(--font-inter), sans-serif" }}>
           {activeTab === "2026"
-            ? "* 2026 season data is illustrative - reflecting the regulation reset, new PU suppliers, and driver moves. Season in progress."
+            ? "* 2026 data current to Round 5 (Canada, May 24). Sprint points not modelled — race-only standings shown. Next race: Monaco, June 5-7."
             : "* Data reflects race wins, DNFs, standings progression, fastest laps, and top speeds per round."}
         </p>
       </div>
