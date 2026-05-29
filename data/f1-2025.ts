@@ -18,6 +18,9 @@ export interface RaceMeta {
   narrative: string;
   narrativePhase: "struggle" | "finding" | "climbing" | "pressure" | "fight" | "comeback";
   maxMoment?: string;
+  winner: string;
+  fastestLap: { driverId: string; time: string };
+  topSpeed: { driverId: string; kmh: number };
 }
 
 export interface StandingsEntry {
@@ -39,22 +42,22 @@ export const DRIVERS: DriverMeta[] = [
 
 // ─── Race Metadata ─────────────────────────────────────────────────────────────
 export const RACES: RaceMeta[] = [
-  { round: 1,  name: "Australia",    flag: "🇦🇺", date: "Mar 16",  circuit: "Melbourne",        narrative: "McLarens light up Melbourne. Max drops to P5 — Red Bull visibly off the pace.", narrativePhase: "struggle",  maxMoment: "P5 — Struggling" },
-  { round: 2,  name: "China",        flag: "🇨🇳", date: "Mar 23",  circuit: "Shanghai",         narrative: "Norris leads the championship. Max still adrift — P5 again in China.", narrativePhase: "struggle",  maxMoment: "P5 — Out of sorts" },
-  { round: 3,  name: "Japan",        flag: "🇯🇵", date: "Apr 6",   circuit: "Suzuka",           narrative: "Suzuka magic. Max WINS in dominant fashion — the old Max is back.", narrativePhase: "finding",   maxMoment: "🏆 WIN — First blood" },
-  { round: 4,  name: "Bahrain",      flag: "🇧🇭", date: "Apr 13",  circuit: "Sakhir",           narrative: "P4 in Bahrain. Max climbs to P3 in the standings but McLarens still 25+ points clear.", narrativePhase: "finding",   maxMoment: "P4 — Climbing" },
-  { round: 5,  name: "Saudi Arabia", flag: "🇸🇦", date: "Apr 20",  circuit: "Jeddah",           narrative: "Piastri wins; Max holds P3 in the standings. The gap stubbornly refuses to close.", narrativePhase: "finding",   maxMoment: "P5 — Grinding" },
-  { round: 6,  name: "Miami",        flag: "🇺🇸", date: "May 4",   circuit: "Miami",            narrative: "Max WINS Miami! Charging from 3rd to 1st in the closing laps. P3 → P2 in standings.", narrativePhase: "climbing",  maxMoment: "🏆 WIN — Clawing back" },
-  { round: 7,  name: "Imola",        flag: "🇮🇹", date: "May 18",  circuit: "Imola",            narrative: "Consecutive wins at Imola — Max now tied with Piastri for P2 in the championship.", narrativePhase: "climbing",  maxMoment: "🏆 WIN — Momentum" },
-  { round: 8,  name: "Monaco",       flag: "🇲🇨", date: "May 25",  circuit: "Monte Carlo",      narrative: "Leclerc's home win. Max misses out (P5) as Ferrari shines on the streets.", narrativePhase: "climbing",  maxMoment: "P5 — Setback" },
-  { round: 9,  name: "Spain",        flag: "🇪🇸", date: "Jun 1",   circuit: "Barcelona",        narrative: "Max WINS Spain — now only 12 points behind Norris. The hunt is on.", narrativePhase: "pressure",  maxMoment: "🏆 WIN — Gap closing" },
-  { round: 10, name: "Canada",       flag: "🇨🇦", date: "Jun 15",  circuit: "Montréal",         narrative: "Norris wins Canada. Max P4 — championship gap widens slightly to 25 points.", narrativePhase: "pressure",  maxMoment: "P4 — Norris fights back" },
-  { round: 11, name: "Austria",      flag: "🇦🇹", date: "Jun 29",  circuit: "Spielberg",        narrative: "Max WINS his home race at Red Bull Ring. Now officially in the championship fight.", narrativePhase: "pressure",  maxMoment: "🏆 WIN — Red Bull home" },
-  { round: 12, name: "Britain",      flag: "🇬🇧", date: "Jul 6",   circuit: "Silverstone",      narrative: "Hamilton wins Silverstone for Ferrari — emotional scenes. Max P2, cutting the gap to 15.", narrativePhase: "fight",     maxMoment: "P2 — 15 pts behind" },
-  { round: 13, name: "Belgium",      flag: "🇧🇪", date: "Jul 27",  circuit: "Spa-Francorchamps", narrative: "Max WINS Spa to close to within 8 points of Norris. It's a championship.", narrativePhase: "fight",     maxMoment: "🏆 WIN — 8 pts behind!" },
-  { round: 14, name: "Hungary",      flag: "🇭🇺", date: "Aug 3",   circuit: "Budapest",         narrative: "Norris wins Hungary, 15 points clear again. Max refuses to yield.", narrativePhase: "fight",     maxMoment: "P2 — Norris responds" },
-  { round: 15, name: "Netherlands",  flag: "🇳🇱", date: "Aug 31",  circuit: "Zandvoort",        narrative: "Max WINS Zandvoort — the Dutch crowd erupts. 8 points behind Norris with 6 races left.", narrativePhase: "fight",     maxMoment: "🏆 WIN — Home crowd roars" },
-  { round: 16, name: "Italy",        flag: "🇮🇹", date: "Sep 7",   circuit: "Monza",            narrative: "MONZA MASTERCLASS. Max wins as Norris DNF. MAX LEADS THE CHAMPIONSHIP! The comeback is complete.", narrativePhase: "comeback",  maxMoment: "🏆 WIN — CHAMPIONSHIP LEAD!" },
+  { round: 1,  name: "Australia",    flag: "🇦🇺", date: "Mar 16",  circuit: "Melbourne",          winner: "PIA", fastestLap: { driverId: "VER", time: "1:20.874" }, topSpeed: { driverId: "NOR", kmh: 325 }, narrative: "McLarens light up Melbourne. Max drops to P5 — Red Bull visibly off the pace.",                              narrativePhase: "struggle",  maxMoment: "P5 — Struggling" },
+  { round: 2,  name: "China",        flag: "🇨🇳", date: "Mar 23",  circuit: "Shanghai",           winner: "NOR", fastestLap: { driverId: "NOR", time: "1:32.567" }, topSpeed: { driverId: "VER", kmh: 328 }, narrative: "Norris leads the championship. Max still adrift — P5 again in China.",                                     narrativePhase: "struggle",  maxMoment: "P5 — Out of sorts" },
+  { round: 3,  name: "Japan",        flag: "🇯🇵", date: "Apr 6",   circuit: "Suzuka",             winner: "VER", fastestLap: { driverId: "VER", time: "1:28.302" }, topSpeed: { driverId: "VER", kmh: 322 }, narrative: "Suzuka magic. Max WINS in dominant fashion — the old Max is back.",                                         narrativePhase: "finding",   maxMoment: "🏆 WIN — First blood" },
+  { round: 4,  name: "Bahrain",      flag: "🇧🇭", date: "Apr 13",  circuit: "Sakhir",             winner: "NOR", fastestLap: { driverId: "NOR", time: "1:33.156" }, topSpeed: { driverId: "NOR", kmh: 343 }, narrative: "P4 in Bahrain. Max climbs to P3 in the standings but McLarens still 25+ points clear.",                     narrativePhase: "finding",   maxMoment: "P4 — Climbing" },
+  { round: 5,  name: "Saudi Arabia", flag: "🇸🇦", date: "Apr 20",  circuit: "Jeddah",             winner: "PIA", fastestLap: { driverId: "PIA", time: "1:27.642" }, topSpeed: { driverId: "VER", kmh: 347 }, narrative: "Piastri wins; Max holds P3 in the standings. The gap stubbornly refuses to close.",                         narrativePhase: "finding",   maxMoment: "P5 — Grinding" },
+  { round: 6,  name: "Miami",        flag: "🇺🇸", date: "May 4",   circuit: "Miami",              winner: "VER", fastestLap: { driverId: "VER", time: "1:29.698" }, topSpeed: { driverId: "VER", kmh: 330 }, narrative: "Max WINS Miami! Charging from 3rd to 1st in the closing laps. P3 → P2 in standings.",                      narrativePhase: "climbing",  maxMoment: "🏆 WIN — Clawing back" },
+  { round: 7,  name: "Imola",        flag: "🇮🇹", date: "May 18",  circuit: "Imola",              winner: "VER", fastestLap: { driverId: "VER", time: "1:15.431" }, topSpeed: { driverId: "NOR", kmh: 324 }, narrative: "Consecutive wins at Imola — Max now tied with Piastri for P2 in the championship.",                          narrativePhase: "climbing",  maxMoment: "🏆 WIN — Momentum" },
+  { round: 8,  name: "Monaco",       flag: "🇲🇨", date: "May 25",  circuit: "Monte Carlo",        winner: "LEC", fastestLap: { driverId: "LEC", time: "1:11.387" }, topSpeed: { driverId: "LEC", kmh: 288 }, narrative: "Leclerc's home win. Max misses out (P5) as Ferrari shines on the streets.",                                 narrativePhase: "climbing",  maxMoment: "P5 — Setback" },
+  { round: 9,  name: "Spain",        flag: "🇪🇸", date: "Jun 1",   circuit: "Barcelona",          winner: "VER", fastestLap: { driverId: "VER", time: "1:16.283" }, topSpeed: { driverId: "VER", kmh: 327 }, narrative: "Max WINS Spain — now only 12 points behind Norris. The hunt is on.",                                       narrativePhase: "pressure",  maxMoment: "🏆 WIN — Gap closing" },
+  { round: 10, name: "Canada",       flag: "🇨🇦", date: "Jun 15",  circuit: "Montréal",           winner: "NOR", fastestLap: { driverId: "NOR", time: "1:13.756" }, topSpeed: { driverId: "NOR", kmh: 330 }, narrative: "Norris wins Canada. Max P4 — championship gap widens slightly to 25 points.",                              narrativePhase: "pressure",  maxMoment: "P4 — Norris fights back" },
+  { round: 11, name: "Austria",      flag: "🇦🇹", date: "Jun 29",  circuit: "Spielberg",          winner: "VER", fastestLap: { driverId: "VER", time: "1:05.294" }, topSpeed: { driverId: "VER", kmh: 332 }, narrative: "Max WINS his home race at Red Bull Ring. Now officially in the championship fight.",                         narrativePhase: "pressure",  maxMoment: "🏆 WIN — Red Bull home" },
+  { round: 12, name: "Britain",      flag: "🇬🇧", date: "Jul 6",   circuit: "Silverstone",        winner: "HAM", fastestLap: { driverId: "HAM", time: "1:27.097" }, topSpeed: { driverId: "VER", kmh: 322 }, narrative: "Hamilton wins Silverstone for Ferrari — emotional scenes. Max P2, cutting the gap to 15.",                  narrativePhase: "fight",     maxMoment: "P2 — 15 pts behind" },
+  { round: 13, name: "Belgium",      flag: "🇧🇪", date: "Jul 27",  circuit: "Spa-Francorchamps",  winner: "VER", fastestLap: { driverId: "VER", time: "1:46.023" }, topSpeed: { driverId: "VER", kmh: 342 }, narrative: "Max WINS Spa to close to within 8 points of Norris. It's a championship.",                                  narrativePhase: "fight",     maxMoment: "🏆 WIN — 8 pts behind!" },
+  { round: 14, name: "Hungary",      flag: "🇭🇺", date: "Aug 3",   circuit: "Budapest",           winner: "NOR", fastestLap: { driverId: "NOR", time: "1:17.445" }, topSpeed: { driverId: "NOR", kmh: 320 }, narrative: "Norris wins Hungary, 15 points clear again. Max refuses to yield.",                                         narrativePhase: "fight",     maxMoment: "P2 — Norris responds" },
+  { round: 15, name: "Netherlands",  flag: "🇳🇱", date: "Aug 31",  circuit: "Zandvoort",          winner: "VER", fastestLap: { driverId: "VER", time: "1:11.097" }, topSpeed: { driverId: "VER", kmh: 312 }, narrative: "Max WINS Zandvoort — the Dutch crowd erupts. 8 points behind Norris with 6 races left.",                    narrativePhase: "fight",     maxMoment: "🏆 WIN — Home crowd roars" },
+  { round: 16, name: "Italy",        flag: "🇮🇹", date: "Sep 7",   circuit: "Monza",              winner: "VER", fastestLap: { driverId: "VER", time: "1:21.490" }, topSpeed: { driverId: "VER", kmh: 362 }, narrative: "MONZA MASTERCLASS. Max wins as Norris DNF. MAX LEADS THE CHAMPIONSHIP! The comeback is complete.",           narrativePhase: "comeback",  maxMoment: "🏆 WIN — CHAMPIONSHIP LEAD!" },
 ];
 
 // Race results: [P1, P2, P3, P4, P5, P6, P7, P8] by driver ID
@@ -74,22 +77,20 @@ const RACE_RESULTS: { [round: number]: string[] } = {
   13: ["VER", "NOR", "PIA", "LEC", "HAM", "RUS", "ANT", "SAI"],
   14: ["NOR", "VER", "PIA", "HAM", "LEC", "RUS", "SAI", "ANT"],
   15: ["VER", "NOR", "RUS", "PIA", "LEC", "HAM", "ANT", "SAI"],
-  16: ["VER", "PIA", "LEC", "RUS", "HAM", "ANT", "SAI", "NOR"], // NOR DNF = 0 pts
+  16: ["VER", "PIA", "LEC", "RUS", "HAM", "ANT", "SAI", "NOR"],
 };
 
 const POINTS_MAP = [25, 18, 15, 12, 10, 8, 6, 4];
 
-// Build cumulative standings for each race
 function buildStandings(): StandingsEntry[][] {
   const cumulative: Record<string, number> = {};
   DRIVERS.forEach((d) => { cumulative[d.id] = 0; });
 
   return RACES.map((race) => {
     const results = RACE_RESULTS[race.round];
-    // NOR DNF in R16
     if (race.round === 16) {
       results.forEach((driverId, idx) => {
-        if (driverId === "NOR") return; // DNF, no points
+        if (driverId === "NOR") return;
         cumulative[driverId] = (cumulative[driverId] ?? 0) + (POINTS_MAP[idx] ?? 0);
       });
     } else {
