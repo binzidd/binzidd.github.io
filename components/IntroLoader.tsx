@@ -1,479 +1,381 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// ── Star ──────────────────────────────────────────────────────────────────────
-interface Star {
-  x: number; y: number;
-  vx: number; vy: number;
-  size: number;
-  brightness: number;
-  twinkle: number;   // current phase
-  twinkleSpd: number;
-}
+// ── Boot sequence lines ────────────────────────────────────────────────────────
+const BOOT_LINES = [
+  { text: "BIOS v9.0.0  —  BINAY SIDDHARTH PORTFOLIO", bright: true,  delay: 0    },
+  { text: "RAM check: 9 yrs analytics ... OK",          bright: false, delay: 200  },
+  { text: "Loading kernel modules:",                     bright: false, delay: 390  },
+  { text: "  [  OK  ] data_analytics.core",             bright: false, delay: 530  },
+  { text: "  [  OK  ] people_leadership.mod (5+ yrs)",  bright: false, delay: 650  },
+  { text: "  [  OK  ] genai_engineering.mod (200+ usr)",bright: false, delay: 770  },
+  { text: "  [  OK  ] aws_certs.mod (×3 certified)",    bright: false, delay: 890  },
+  { text: "  [  OK  ] hci_design.mod",                  bright: false, delay: 990  },
+  { text: "Mounting filesystems ... done",              bright: false, delay: 1120 },
+  { text: "Network: Sydney, AU  //  data & GenAI",      bright: false, delay: 1280 },
+  { text: "System ready.",                              bright: true,  delay: 1460 },
+] as const;
 
-function mkStar(W: number, H: number): Star {
-  return {
-    x: Math.random() * W,
-    y: Math.random() * H,
-    vx: (Math.random() - 0.5) * 0.16,
-    vy: (Math.random() - 0.5) * 0.16,
-    size: Math.random() * 1.7 + 0.4,
-    brightness: Math.random() * 0.65 + 0.25,
-    twinkle: Math.random() * Math.PI * 2,
-    twinkleSpd: Math.random() * 0.018 + 0.006,
-  };
+const BOOT_TOTAL_MS = 1800;
+
+// ASCII progress bar
+function progressBar(pct: number): string {
+  const W = 24;
+  const filled = Math.round(pct * W);
+  return "[" + "█".repeat(filled) + "░".repeat(W - filled) + "]  " + Math.round(pct * 100) + "%";
 }
 
 // ── Steps ─────────────────────────────────────────────────────────────────────
-type Step = "welcome" | "name" | "feedback" | "thanks";
+type Step = "boot" | "name" | "feedback" | "thanks";
 
-const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const CRUMBS: { key: Step; label: string }[] = [
+  { key: "boot",     label: "Init"     },
+  { key: "name",     label: "Identify" },
+  { key: "feedback", label: "Feedback" },
+  { key: "thanks",   label: "Launch"   },
+];
 
-const CRUMBS = [
-  { key: "welcome",  label: "Welcome"   },
-  { key: "name",     label: "Your Name" },
-  { key: "feedback", label: "Feedback"  },
-  { key: "thanks",   label: "Explore"   },
-] as const;
+const STEP_ORDER: Step[] = ["boot", "name", "feedback", "thanks"];
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function IntroLoader() {
-  const canvasRef  = useRef<HTMLCanvasElement>(null);
-  const mouseRef   = useRef({ x: -999, y: -999 });
+  const [mounted,    setMounted]    = useState(false);
+  const [visible,    setVisible]    = useState(true);
+  const [step,       setStep]       = useState<Step>("boot");
+  const [bootLines,  setBootLines]  = useState<number>(0);   // how many lines shown
+  const [progress,   setProgress]   = useState(0);           // 0–1
+  const [nameVal,    setNameVal]    = useState("");
+  const [fbVal,      setFbVal]      = useState("");
+  const [vName,      setVName]      = useState("");
+  const [exiting,    setExiting]    = useState(false);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const fbRef   = useRef<HTMLTextAreaElement>(null);
 
-  const [step,    setStep]    = useState<Step>("welcome");
-  const [nameVal, setNameVal] = useState("");
-  const [fbVal,   setFbVal]   = useState("");
-  const [vName,   setVName]   = useState("");    // confirmed visitor name
-  const [exiting, setExiting] = useState(false);
-  const [gone,    setGone]    = useState(false);
-
-  // ── Once per session ─────────────────────────────────────────────────────────
+  // ── Session gate ──────────────────────────────────────────────────────────
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (sessionStorage.getItem("introShown")) { setGone(true); return; }
-    sessionStorage.setItem("introShown", "1");
-    const t = setTimeout(() => setStep("name"), 1900);
-    return () => clearTimeout(t);
+    if (sessionStorage.getItem("introShown")) {
+      setVisible(false);
+    } else {
+      setMounted(true);
+    }
   }, []);
 
-  // ── Constellation canvas ──────────────────────────────────────────────────────
+  // ── Boot sequence: reveal lines + progress bar ─────────────────────────────
   useEffect(() => {
-    if (gone) return;
-    const c = canvasRef.current;
-    if (!c) return;
+    if (!mounted || step !== "boot") return;
 
-    const onResize = () => { c.width = window.innerWidth; c.height = window.innerHeight; };
-    onResize();
-    window.addEventListener("resize", onResize);
-
-    const ctx = c.getContext("2d")!;
-    const stars: Star[] = Array.from({ length: 100 }, () => mkStar(c.width, c.height));
-
-    const onMouse = (e: MouseEvent) => { mouseRef.current = { x: e.clientX, y: e.clientY }; };
-    window.addEventListener("mousemove", onMouse);
-
+    // Progress interpolation
+    const start = performance.now();
     let raf: number;
-    const CONNECT = 145;
-
-    const tick = () => {
-      const { width: W, height: H } = c;
-      ctx.clearRect(0, 0, W, H);
-
-      // Background
-      ctx.fillStyle = "#000500";
-      ctx.fillRect(0, 0, W, H);
-
-      const { x: mx, y: my } = mouseRef.current;
-
-      // Update + mouse repulsion
-      stars.forEach((s) => {
-        s.twinkle += s.twinkleSpd;
-        s.x += s.vx;
-        s.y += s.vy;
-        if (s.x < 0 || s.x > W) s.vx *= -1;
-        if (s.y < 0 || s.y > H) s.vy *= -1;
-
-        const dx = s.x - mx, dy = s.y - my;
-        const d = Math.sqrt(dx * dx + dy * dy);
-        if (d < 110 && d > 0) {
-          const f = ((110 - d) / 110) * 0.22;
-          s.x += (dx / d) * f;
-          s.y += (dy / d) * f;
-        }
-      });
-
-      // Connections
-      for (let i = 0; i < stars.length; i++) {
-        for (let j = i + 1; j < stars.length; j++) {
-          const dx = stars[i].x - stars[j].x;
-          const dy = stars[i].y - stars[j].y;
-          const d  = Math.sqrt(dx * dx + dy * dy);
-          if (d < CONNECT) {
-            const a = (1 - d / CONNECT) * 0.20;
-            ctx.beginPath();
-            ctx.moveTo(stars[i].x, stars[i].y);
-            ctx.lineTo(stars[j].x, stars[j].y);
-            ctx.strokeStyle = `rgba(80,210,120,${a})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      }
-
-      // Stars
-      stars.forEach((s) => {
-        const tw = 0.65 + 0.35 * Math.sin(s.twinkle);
-        const a  = s.brightness * tw;
-
-        // Halo
-        const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.size * 5);
-        g.addColorStop(0, `rgba(160,255,190,${a * 0.45})`);
-        g.addColorStop(1, "rgba(160,255,190,0)");
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size * 5, 0, Math.PI * 2);
-        ctx.fillStyle = g;
-        ctx.fill();
-
-        // Core
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(215,255,225,${a})`;
-        ctx.fill();
-      });
-
-      raf = requestAnimationFrame(tick);
+    const tick = (now: number) => {
+      const pct = Math.min((now - start) / BOOT_TOTAL_MS, 1);
+      setProgress(pct);
+      if (pct < 1) raf = requestAnimationFrame(tick);
     };
-
     raf = requestAnimationFrame(tick);
+
+    // Line reveals
+    const timers = BOOT_LINES.map((_, i) =>
+      setTimeout(() => setBootLines((n) => Math.max(n, i + 1)), BOOT_LINES[i].delay)
+    );
+
+    // Advance to name step after boot completes
+    const advance = setTimeout(() => setStep("name"), BOOT_TOTAL_MS + 220);
+
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("mousemove", onMouse);
+      timers.forEach(clearTimeout);
+      clearTimeout(advance);
     };
-  }, [gone]);
+  }, [mounted, step]);
 
-  // ── Handlers ──────────────────────────────────────────────────────────────────
-  const submitName = () => {
-    const n = nameVal.trim();
-    if (!n) return;
-    setVName(n);
-    setStep("feedback");
-  };
+  // Focus inputs on step change
+  useEffect(() => {
+    if (step === "name")     setTimeout(() => nameRef.current?.focus(), 60);
+    if (step === "feedback") setTimeout(() => fbRef.current?.focus(), 60);
+  }, [step]);
 
-  const submitFeedback = () => {
-    if (typeof window !== "undefined") {
-      const entry = { name: vName, feedback: fbVal.trim(), at: new Date().toISOString() };
+  // ── Exit ──────────────────────────────────────────────────────────────────
+  const exit = useCallback(() => {
+    sessionStorage.setItem("introShown", "1");
+    setExiting(true);
+    setTimeout(() => setVisible(false), 700);
+  }, []);
+
+  // ── Feedback submit ────────────────────────────────────────────────────────
+  const submitFeedback = useCallback(() => {
+    if (fbVal.trim()) {
       try {
         const prev = JSON.parse(localStorage.getItem("portfolio_feedback") ?? "[]");
-        localStorage.setItem("portfolio_feedback", JSON.stringify([...prev, entry]));
-      } catch { /* ignore */ }
+        prev.push({ name: vName || "Anonymous", feedback: fbVal.trim(), ts: Date.now() });
+        localStorage.setItem("portfolio_feedback", JSON.stringify(prev));
+      } catch {/* ignore */}
     }
     setStep("thanks");
-    setTimeout(() => setExiting(true), 1600);
-    setTimeout(() => setGone(true), 2400);
-  };
+    setTimeout(exit, 1600);
+  }, [fbVal, vName, exit]);
 
-  const skip = () => {
-    setExiting(true);
-    setTimeout(() => setGone(true), 800);
-  };
+  const skipFeedback = useCallback(() => {
+    setStep("thanks");
+    setTimeout(exit, 1600);
+  }, [exit]);
 
-  if (gone) return null;
+  if (!visible) return null;
 
-  const crumbIdx = CRUMBS.findIndex((c) => c.key === step);
-
-  const card = {
-    background: "rgba(0,5,0,0.84)",
-    border: "1px solid rgba(0,255,65,0.14)",
-    backdropFilter: "blur(22px)",
-    boxShadow: "0 0 80px rgba(0,255,65,0.05), 0 24px 60px rgba(0,0,0,0.65)",
-  } as const;
-
-  const inputBase = {
-    color: "#00FF41",
-    fontFamily: "var(--font-mono), monospace",
-    caretColor: "#00FF41",
-    background: "transparent",
-    outline: "none",
-    width: "100%",
-  } as const;
+  const crumbIndex = STEP_ORDER.indexOf(step);
 
   return (
-    <motion.div
-      className="fixed inset-0 z-[300] flex flex-col"
-      style={{ background: "#000500" }}
-      animate={{ opacity: exiting ? 0 : 1 }}
-      transition={{ duration: 0.8 }}
-    >
-      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
+    <AnimatePresence>
+      {!exiting && (
+        <motion.div
+          key="intro"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.7 }}
+          className="fixed inset-0 z-[300] flex flex-col"
+          style={{ background: "#000500", fontFamily: "var(--font-mono), monospace" }}
+        >
+          {/* Scanline overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.015) 2px, rgba(0,255,65,0.015) 4px)",
+              zIndex: 1,
+            }}
+          />
 
-      {/* ── Breadcrumb ──────────────────────────────────────────────────────── */}
-      <div className="relative z-10 flex items-center gap-1.5 px-6 pt-7 md:px-10">
-        {CRUMBS.map((c, i) => (
-          <div key={c.key} className="flex items-center gap-1.5">
-            <span
-              className="text-[9px] tracking-[0.18em] uppercase transition-all duration-500"
-              style={{
-                fontFamily: "var(--font-mono), monospace",
-                color:
-                  i === crumbIdx
-                    ? "#00FF41"
-                    : i < crumbIdx
-                    ? "rgba(0,255,65,0.38)"
-                    : "rgba(0,255,65,0.14)",
-              }}
-            >
-              {c.label}
+          {/* Top bar — breadcrumb */}
+          <div
+            className="relative z-10 flex items-center gap-0 px-6 py-3"
+            style={{ borderBottom: "1px solid #001a00" }}
+          >
+            <span className="text-[10px]" style={{ color: "#003300", marginRight: 12 }}>
+              binay@portfolio:~$
             </span>
-            {i < CRUMBS.length - 1 && (
-              <span
-                style={{
-                  color:
-                    i < crumbIdx
-                      ? "rgba(0,255,65,0.3)"
-                      : "rgba(0,255,65,0.1)",
-                  fontSize: 9,
-                  fontFamily: "var(--font-mono), monospace",
-                }}
-              >
-                /
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* ── Content ─────────────────────────────────────────────────────────── */}
-      <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-10">
-        <AnimatePresence mode="wait">
-
-          {/* WELCOME */}
-          {step === "welcome" && (
-            <motion.div
-              key="welcome"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 1.0, ease: EASE }}
-              className="text-center select-none pointer-events-none"
-            >
-              <p
-                className="text-[9px] tracking-[0.44em] uppercase mb-8"
-                style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}
-              >
-                // portfolio
-              </p>
-              <h1
-                className="font-light leading-[0.92]"
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "clamp(3.5rem, 13vw, 9.5rem)",
-                  color: "#E6EDF3",
-                  letterSpacing: "0.16em",
-                  textShadow:
-                    "0 0 60px rgba(0,255,65,0.20), 0 0 120px rgba(0,255,65,0.07)",
-                }}
-              >
-                BINAY
-                <br />
-                SIDDHARTH
-              </h1>
-              <p
-                className="mt-7 text-[10px] tracking-[0.26em] uppercase"
-                style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}
-              >
-                Data &amp; GenAI &nbsp;·&nbsp; Sydney
-              </p>
-            </motion.div>
-          )}
-
-          {/* NAME */}
-          {step === "name" && (
-            <motion.div
-              key="name"
-              initial={{ opacity: 0, y: 32 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.65, ease: EASE }}
-              className="w-full max-w-sm"
-            >
-              <div className="rounded-2xl px-8 py-8" style={card}>
-                <p
-                  className="text-[9px] tracking-[0.25em] uppercase mb-3"
-                  style={{ color: "#004400", fontFamily: "var(--font-mono), monospace" }}
-                >
-                  // init_session
-                </p>
-                <h2
-                  className="text-3xl md:text-4xl font-light mb-2 leading-tight"
-                  style={{
-                    color: "#E6EDF3",
-                    fontFamily: "var(--font-cormorant), serif",
-                    letterSpacing: "0.04em",
-                  }}
-                >
-                  Who are you?
-                </h2>
-                <p
-                  className="text-[11px] mb-7"
-                  style={{ color: "rgba(0,255,65,0.35)", fontFamily: "var(--font-mono), monospace" }}
-                >
-                  Enter your name to continue.
-                </p>
-
-                <input
-                  autoFocus
-                  value={nameVal}
-                  onChange={(e) => setNameVal(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && submitName()}
-                  placeholder="your_name"
-                  className="text-sm pb-2 mb-7"
-                  style={{
-                    ...inputBase,
-                    borderBottom: "1px solid rgba(0,255,65,0.22)",
-                    fontSize: "0.875rem",
-                  }}
-                />
-
-                <div className="flex items-center justify-between">
-                  <button
-                    onClick={submitName}
-                    disabled={!nameVal.trim()}
-                    className="px-6 py-2.5 rounded-full text-xs transition-all duration-200"
+            {CRUMBS.map((c, i) => {
+              const active = i === crumbIndex;
+              const past   = i < crumbIndex;
+              return (
+                <span key={c.key} className="flex items-center">
+                  {i > 0 && (
+                    <span className="mx-2 text-[10px]" style={{ color: "#002200" }}>/</span>
+                  )}
+                  <span
+                    className="text-[10px] tracking-widest uppercase"
                     style={{
-                      background: nameVal.trim() ? "#00FF41" : "rgba(0,255,65,0.08)",
-                      color: nameVal.trim() ? "#000500" : "rgba(0,255,65,0.25)",
-                      fontFamily: "var(--font-mono), monospace",
-                      fontWeight: 500,
+                      color: active ? "#00FF41" : past ? "#004400" : "#002200",
+                      fontWeight: active ? 600 : 400,
                     }}
                   >
-                    continue →
+                    {c.label}
+                  </span>
+                </span>
+              );
+            })}
+          </div>
+
+          {/* Terminal body */}
+          <div className="relative z-10 flex-1 flex flex-col justify-center px-6 md:px-16 max-w-3xl w-full mx-auto py-8">
+
+            {/* ── BOOT ── */}
+            {step === "boot" && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+                {/* ASCII header */}
+                <div className="mb-6 hidden md:block">
+                  <pre className="text-[11px] leading-tight select-none" style={{ color: "#00FF41" }}>{`
+ ██████╗ ██╗███╗   ██╗ █████╗ ██╗   ██╗
+ ██╔══██╗██║████╗  ██║██╔══██╗╚██╗ ██╔╝
+ ██████╔╝██║██╔██╗ ██║███████║ ╚████╔╝
+ ██╔══██╗██║██║╚██╗██║██╔══██║  ╚██╔╝
+ ██████╔╝██║██║ ╚████║██║  ██║   ██║
+ ╚═════╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝   ╚═╝  `}</pre>
+                </div>
+                {/* Mobile name */}
+                <div className="mb-6 md:hidden">
+                  <p className="text-2xl font-semibold tracking-widest" style={{ color: "#00FF41" }}>
+                    BINAY SIDDHARTH
+                  </p>
+                </div>
+
+                {/* Boot lines */}
+                <div className="space-y-0.5">
+                  {BOOT_LINES.slice(0, bootLines).map((line, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.18 }}
+                      className="text-[12px] leading-6 whitespace-pre"
+                      style={{ color: line.bright ? "#00FF41" : "#006600" }}
+                    >
+                      {line.text}
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Progress bar */}
+                <div className="mt-5 text-[12px]" style={{ color: "#008F11" }}>
+                  {progressBar(progress)}
+                </div>
+              </motion.div>
+            )}
+
+            {/* ── NAME ── */}
+            {step === "name" && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35 }}
+              >
+                <p className="text-[11px] mb-6" style={{ color: "#006600" }}>
+                  {"> "}<span style={{ color: "#008F11" }}>SYSTEM READY.</span> Identify yourself to continue.
+                </p>
+                <div className="mb-2 text-[12px]" style={{ color: "#00FF41" }}>
+                  &gt; WHO_ARE_YOU:
+                </div>
+                <div className="flex items-center gap-2 mb-8" style={{ borderBottom: "1px solid #003300", paddingBottom: 6 }}>
+                  <span className="text-[12px]" style={{ color: "#00FF41" }}>&gt;</span>
+                  <input
+                    ref={nameRef}
+                    value={nameVal}
+                    onChange={(e) => setNameVal(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && nameVal.trim()) {
+                        setVName(nameVal.trim());
+                        setStep("feedback");
+                      }
+                    }}
+                    placeholder="type your name..."
+                    className="flex-1 bg-transparent outline-none text-[13px] placeholder:opacity-30"
+                    style={{ color: "#00FF41", caretColor: "#00FF41" }}
+                  />
+                  <span
+                    className="inline-block w-[2px] h-4"
+                    style={{ background: "#00FF41", animation: "blink 1s step-end infinite" }}
+                  />
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => { if (nameVal.trim()) { setVName(nameVal.trim()); setStep("feedback"); } }}
+                    disabled={!nameVal.trim()}
+                    className="px-4 py-1.5 text-[11px] rounded transition-all"
+                    style={{
+                      background: nameVal.trim() ? "rgba(0,255,65,0.1)" : "transparent",
+                      border: `1px solid ${nameVal.trim() ? "rgba(0,255,65,0.4)" : "#002200"}`,
+                      color: nameVal.trim() ? "#00FF41" : "#003300",
+                    }}
+                  >
+                    ./continue
                   </button>
                   <button
-                    onClick={skip}
-                    style={{ color: "rgba(0,255,65,0.2)", fontFamily: "var(--font-mono), monospace", fontSize: "0.625rem" }}
-                    onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(0,255,65,0.45)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(0,255,65,0.2)"; }}
+                    onClick={() => { setVName(""); setStep("feedback"); }}
+                    className="px-4 py-1.5 text-[11px] rounded transition-all"
+                    style={{ background: "transparent", border: "1px solid #002200", color: "#003300" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = "#006600"; e.currentTarget.style.borderColor = "#003300"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = "#003300"; e.currentTarget.style.borderColor = "#002200"; }}
                   >
-                    skip
+                    --anonymous
                   </button>
                 </div>
-              </div>
-            </motion.div>
-          )}
+              </motion.div>
+            )}
 
-          {/* FEEDBACK */}
-          {step === "feedback" && (
-            <motion.div
-              key="feedback"
-              initial={{ opacity: 0, y: 32 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.65, ease: EASE }}
-              className="w-full max-w-sm"
-            >
-              <div className="rounded-2xl px-8 py-8" style={card}>
-                <p
-                  className="text-[9px] tracking-[0.25em] uppercase mb-3"
-                  style={{ color: "#004400", fontFamily: "var(--font-mono), monospace" }}
-                >
-                  // hello_{vName.toLowerCase().replace(/\s+/g, "_")}
+            {/* ── FEEDBACK ── */}
+            {step === "feedback" && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35 }}
+              >
+                <p className="text-[11px] mb-5" style={{ color: "#006600" }}>
+                  &gt; {vName ? <span style={{ color: "#008F11" }}>Hello, {vName}.</span> : <span style={{ color: "#008F11" }}>Hello.</span>} Leave a log entry before you explore.
                 </p>
-                <h2
-                  className="text-3xl md:text-4xl font-light mb-2 leading-tight"
-                  style={{
-                    color: "#E6EDF3",
-                    fontFamily: "var(--font-cormorant), serif",
-                    letterSpacing: "0.04em",
-                  }}
-                >
-                  Hi, {vName}!
-                </h2>
-                <p
-                  className="text-[11px] mb-6"
-                  style={{ color: "rgba(0,255,65,0.35)", fontFamily: "var(--font-mono), monospace" }}
-                >
-                  Quick feedback before you explore?
-                </p>
-
+                <div className="mb-2 text-[12px]" style={{ color: "#00FF41" }}>
+                  &gt; FEEDBACK.LOG:
+                </div>
                 <textarea
-                  autoFocus
+                  ref={fbRef}
                   value={fbVal}
                   onChange={(e) => setFbVal(e.target.value)}
-                  placeholder="What brings you here? First impressions? Be honest..."
+                  placeholder="// thoughts, impressions, suggestions..."
                   rows={4}
-                  className="w-full text-xs rounded-lg p-3 mb-6 resize-none outline-none"
+                  className="w-full bg-transparent outline-none resize-none text-[12px] placeholder:opacity-25 leading-6"
                   style={{
-                    background: "rgba(0,255,65,0.03)",
-                    border: "1px solid rgba(0,255,65,0.14)",
-                    color: "#E6EDF3",
-                    fontFamily: "var(--font-inter), sans-serif",
-                    lineHeight: "1.65",
+                    color: "#00FF41",
                     caretColor: "#00FF41",
+                    borderBottom: "1px solid #003300",
+                    paddingBottom: 8,
+                    marginBottom: 20,
+                    fontFamily: "var(--font-mono), monospace",
                   }}
                 />
-
-                <div className="flex items-center justify-between">
+                <div className="flex gap-3">
                   <button
                     onClick={submitFeedback}
-                    className="px-6 py-2.5 rounded-full text-xs transition-all duration-200"
+                    className="px-4 py-1.5 text-[11px] rounded transition-all"
                     style={{
-                      background: "#00FF41",
-                      color: "#000500",
-                      fontFamily: "var(--font-mono), monospace",
-                      fontWeight: 500,
+                      background: "rgba(0,255,65,0.1)",
+                      border: "1px solid rgba(0,255,65,0.4)",
+                      color: "#00FF41",
                     }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,255,65,0.18)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,255,65,0.1)"; }}
                   >
-                    submit &amp; explore
+                    ./submit &amp; launch
                   </button>
                   <button
-                    onClick={skip}
-                    style={{ color: "rgba(0,255,65,0.2)", fontFamily: "var(--font-mono), monospace", fontSize: "0.625rem" }}
-                    onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(0,255,65,0.45)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(0,255,65,0.2)"; }}
+                    onClick={skipFeedback}
+                    className="px-4 py-1.5 text-[11px] rounded transition-all"
+                    style={{ background: "transparent", border: "1px solid #002200", color: "#003300" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = "#006600"; e.currentTarget.style.borderColor = "#003300"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = "#003300"; e.currentTarget.style.borderColor = "#002200"; }}
                   >
-                    skip
+                    --skip
                   </button>
                 </div>
-              </div>
-            </motion.div>
-          )}
+              </motion.div>
+            )}
 
-          {/* THANKS */}
-          {step === "thanks" && (
-            <motion.div
-              key="thanks"
-              initial={{ opacity: 0, scale: 0.94 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.55, ease: EASE }}
-              className="text-center select-none pointer-events-none"
-            >
-              <p className="text-5xl mb-5">✨</p>
-              <h2
-                className="text-4xl md:text-5xl font-light mb-3"
-                style={{
-                  color: "#00FF41",
-                  fontFamily: "var(--font-cormorant), serif",
-                  letterSpacing: "0.06em",
-                }}
+            {/* ── THANKS ── */}
+            {step === "thanks" && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4 }}
               >
-                Thanks, {vName}!
-              </h2>
-              <p
-                className="text-[11px] tracking-[0.15em]"
-                style={{ color: "rgba(0,255,65,0.38)", fontFamily: "var(--font-mono), monospace" }}
-              >
-                launching portfolio...
-              </p>
-            </motion.div>
-          )}
+                <div className="space-y-1 text-[12px]" style={{ color: "#006600" }}>
+                  <p>&gt; log saved.</p>
+                  {vName && <p style={{ color: "#008F11" }}>&gt; access granted: {vName}</p>}
+                  <p style={{ color: "#00FF41" }}>&gt; launching portfolio...</p>
+                </div>
+                {/* Blinking cursor at end */}
+                <div className="mt-3 flex items-center gap-1">
+                  <span className="text-[12px]" style={{ color: "#00FF41" }}>&gt;</span>
+                  <span
+                    className="inline-block w-[2px] h-4"
+                    style={{ background: "#00FF41", animation: "blink 1s step-end infinite" }}
+                  />
+                </div>
+              </motion.div>
+            )}
+          </div>
 
-        </AnimatePresence>
-      </div>
-    </motion.div>
+          {/* Bottom status bar */}
+          <div
+            className="relative z-10 flex items-center justify-between px-6 py-2"
+            style={{ borderTop: "1px solid #001a00" }}
+          >
+            <span className="text-[10px]" style={{ color: "#002a00" }}>
+              Sydney, AU  //  data &amp; genai
+            </span>
+            <span className="text-[10px]" style={{ color: "#002a00" }}>
+              {step === "boot" ? `BOOTING ${Math.round(progress * 100)}%` : step.toUpperCase()}
+            </span>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
