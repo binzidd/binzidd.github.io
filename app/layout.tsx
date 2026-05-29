@@ -24,7 +24,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Binay Siddharth — Data & GenAI Leader",
+  title: "Binay Siddharth - Data & GenAI Leader",
   description:
     "Chapter Area Lead - FS Analytics at Commonwealth Bank of Australia. 9 years of analytics experience, GenAI practitioner, HCI specialist, and people leader.",
   keywords: [
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     "AWS",
   ],
   openGraph: {
-    title: "Binay Siddharth — Data & GenAI Leader",
+    title: "Binay Siddharth - Data & GenAI Leader",
     description:
       "Transforming finance analytics through GenAI, ML, and HCI-driven design thinking.",
     type: "website",

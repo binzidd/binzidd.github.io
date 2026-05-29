@@ -141,7 +141,7 @@ export const bikes: MotoSpec[] = [
     tank: 16,
     priceAUD: 27990,
     powerToWeight: 0.95,
-    tagline: "The Beast — Tamed",
+    tagline: "The Beast - Tamed",
   },
   {
     id: "tuono",

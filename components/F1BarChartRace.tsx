@@ -360,7 +360,7 @@ function CompareTab() {
 
         {compView === "laps" && (
           <motion.div key="laps" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-            <p className="text-xs font-semibold mb-4" style={{ color: "#F8F5F0", fontFamily: "var(--font-inter), sans-serif" }}>Fastest Lap Comparison — 2025 vs 2026</p>
+            <p className="text-xs font-semibold mb-4" style={{ color: "#F8F5F0", fontFamily: "var(--font-inter), sans-serif" }}>Fastest Lap Comparison - 2025 vs 2026</p>
             <div className="space-y-2">
               {/* Header */}
               <div className="grid grid-cols-4 gap-2 text-[9px] font-semibold uppercase tracking-wider pb-2" style={{ color: "#4A4440", fontFamily: "var(--font-inter), sans-serif", borderBottom: "1px solid #2A2520" }}>
@@ -403,7 +403,7 @@ function CompareTab() {
 
         {compView === "speed" && (
           <motion.div key="speed" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-            <p className="text-xs font-semibold mb-4" style={{ color: "#F8F5F0", fontFamily: "var(--font-inter), sans-serif" }}>Top Speed Comparison — 2025 vs 2026 (km/h)</p>
+            <p className="text-xs font-semibold mb-4" style={{ color: "#F8F5F0", fontFamily: "var(--font-inter), sans-serif" }}>Top Speed Comparison - 2025 vs 2026 (km/h)</p>
             <div className="space-y-3">
               {RACES_2026.map((r26, i) => {
                 const r25 = RACES[i];
@@ -445,7 +445,7 @@ function CompareTab() {
 
         {compView === "pu" && (
           <motion.div key="pu" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-            <p className="text-xs font-semibold mb-4" style={{ color: "#F8F5F0", fontFamily: "var(--font-inter), sans-serif" }}>Power Unit Suppliers — What Changed</p>
+            <p className="text-xs font-semibold mb-4" style={{ color: "#F8F5F0", fontFamily: "var(--font-inter), sans-serif" }}>Power Unit Suppliers - What Changed</p>
             <div className="space-y-2">
               {ENGINE_CHANGES.puSuppliers.map((s) => (
                 <div key={s.team} className="rounded-xl p-3" style={{ background: "#1A1714" }}>
@@ -497,7 +497,7 @@ export default function F1BarChartRace() {
           </span>
         </div>
         <h3 className="text-xl font-light mb-4" style={{ color: "#F8F5F0", fontFamily: "var(--font-cormorant), serif" }}>
-          {activeTab === "2025" ? "The Verstappen Comeback" : activeTab === "2026" ? "The 2026 Reset — New Era" : "2025 vs 2026 — Regulation Shift"}
+          {activeTab === "2025" ? "The Verstappen Comeback" : activeTab === "2026" ? "The 2026 Reset - New Era" : "2025 vs 2026 - Regulation Shift"}
         </h3>
 
         {/* Tabs */}
@@ -558,7 +558,7 @@ export default function F1BarChartRace() {
       <div className="px-5 py-3" style={{ borderTop: "1px solid #1E1A17" }}>
         <p className="text-[9px]" style={{ color: "#3C3530", fontFamily: "var(--font-inter), sans-serif" }}>
           {activeTab === "2026"
-            ? "* 2026 season data is illustrative — reflecting the regulation reset, new PU suppliers, and driver moves. Season in progress."
+            ? "* 2026 season data is illustrative - reflecting the regulation reset, new PU suppliers, and driver moves. Season in progress."
             : "* Data reflects race wins, DNFs, standings progression, fastest laps, and top speeds per round."}
         </p>
       </div>

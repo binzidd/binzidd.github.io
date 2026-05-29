@@ -58,7 +58,7 @@ const FALLBACK_REPOS: GitHubRepo[] = [
   {
     id: 11,
     name: "au-govt-budget-sankey",
-    description: "4-level interactive Sankey tracing AU Federal Budget 2024-25 — $738.5B from revenue to sub-programs",
+    description: "4-level interactive Sankey tracing AU Federal Budget 2024-25 - $738.5B from revenue to sub-programs",
     html_url: "https://github.com/binzidd/au-govt-budget-sankey",
     stargazers_count: 0,
     forks_count: 0,
@@ -102,7 +102,7 @@ const FALLBACK_REPOS: GitHubRepo[] = [
   {
     id: 7,
     name: "f1-2025-championship-race",
-    description: "Animated F1 2025 bar chart race — Verstappen comeback story across 16 rounds",
+    description: "Animated F1 2025 bar chart race - Verstappen comeback story across 16 rounds",
     html_url: "https://github.com/binzidd/f1-2025-championship-race",
     stargazers_count: 0,
     forks_count: 0,

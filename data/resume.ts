@@ -47,7 +47,7 @@ export const experience: Experience[] = [
     role: "Chapter Area Lead",
     company: "Commonwealth Bank of Australia",
     location: "Sydney",
-    period: "Feb 2026 — Present",
+    period: "Feb 2026 - Present",
     current: true,
     color: "#00FF41",
     sections: [
@@ -77,14 +77,14 @@ export const experience: Experience[] = [
     role: "Chapter Lead, FS Analytics",
     company: "Commonwealth Bank of Australia",
     location: "Sydney",
-    period: "Mar 2022 — Jan 2026",
+    period: "Mar 2022 - Jan 2026",
     current: false,
     color: "#008F11",
     sections: [
       {
         heading: "Chapter Management",
         bullets: [
-          "Lead BI Reporting — chapter-level stewardship for analytics across finance.",
+          "Lead BI Reporting - chapter-level stewardship for analytics across finance.",
           "Defined capability & workforce plans with Talent Acquisition; zero attrition, steady IA→AA role conversions, AWS certification initiative to upskill the team.",
           "Standardised tooling & ways of working (Tableau, Alteryx, DHP and GenAI patterns); created shared playbook and peer-review process.",
           "Designed chapter capability uplift roadmap: competency bands, learning pathways, staged assessments.",
@@ -96,7 +96,7 @@ export const experience: Experience[] = [
         heading: "Generative AI & AI Integration",
         bullets: [
           "NL-to-SQL (Pre-prod): Built a GenAI interface using LangGraph + LangFuse, reranking and embedding cache. Adopted by 200+ FS users; authored rollout playbook.",
-          "Policy RAG Bot (Pre-prod): Leading design of a Retrieval-Augmented Generation bot for policy queries — chunking, orchestration and embedding reuse.",
+          "Policy RAG Bot (Pre-prod): Leading design of a Retrieval-Augmented Generation bot for policy queries - chunking, orchestration and embedding reuse.",
           "Agentic Month-End & MCP Ecosystem (Ideation): Driving strategy and architecture for AI agents in month-end reporting workflows.",
           "XClaim App (Prototype): Delivered Streamlit/AWS prototype demonstrating end-to-end claims automation.",
         ],
@@ -113,9 +113,9 @@ export const experience: Experience[] = [
   {
     id: "cba-manager-bi",
     role: "Manager, Business Intelligence Reporting",
-    company: "Commonwealth Bank of Australia — IB&M Finance",
+    company: "Commonwealth Bank of Australia - IB&M Finance",
     location: "Sydney",
-    period: "Mar 2020 — 2022",
+    period: "Mar 2020 - 2022",
     current: false,
     color: "#006600",
     sections: [
@@ -142,7 +142,7 @@ export const experience: Experience[] = [
     role: "Senior Analyst, Capital Technology",
     company: "Commonwealth Bank of Australia",
     location: "Sydney",
-    period: "Mar 2019 — Mar 2020",
+    period: "Mar 2019 - Mar 2020",
     current: false,
     color: "#B89070",
     sections: [
@@ -175,7 +175,7 @@ export const experience: Experience[] = [
     role: "Analyst, GEMS Operations",
     company: "Commonwealth Bank of Australia",
     location: "Sydney",
-    period: "Mar 2018 — Mar 2019",
+    period: "Mar 2018 - Mar 2019",
     current: false,
     color: "#C8A88C",
     sections: [
@@ -200,7 +200,7 @@ export const experience: Experience[] = [
     role: "Analyst",
     company: "The University of Sydney",
     location: "Sydney",
-    period: "Jun 2017 — Mar 2018",
+    period: "Jun 2017 - Mar 2018",
     current: false,
     color: "#9B7EA0",
     sections: [
@@ -234,7 +234,7 @@ export const experience: Experience[] = [
     role: "Systems Engineer",
     company: "Adobe Systems Inc",
     location: "Mumbai",
-    period: "Jun 2012 — May 2015",
+    period: "Jun 2012 - May 2015",
     current: false,
     color: "#CC5533",
     sections: [
@@ -289,9 +289,9 @@ export const projects: Project[] = [
   {
     id: "xclaim-app",
     title: "XClaim App",
-    tagline: "Automated claims processing — from days to minutes.",
+    tagline: "Automated claims processing - from days to minutes.",
     description:
-      "A Streamlit and AWS-backed prototype demonstrating end-to-end claims automation. The app showcases how GenAI can reduce manual claims handling through intelligent document parsing, classification, and workflow automation — built as a proof-of-concept to drive executive buy-in.",
+      "A Streamlit and AWS-backed prototype demonstrating end-to-end claims automation. The app showcases how GenAI can reduce manual claims handling through intelligent document parsing, classification, and workflow automation - built as a proof-of-concept to drive executive buy-in.",
     tech: ["Streamlit", "AWS", "Python", "GenAI", "Document AI"],
     status: "prototype",
     icon: "⚡",
@@ -397,7 +397,7 @@ export const qaEntries: QAEntry[] = [
   {
     keywords: ["project spur", "spur", "teradata", "ib&m"],
     answer:
-      "Project SPUR (2020–2022) was Binay's flagship initiative as Chapter Lead at CBA's IB&M Finance. He led end-to-end ingestion, modelling and productionisation using SQL & Python to deliver a unified Teradata repository for finance reporting and ELT decision-making — replacing fragmented manual reports with repeatable, auditable pipelines.",
+      "Project SPUR (2020–2022) was Binay's flagship initiative as Chapter Lead at CBA's IB&M Finance. He led end-to-end ingestion, modelling and productionisation using SQL & Python to deliver a unified Teradata repository for finance reporting and ELT decision-making - replacing fragmented manual reports with repeatable, auditable pipelines.",
   },
   {
     keywords: ["nl to sql", "natural language", "sql", "langgraph", "langfuse"],
@@ -432,11 +432,11 @@ export const qaEntries: QAEntry[] = [
   {
     keywords: ["github", "repos", "code", "open source"],
     answer:
-      "Binay's GitHub is github.com/binzidd — scroll down to the GitHub section of this portfolio to see his live repositories, including data projects and AI experiments.",
+      "Binay's GitHub is github.com/binzidd - scroll down to the GitHub section of this portfolio to see his live repositories, including data projects and AI experiments.",
   },
   {
     keywords: ["usyd", "university of sydney", "student", "heatmap", "wifi", "geospatial"],
     answer:
-      "At The University of Sydney (2017–2018), Binay built a Wi-Fi-based campus space-utilisation platform — ingesting raw Wi-Fi logs, anonymising device IDs, and producing Tableau heatmaps showing room occupancy hour by hour. He also built early-warning ML models (logistic regression, tree classifiers) to identify at-risk HDR students.",
+      "At The University of Sydney (2017–2018), Binay built a Wi-Fi-based campus space-utilisation platform - ingesting raw Wi-Fi logs, anonymising device IDs, and producing Tableau heatmaps showing room occupancy hour by hour. He also built early-warning ML models (logistic regression, tree classifiers) to identify at-risk HDR students.",
   },
 ];

@@ -41,17 +41,17 @@ export const rateHistory: RateHistory[] = [
   // COVID emergency cuts (RBA to 0.10% in Nov 2020)
   { month: "May 20", date: "2020-05", CBA: 0.50, WBC: 0.45, ANZ: 0.40, NAB: 0.55, MAC: 0.85, rbaCash: 0.25 },
   { month: "Nov 20", date: "2020-11", CBA: 0.25, WBC: 0.25, ANZ: 0.20, NAB: 0.30, MAC: 0.55, rbaCash: 0.10 },
-  // Near-zero era — savers earning almost nothing
+  // Near-zero era - savers earning almost nothing
   { month: "Jun 21", date: "2021-06", CBA: 0.25, WBC: 0.25, ANZ: 0.20, NAB: 0.30, MAC: 0.65, rbaCash: 0.10 },
   { month: "Dec 21", date: "2021-12", CBA: 0.30, WBC: 0.30, ANZ: 0.25, NAB: 0.35, MAC: 0.75, rbaCash: 0.10 },
-  // RBA begins hiking (May 2022 — first hike in 11 years)
+  // RBA begins hiking (May 2022 - first hike in 11 years)
   { month: "May 22", date: "2022-05", CBA: 0.55, WBC: 0.55, ANZ: 0.50, NAB: 0.65, MAC: 1.20, rbaCash: 0.35 },
   { month: "Aug 22", date: "2022-08", CBA: 1.80, WBC: 1.60, ANZ: 1.50, NAB: 1.85, MAC: 2.50, rbaCash: 1.85 },
   { month: "Nov 22", date: "2022-11", CBA: 2.80, WBC: 2.60, ANZ: 2.50, NAB: 2.85, MAC: 3.50, rbaCash: 2.85 },
   // Aggressive hike cycle continues
   { month: "Mar 23", date: "2023-03", CBA: 4.00, WBC: 3.85, ANZ: 3.75, NAB: 4.10, MAC: 4.50, rbaCash: 3.60 },
   { month: "Jun 23", date: "2023-06", CBA: 4.40, WBC: 4.25, ANZ: 4.10, NAB: 4.50, MAC: 5.00, rbaCash: 4.10 },
-  // RBA pauses — rates hold
+  // RBA pauses - rates hold
   { month: "Sep 23", date: "2023-09", CBA: 4.55, WBC: 4.40, ANZ: 4.30, NAB: 4.65, MAC: 5.20, rbaCash: 4.10 },
   { month: "Dec 23", date: "2023-12", CBA: 4.65, WBC: 4.50, ANZ: 4.40, NAB: 4.75, MAC: 5.25, rbaCash: 4.35 },
   // One more hike (Nov 2023), then hold throughout 2024
@@ -62,7 +62,7 @@ export const rateHistory: RateHistory[] = [
   { month: "Mar 25", date: "2025-03", CBA: 5.10, WBC: 5.00, ANZ: 5.00, NAB: 5.25, MAC: 5.35, rbaCash: 4.10 },
 ];
 
-// Market share shift over time (APRA ADI monthly banking statistics — household deposits)
+// Market share shift over time (APRA ADI monthly banking statistics - household deposits)
 export interface MarketSharePoint {
   date: string;
   CBA: number;
@@ -96,8 +96,8 @@ export const BANK_COLORS: Record<string, string> = {
 // Key RBA events for annotation
 export const rbaEvents = [
   { date: "2020-03", label: "COVID rate cut", rate: 0.50 },
-  { date: "2020-11", label: "0.10% — historic low", rate: 0.10 },
+  { date: "2020-11", label: "0.10% - historic low", rate: 0.10 },
   { date: "2022-05", label: "First hike in 11 yrs", rate: 0.35 },
   { date: "2023-06", label: "Rate peak 4.35%", rate: 4.10 },
-  { date: "2025-02", label: "First cut — Feb 2025", rate: 4.10 },
+  { date: "2025-02", label: "First cut - Feb 2025", rate: 4.10 },
 ];

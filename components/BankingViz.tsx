@@ -42,7 +42,7 @@ export default function BankingViz() {
           <div>
             <p className="text-[10px] tracking-[0.2em] uppercase mb-2" style={{ color: "#00D9FF", fontFamily: "var(--font-mono), monospace" }}>// banking.post_covid_analysis</p>
             <h3 className="text-xl font-semibold" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}>
-              Big 4 + Macquarie — Post-COVID Rate Cycle & Deposit Share
+              Big 4 + Macquarie - Post-COVID Rate Cycle & Deposit Share
             </h3>
             <p className="text-xs mt-1" style={{ color: "#484F58", fontFamily: "var(--font-mono), monospace" }}>
               Source: APRA ADI Statistics · RBA Cash Rate Decisions · Bank product pages
@@ -84,7 +84,7 @@ export default function BankingViz() {
         {activeTab === "rates" && (
           <div>
             <p className="text-xs mb-4" style={{ color: "#484F58", fontFamily: "var(--font-mono), monospace" }}>
-              Best savings account rate (% p.a.) — Jan 2020 to Mar 2025. Click a bank above to isolate.
+              Best savings account rate (% p.a.) - Jan 2020 to Mar 2025. Click a bank above to isolate.
             </p>
 
             {/* RBA event badges */}
@@ -92,7 +92,7 @@ export default function BankingViz() {
               {rbaEvents.map(ev => (
                 <span key={ev.date} className="text-[9px] px-2 py-1 rounded-full"
                   style={{ background: "rgba(240,167,66,0.1)", color: "#F0A742", border: "1px solid rgba(240,167,66,0.2)", fontFamily: "var(--font-mono), monospace" }}>
-                  {ev.date} — {ev.label}
+                  {ev.date} - {ev.label}
                 </span>
               ))}
             </div>
@@ -108,7 +108,7 @@ export default function BankingViz() {
                   </g>
                 ))}
 
-                {/* RBA cash rate — dashed */}
+                {/* RBA cash rate - dashed */}
                 <path d={rateHistory.map((d, i) => `${i === 0 ? "M" : "L"} ${xScale(i)} ${yScale(d.rbaCash)}`).join(" ")}
                   fill="none" stroke="#F0A742" strokeWidth="1.5" strokeDasharray="5,3" opacity="0.6" />
 
@@ -159,7 +159,7 @@ export default function BankingViz() {
         {activeTab === "market" && (
           <div>
             <p className="text-xs mb-6" style={{ color: "#484F58", fontFamily: "var(--font-mono), monospace" }}>
-              Household deposit market share (%) — APRA ADI Statistics. Macquarie gaining ground post-COVID.
+              Household deposit market share (%) - APRA ADI Statistics. Macquarie gaining ground post-COVID.
             </p>
             <div className="space-y-4">
               {marketShareHistory.map((period, pi) => {
@@ -207,7 +207,7 @@ export default function BankingViz() {
             <div className="mt-6 p-4 rounded-xl" style={{ background: "rgba(0,217,255,0.04)", border: "1px solid rgba(0,217,255,0.1)" }}>
               <p className="text-xs leading-relaxed" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
                 <span style={{ color: "#00D9FF" }}>Macquarie effect:</span> By consistently offering higher deposit rates, Macquarie grew household deposit share from
-                ~1.8% (2020) to ~4.2% (2025) — a +133% relative gain — while Big 4 collectively ceded ~2.5 percentage points.
+                ~1.8% (2020) to ~4.2% (2025) - a +133% relative gain - while Big 4 collectively ceded ~2.5 percentage points.
               </p>
             </div>
           </div>
@@ -217,7 +217,7 @@ export default function BankingViz() {
         {activeTab === "snapshot" && (
           <div>
             <p className="text-xs mb-6" style={{ color: "#484F58", fontFamily: "var(--font-mono), monospace" }}>
-              Current rates snapshot — Q1 2025. RBA cash rate: 4.10% (cut Feb 2025)
+              Current rates snapshot - Q1 2025. RBA cash rate: 4.10% (cut Feb 2025)
             </p>
             <div className="overflow-x-auto">
               <table className="w-full text-xs" style={{ borderCollapse: "separate", borderSpacing: 0 }}>
@@ -275,7 +275,7 @@ export default function BankingViz() {
             </div>
             <div className="mt-6 p-4 rounded-xl" style={{ background: "rgba(240,167,66,0.05)", border: "1px solid rgba(240,167,66,0.15)" }}>
               <p className="text-xs leading-relaxed" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
-                <span style={{ color: "#F0A742" }}>Feb 2025:</span> RBA cut the cash rate by 25bps to 4.10% — the first cut since Nov 2020.
+                <span style={{ color: "#F0A742" }}>Feb 2025:</span> RBA cut the cash rate by 25bps to 4.10% - the first cut since Nov 2020.
                 Macquarie leads on both savings (5.35%) and term deposit (5.05%) rates, with CBA maintaining
                 27.4% deposit market share despite higher-rate competition from challengers.
               </p>

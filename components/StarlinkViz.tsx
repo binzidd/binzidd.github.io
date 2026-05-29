@@ -77,7 +77,7 @@ function TeslaCard() {
             </span>
           </div>
           <p className="text-[10px] leading-relaxed mb-2" style={{ color: "#8B949E", fontFamily: MONO }}>
-            <span style={{ color: "#E6EDF3" }}>Feb 7, 2018 — Falcon Heavy Demo Flight.</span>{" "}
+            <span style={{ color: "#E6EDF3" }}>Feb 7, 2018 - Falcon Heavy Demo Flight.</span>{" "}
             Elon&apos;s personal cherry-red Tesla Roadster was strapped to the rocket as a test payload.
             &quot;Starman&quot; (a mannequin in a spacesuit) sits at the wheel. David Bowie&apos;s 🎵 <em>Space Oddity</em> plays on loop.
             Dashboard reads <span style={{ color: CY }}>&quot;DON&apos;T PANIC&quot;</span> in a nod to Hitchhiker&apos;s Guide.
@@ -120,7 +120,7 @@ function AdoptionChart() {
           return (
             <div key={d.month}
               style={{ flex: "1 0 36px", maxWidth: 52, display: "flex", flexDirection: "column", alignItems: "center", height: 240 }}>
-              {/* Milestone zone — grows to fill space above bar */}
+              {/* Milestone zone - grows to fill space above bar */}
               <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", paddingBottom: 6 }}>
                 {hasMilestone && (
                   <div style={{
@@ -215,7 +215,7 @@ export default function StarlinkViz() {
           <div>
             <p className="text-[10px] tracking-[0.2em] uppercase mb-2" style={{ color: CY, fontFamily: MONO }}>// starlink.constellation</p>
             <h3 className="text-xl font-semibold" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}>
-              SpaceX Starlink — Full Mission Dashboard
+              SpaceX Starlink - Full Mission Dashboard
             </h3>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -259,7 +259,7 @@ export default function StarlinkViz() {
           <div>
             <TeslaCard />
             <p className="text-[10px] mb-1" style={{ color: DIM, fontFamily: MONO }}>
-              Satellites deployed per launch mission — 2019 to present
+              Satellites deployed per launch mission - 2019 to present
             </p>
             <div className="flex gap-3 mb-5 text-[9px]" style={{ fontFamily: MONO }}>
               <span className="flex items-center gap-1.5">
@@ -291,7 +291,7 @@ export default function StarlinkViz() {
                     <motion.div initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }} transition={{ delay: i * 0.025, duration: 0.45, ease: EASE }}>
                       <div className="flex items-center gap-2">
-                        {/* Date — FIXED: full month string, no slice */}
+                        {/* Date - FIXED: full month string, no slice */}
                         <span className="text-[9px] w-[72px] flex-shrink-0 text-right" style={{ color: DIM, fontFamily: MONO }}>
                           {d.month}
                         </span>
@@ -339,7 +339,7 @@ export default function StarlinkViz() {
               <EarthOrbit />
               <div>
                 <p className="text-xs mb-4" style={{ color: DIM, fontFamily: MONO }}>
-                  Five orbital shells — altitude, inclination &amp; satellite count
+                  Five orbital shells - altitude, inclination &amp; satellite count
                 </p>
                 <div className="space-y-3">
                   {orbitalShells.map((shell, i) => (
@@ -394,7 +394,7 @@ export default function StarlinkViz() {
               </div>
               <div className="mt-6 p-4 rounded-2xl" style={{ background: "rgba(0,100,200,0.06)", border: "1px solid rgba(0,217,255,0.15)" }}>
                 <p className="text-[10px] leading-relaxed" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
-                  <span style={{ color: CY }}>📡 At 12+ passes/day</span> — Sydney residents can see Starlink trains with the naked eye every clear night.
+                  <span style={{ color: CY }}>📡 At 12+ passes/day</span> - Sydney residents can see Starlink trains with the naked eye every clear night.
                   Each pass lasts ~6–10 min. With 7,000+ satellites operational, Australia has 24/7 coverage with zero latency gaps.
                 </p>
               </div>
@@ -468,7 +468,7 @@ export default function StarlinkViz() {
               {/* Hardware chart */}
               <div>
                 <p className="text-xs font-medium mb-1" style={{ color: "#E6EDF3", fontFamily: MONO }}>📡 Hardware kit (USD one-time)</p>
-                <p className="text-[9px] mb-3" style={{ color: DIM, fontFamily: MONO }}>Dish + router — standard kit price</p>
+                <p className="text-[9px] mb-3" style={{ color: DIM, fontFamily: MONO }}>Dish + router - standard kit price</p>
                 <div className="overflow-x-auto">
                   <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: "100%", minWidth: 280 }}>
                     {[299, 349, 499, 599].map(v => (
@@ -509,7 +509,7 @@ export default function StarlinkViz() {
               {pricingHistory.filter(d => d.note).map(d => (
                 <div key={d.month} className="flex gap-2 items-center text-[9px]" style={{ color: DIM, fontFamily: MONO }}>
                   <span style={{ color: CY }}>{d.month}</span>
-                  <span style={{ color: BORDER }}>—</span>
+                  <span style={{ color: BORDER }}>-</span>
                   <span>{d.note}</span>
                 </div>
               ))}
@@ -521,7 +521,7 @@ export default function StarlinkViz() {
         {tab === "adoption" && (
           <div>
             <p className="text-xs mb-1" style={{ color: DIM, fontFamily: MONO }}>
-              Global subscriber growth — Oct 2020 to Mar 2025
+              Global subscriber growth - Oct 2020 to Mar 2025
             </p>
             <p className="text-[10px] mb-6" style={{ color: DIMMER, fontFamily: MONO }}>
               500× growth in 4.5 years · fastest commercial satellite internet adoption on record

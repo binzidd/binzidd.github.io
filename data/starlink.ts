@@ -45,14 +45,14 @@ export const starlinkLaunches: StarlinkLaunch[] = [
 
 // Orbital shells that make up the constellation
 export const orbitalShells: OrbitalShell[] = [
-  { altitude: 550, inclination: 53.0,  count: 1584, color: "#00D9FF", label: "Shell 1 — 550km / 53°" },
-  { altitude: 540, inclination: 53.2,  count: 720,  color: "#7C3AED", label: "Shell 2 — 540km / 53.2°" },
-  { altitude: 570, inclination: 70.0,  count: 348,  color: "#3FB950", label: "Shell 3 — 570km / 70°" },
-  { altitude: 560, inclination: 97.6,  count: 172,  color: "#F0A742", label: "Shell 4 — 560km / 97.6° (polar)" },
-  { altitude: 345, inclination: 53.0,  count: 2493, color: "#FF6B6B", label: "Shell 5 — 345km / 53° (Gen2)" },
+  { altitude: 550, inclination: 53.0,  count: 1584, color: "#00D9FF", label: "Shell 1 - 550km / 53°" },
+  { altitude: 540, inclination: 53.2,  count: 720,  color: "#7C3AED", label: "Shell 2 - 540km / 53.2°" },
+  { altitude: 570, inclination: 70.0,  count: 348,  color: "#3FB950", label: "Shell 3 - 570km / 70°" },
+  { altitude: 560, inclination: 97.6,  count: 172,  color: "#F0A742", label: "Shell 4 - 560km / 97.6° (polar)" },
+  { altitude: 345, inclination: 53.0,  count: 2493, color: "#FF6B6B", label: "Shell 5 - 345km / 53° (Gen2)" },
 ];
 
-// Approximate passes over NSW (Sydney ~34°S) per day — varies by shell inclination
+// Approximate passes over NSW (Sydney ~34°S) per day - varies by shell inclination
 // LEO ~550km orbits ~15.5 times/day globally; coverage window ~10 min per pass
 // Sydney visible passes from shells with inclination > 34°
 export const nswPassData = [
@@ -77,9 +77,9 @@ export const MILESTONES = [
 // ─── Pricing history ───────────────────────────────────────────────────────────
 export interface PricingPoint {
   month: string;
-  monthly: number;         // USD/month — Residential/Standard
-  monthlyBasic: number | null; // USD/month — Basic plan (null before launch)
-  hardware: number;        // USD — dish + router kit
+  monthly: number;         // USD/month - Residential/Standard
+  monthlyBasic: number | null; // USD/month - Basic plan (null before launch)
+  hardware: number;        // USD - dish + router kit
   note?: string;
 }
 
@@ -91,7 +91,7 @@ export const pricingHistory: PricingPoint[] = [
   { month: "Feb '23", monthly: 120, monthlyBasic: null, hardware: 599 },
   { month: "Mar '23", monthly: 120, monthlyBasic: 50,   hardware: 599, note: "Basic $50/mo plan 🆕" },
   { month: "Mar '24", monthly: 120, monthlyBasic: 50,   hardware: 349, note: "Hardware drops to $349 📉" },
-  { month: "Mar '25", monthly: 120, monthlyBasic: 50,   hardware: 299, note: "Hardware $299 — 40% off peak" },
+  { month: "Mar '25", monthly: 120, monthlyBasic: 50,   hardware: 299, note: "Hardware $299 - 40% off peak" },
 ];
 
 // ─── Subscriber adoption ───────────────────────────────────────────────────────

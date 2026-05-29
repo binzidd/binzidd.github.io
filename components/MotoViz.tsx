@@ -39,7 +39,7 @@ function RetroGauge({
     return () => ctrl.stop();
   }, [inView, value]);
 
-  // SVG arc maths — 240° sweep
+  // SVG arc maths - 240° sweep
   const R_ARC = 48, CX = 64, CY = 68;
   const START_DEG = 150, SWEEP = 240;
   const toRad = (d: number) => (d * Math.PI) / 180;
@@ -292,7 +292,7 @@ export default function MotoViz() {
                 Yamaha MT-10
                 <span className="text-xl ml-3" style={{ color: R.amber }}>vs The Field</span>
               </h3>
-              <p className="text-sm italic" style={{ color: R.muted }}>&ldquo;{yamaha.tagline}&rdquo; — 998cc CP4, 166hp, 111Nm</p>
+              <p className="text-sm italic" style={{ color: R.muted }}>&ldquo;{yamaha.tagline}&rdquo; - 998cc CP4, 166hp, 111Nm</p>
             </div>
             <div className="text-right">
               <div className="text-5xl font-bold" style={{ color: R.amber, lineHeight: 1 }}>🏍️</div>
@@ -345,7 +345,7 @@ export default function MotoViz() {
           <AnimatePresence mode="wait">
             <motion.div key="gauges" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
               <p className="text-xs tracking-widest uppercase mb-6 text-center" style={{ color: R.muted, fontFamily: "monospace" }}>
-                — YOUR MT-10's INSTRUMENT CLUSTER —
+                - YOUR MT-10's INSTRUMENT CLUSTER —
               </p>
               <div className="grid grid-cols-3 md:grid-cols-6 gap-4 mb-8 p-6 rounded-2xl"
                 style={{ background: R.surface, border: `1px solid ${R.border}`, backgroundImage: "repeating-linear-gradient(0deg, rgba(0,0,0,0.04) 0px, rgba(0,0,0,0.04) 1px, transparent 1px, transparent 4px)" }}>
@@ -395,7 +395,7 @@ export default function MotoViz() {
                       {filtered.map(b => {
                         let val = b[row.key] as number;
                         let maxForBar = row.key === "zeroToHundred" ? maxVal : row.maxVal;
-                        // For 0-100 — lower is better, invert bar
+                        // For 0-100 - lower is better, invert bar
                         if (row.key === "zeroToHundred") {
                           const invertedVal = maxVal - val + Math.min(...filtered.map(x => x[row.key] as number));
                           return (
@@ -417,7 +417,7 @@ export default function MotoViz() {
               <div className="mt-6 p-5 rounded-2xl" style={{ background: "#1C1408", border: `1px solid ${R.amber}44` }}>
                 <p className="text-xs leading-relaxed" style={{ color: R.muted, fontFamily: "Georgia, serif" }}>
                   <span style={{ color: R.amber }}>★ Value verdict:</span>{" "}
-                  The MT-10 delivers 166hp from the same R1-derived CP4 engine at A$19,999 — making it the
+                  The MT-10 delivers 166hp from the same R1-derived CP4 engine at A$19,999 - making it the
                   best power-per-dollar in this class. The Streetfighter V4 edges it on outright power at 208hp,
                   but at nearly double the price. The Z H2's supercharger adds 200hp but also 46kg of extra weight.
                 </p>
@@ -431,7 +431,7 @@ export default function MotoViz() {
           <AnimatePresence mode="wait">
             <motion.div key="spider" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
               <p className="text-xs tracking-widest uppercase mb-4 text-center" style={{ color: R.muted, fontFamily: "monospace" }}>
-                — COMPOSITE PERFORMANCE SPIDER —
+                - COMPOSITE PERFORMANCE SPIDER —
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div className="p-4 rounded-2xl" style={{ background: R.surface, border: `1px solid ${R.border}` }}>
@@ -472,7 +472,7 @@ export default function MotoViz() {
           <AnimatePresence mode="wait">
             <motion.div key="electronics" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
               <p className="text-xs tracking-widest uppercase mb-6" style={{ color: R.muted, fontFamily: "monospace" }}>
-                — ELECTRONICS & RIDER AIDS COMPARISON —
+                - ELECTRONICS & RIDER AIDS COMPARISON —
               </p>
               <div className="overflow-x-auto -mx-2 px-2">
                 <table className="w-full text-xs" style={{ minWidth: 680 }}>
@@ -496,7 +496,7 @@ export default function MotoViz() {
               <div className="mt-6 p-4 rounded-xl" style={{ background: R.surface, border: `1px solid ${R.amber}33` }}>
                 <p className="text-xs leading-relaxed" style={{ color: R.muted, fontFamily: "Georgia, serif" }}>
                   <span style={{ color: R.amber }}>★ MT-10 standout:</span>{" "}
-                  Slide Control System (SCS) is unique to the MT-10 in this comparison — a feature more common on premium
+                  Slide Control System (SCS) is unique to the MT-10 in this comparison - a feature more common on premium
                   superbikes. Combined with the 3-level Lift Control and bilateral quickshifter, you have a near-complete
                   electronics suite at the most competitive price point.
                 </p>
@@ -509,7 +509,7 @@ export default function MotoViz() {
       {/* Retro footer strip */}
       <div className="px-8 py-3 flex items-center justify-between" style={{ background: R.elevated, borderTop: `1px solid ${R.border}` }}>
         <p className="text-[9px] tracking-widest uppercase" style={{ color: R.faint, fontFamily: "monospace" }}>
-          ★ BINAY'S GARAGE — YAMAHA MT-10 SP 2023 ★
+          ★ BINAY'S GARAGE - YAMAHA MT-10 SP 2023 ★
         </p>
         <p className="text-[9px]" style={{ color: R.faint, fontFamily: "monospace" }}>
           Specs: manufacturer data & independent review sources
