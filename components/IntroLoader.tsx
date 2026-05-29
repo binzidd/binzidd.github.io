@@ -102,6 +102,7 @@ export default function IntroLoader() {
 
   const goThanks = useCallback((name: string) => {
     setVName(name);
+    if (name) sessionStorage.setItem("visitorName", name);
     setStep("thanks");
     setTimeout(exit, 1600);
   }, [exit]);
