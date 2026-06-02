@@ -15,8 +15,13 @@ const navItems = [
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const [visitorName, setVisitorName] = useState<string | null>(null);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+
+  useEffect(() => {
+    setVisitorName(sessionStorage.getItem("visitorName"));
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,6 +62,17 @@ export default function Navigation() {
             boxShadow: scrolled ? "0 4px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04)" : "none",
           }}
         >
+          {visitorName && (
+            <>
+              <span
+                className="px-2.5 py-1 text-[10px] rounded-full"
+                style={{ color: "#008F11", fontFamily: "var(--font-mono), monospace" }}
+              >
+                hey, {visitorName}
+              </span>
+              <div className="w-px h-3 mx-1" style={{ background: "#003300" }} />
+            </>
+          )}
           {navItems.map((item) => {
             const isActive = activeSection === item.href.slice(1);
             return (
