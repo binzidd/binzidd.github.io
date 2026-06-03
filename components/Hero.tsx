@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValue, useSpring, useTransform, useScroll, useMotionTemplate } from "framer-motion";
 
 const roles = [
   "Data & Analytics Lead",
@@ -61,6 +61,19 @@ export default function Hero() {
   const [displayed, setDisplayed] = useState("");
   const [typing, setTyping] = useState(true);
 
+  // Scroll-linked "recede" — as the hero scrolls away, content lifts, scales
+  // up slightly, fades, and pulls out of focus (the AirPods-page move).
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const contentY     = useTransform(scrollYProgress, [0, 1], [0, -90]);
+  const contentScale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
+  const blurPx       = useTransform(scrollYProgress, [0, 1], [0, 10]);
+  const contentBlur  = useMotionTemplate`blur(${blurPx}px)`;
+  // Orbs drift further/faster on scroll for layered depth
+  const orbDriftSlow = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const orbDriftFast = useTransform(scrollYProgress, [0, 1], [0, 240]);
+
   // Mouse position for parallax (normalised -1 → 1)
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -99,6 +112,7 @@ export default function Hero() {
 
   return (
     <section
+      ref={heroRef}
       id="hero"
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden dot-grid"
       style={{ background: "#000500" }}
@@ -107,15 +121,21 @@ export default function Hero() {
         mouseY.set((e.clientY / window.innerHeight - 0.5) * 2);
       }}
     >
-      {/* Glow orbs — outer motion.div handles parallax, inner div keeps float animation */}
+      {/* Glow orbs — outer: mouse parallax, middle: scroll drift, inner: CSS float */}
       <motion.div className="absolute pointer-events-none" style={{ x: orb1X, y: orb1Y, top: "-150px", right: "-100px" }}>
-        <div className="orb-1 rounded-full" style={{ width: 600, height: 600, background: "radial-gradient(circle, rgba(0,255,65,0.06) 0%, transparent 70%)", filter: "blur(60px)" }} />
+        <motion.div style={{ y: orbDriftSlow }}>
+          <div className="orb-1 rounded-full" style={{ width: 600, height: 600, background: "radial-gradient(circle, rgba(0,255,65,0.06) 0%, transparent 70%)", filter: "blur(60px)" }} />
+        </motion.div>
       </motion.div>
       <motion.div className="absolute pointer-events-none" style={{ x: orb2X, y: orb2Y, bottom: "80px", left: "-80px" }}>
-        <div className="orb-2 rounded-full" style={{ width: 400, height: 400, background: "radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%)", filter: "blur(50px)" }} />
+        <motion.div style={{ y: orbDriftFast }}>
+          <div className="orb-2 rounded-full" style={{ width: 400, height: 400, background: "radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%)", filter: "blur(50px)" }} />
+        </motion.div>
       </motion.div>
       <motion.div className="absolute pointer-events-none" style={{ x: orb3X, y: orb3Y, top: "40%", left: "60%" }}>
-        <div className="orb-3 rounded-full" style={{ width: 300, height: 300, background: "radial-gradient(circle, rgba(63,185,80,0.05) 0%, transparent 70%)", filter: "blur(40px)" }} />
+        <motion.div style={{ y: orbDriftSlow }}>
+          <div className="orb-3 rounded-full" style={{ width: 300, height: 300, background: "radial-gradient(circle, rgba(63,185,80,0.05) 0%, transparent 70%)", filter: "blur(40px)" }} />
+        </motion.div>
       </motion.div>
 
       {/* Horizontal scan line */}
@@ -124,7 +144,10 @@ export default function Hero() {
           className="absolute left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(0,255,65,0.04), transparent)" }} />
       </div>
 
-      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+      <motion.div
+        className="relative z-10 text-center px-6 max-w-4xl mx-auto"
+        style={{ y: contentY, scale: contentScale, opacity: contentOpacity, filter: contentBlur }}
+      >
         {/* Eyebrow */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.7 }}
           className="flex items-center justify-center gap-3 mb-8">
@@ -195,7 +218,7 @@ export default function Hero() {
             connect --linkedin
           </a>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Scroll indicator */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.0, duration: 0.8 }}

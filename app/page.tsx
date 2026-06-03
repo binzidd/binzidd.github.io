@@ -18,6 +18,8 @@ export default function Home() {
       <IntroLoader />
       <TermColumns />
       <HarryPotterEggs />
+      {/* Cinematic edge vignette for depth — center stays transparent */}
+      <div className="cinematic-vignette" />
       {/* Nav and palette stay above TermRain (z-index: 40+) */}
       <Navigation />
       <CommandPalette />

@@ -113,3 +113,24 @@ body {
   position: fixed; top: 0; left: 0; right: 0; height: 1px; z-index: 60;
   background: #003300;
 }
+
+/* Apple-grade easing token — long-tail cubic used across motion primitives */
+:root { --ease-apple: cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* Cinematic edge vignette — darkens the far corners for depth, center stays
+   fully transparent so content readability is untouched. */
+.cinematic-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(ellipse 120% 120% at 50% 50%, transparent 62%, rgba(0,0,0,0.45) 100%);
+}
+
+/* Respect reduced-motion: calm the ambient CSS keyframe loops and snap scroll */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .orb-1, .orb-2, .orb-3,
+  .glow-pulse,
+  .cursor-blink { animation: none !important; }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import MatrixDecoder from "@/components/MatrixDecoder";
+import HeadingReveal from "@/components/motion/HeadingReveal";
 
 export default function GitHubSectionHeading() {
   return (
@@ -16,7 +17,7 @@ export default function GitHubSectionHeading() {
           className="text-5xl md:text-6xl font-light"
           style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}
         >
-          <MatrixDecoder text="GitHub Repos" delay={0.2} />
+          <HeadingReveal><MatrixDecoder text="GitHub Repos" delay={0.2} /></HeadingReveal>
         </h2>
         <a
           href="https://github.com/binzidd"
