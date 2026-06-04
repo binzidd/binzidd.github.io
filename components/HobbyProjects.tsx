@@ -62,7 +62,7 @@ const projects = [
     icon: "🌏",
     title: "Australia's Carbon Story - Emissions, Targets & the EV Inflection",
     tags: ["Climate Data", "DCCEEW", "OWID", "EV Adoption", "Net Zero 2050"],
-    githubUrl: "https://github.com/binzidd/au-carbon-emissions",
+    githubUrl: "https://github.com/binzidd/au_carbon_emissions",
     story: (
       <>
         <span style={{ color: "#10B981", fontWeight: 600 }}>90 Mt short of the 43% target.</span>{" "}
