@@ -30,6 +30,10 @@ const AgentsViz = dynamic(() => import("@/components/AgentsViz"), {
   ssr: false,
   loading: () => <VizLoader label="initialising agent network..." />,
 });
+const CarbonViz = dynamic(() => import("@/components/CarbonViz"), {
+  ssr: false,
+  loading: () => <VizLoader bg="#020c02" border="#003300" color="#10B981" label="loading emissions data..." />,
+});
 const MatrixRain = dynamic(() => import("@/components/MatrixRain"), { ssr: false });
 
 function VizLoader({ bg = "#0A0E14", border = "#21262D", color = "#1a3a1a", label }: {
@@ -53,6 +57,23 @@ const MB  = "#003300";   // border
 
 // ─── Projects ─────────────────────────────────────────────────────────────────
 const projects = [
+  {
+    id: "carbon",
+    icon: "🌏",
+    title: "Australia's Carbon Story - Emissions, Targets & the EV Inflection",
+    tags: ["Climate Data", "DCCEEW", "OWID", "EV Adoption", "Net Zero 2050"],
+    githubUrl: "https://github.com/binzidd/au-carbon-emissions",
+    story: (
+      <>
+        <span style={{ color: "#10B981", fontWeight: 600 }}>90 Mt short of the 43% target.</span>{" "}
+        Electricity is bending fast; transport is stubbornly flat. Scroll through three chapters:
+        the gap between actual and legislated trajectories, which industry owns how much,
+        and the EV adoption S-curve that will finally bend transport emissions from 2026 onward.{" "}
+        <span style={{ color: MG }}>Auto-refreshes from OWID + DCCEEW every month via GitHub Actions.</span>
+      </>
+    ),
+    component: <CarbonViz />,
+  },
   {
     id: "agents",
     icon: "🤖",
