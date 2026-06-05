@@ -215,139 +215,144 @@ function GapChart() {
   const peakY  = sy(617.8, yMin, yMax);
 
   return (
-    <svg ref={ref} viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ overflow: "visible" }}>
-      <defs>
-        <linearGradient id="gapGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#EF4444" stopOpacity="0.3" />
-          <stop offset="100%" stopColor="#F59E0B" stopOpacity="0.06" />
-        </linearGradient>
-        <linearGradient id="corGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#EF4444" stopOpacity="0.1" />
-          <stop offset="100%" stopColor="#EF4444" stopOpacity="0.01" />
-        </linearGradient>
-      </defs>
+    <div>
+      <svg ref={ref} viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ overflow: "visible" }}>
+        <defs>
+          <linearGradient id="gapGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#EF4444" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#F59E0B" stopOpacity="0.06" />
+          </linearGradient>
+          <linearGradient id="corGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#EF4444" stopOpacity="0.1" />
+            <stop offset="100%" stopColor="#EF4444" stopOpacity="0.01" />
+          </linearGradient>
+        </defs>
 
-      {[100, 200, 300, 400, 500, 600].map((mt) => (
-        <g key={mt}>
-          <line x1={PAD.left} x2={W - PAD.right} y1={sy(mt, yMin, yMax)} y2={sy(mt, yMin, yMax)}
-            stroke="#003300" strokeWidth="0.5" />
-          <text x={PAD.left - 6} y={sy(mt, yMin, yMax) + 4} textAnchor="end" fontSize="9"
-            fill="#006600" fontFamily="var(--font-mono),monospace">{mt}</text>
-        </g>
-      ))}
-      {[2000, 2010, 2020, 2030, 2040, 2050].map((yr) => (
-        <g key={yr}>
-          <line x1={sx(yr, xMin, xMax)} x2={sx(yr, xMin, xMax)} y1={PAD.top} y2={H - PAD.bottom}
-            stroke="#003300" strokeWidth="0.5" />
-          <text x={sx(yr, xMin, xMax)} y={H - PAD.bottom + 14} textAnchor="middle" fontSize="9"
-            fill="#006600" fontFamily="var(--font-mono),monospace">{yr}</text>
-        </g>
-      ))}
-      <text x={PAD.left - 40} y={PAD.top + IH / 2} textAnchor="middle" fontSize="9"
-        fill="#006600" fontFamily="var(--font-mono),monospace"
-        transform={`rotate(-90,${PAD.left - 40},${PAD.top + IH / 2})`}>Mt CO₂-e</text>
-
-      <line x1={sx(2005, xMin, xMax)} x2={sx(2005, xMin, xMax)} y1={PAD.top} y2={H - PAD.bottom}
-        stroke="rgba(0,255,65,0.1)" strokeWidth="1" strokeDasharray="3,4" />
-      <text x={sx(2005, xMin, xMax) + 3} y={PAD.top + 10} fontSize="7.5"
-        fill="rgba(0,255,65,0.3)" fontFamily="var(--font-mono),monospace">2005 baseline</text>
-
-      {inView && (
-        <>
-          <motion.path d={areaPath(bauVsTarget)} fill="url(#gapGrad)"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0, duration: 0.8 }} />
-          <motion.path d={areaPath(corridor)} fill="url(#corGrad)"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.8 }} />
-
-          <AnimPath d={bauPath}    stroke="rgba(239,68,68,0.6)"  width={1.5} dash="5,4" delay={0.8} />
-          <AnimPath d={policyPath} stroke="rgba(0,255,65,0.45)"  width={1.5} dash="4,3" delay={1.0} />
-          <AnimPath d={targetLine} stroke="rgba(0,255,65,0.8)"   width={1}   dash="2,3" delay={1.2} />
-          <AnimPath d={histPath}   stroke="#00FF41"              width={2.5}             delay={0}   />
-
-          {/* 2030 target dot */}
-          <motion.circle cx={sx(2030, xMin, xMax)} cy={sy(TARGETS.target2030, yMin, yMax)} r={5} fill="#00FF41"
-            initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1.4, type: "spring" }} />
-          <motion.text x={sx(2030, xMin, xMax) + 7} y={sy(TARGETS.target2030, yMin, yMax) + 4}
-            fontSize="9" fill="#00FF41" fontFamily="var(--font-mono),monospace"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}>
-            342.9 Mt
-          </motion.text>
-
-          {/* Net zero */}
-          <motion.circle cx={sx(2050, xMin, xMax) - 4} cy={sy(0, yMin, yMax)} r={5} fill="#10B981"
-            initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1.6, type: "spring" }} />
-          <motion.text x={sx(2050, xMin, xMax) - 12} y={sy(0, yMin, yMax) - 8}
-            textAnchor="middle" fontSize="9" fill="#10B981" fontFamily="var(--font-mono),monospace"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.7 }}>
-            Net Zero
-          </motion.text>
-
-          {/* Peak callout */}
-          <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
-            <circle cx={peakX} cy={peakY} r={4} fill="none" stroke="rgba(239,68,68,0.6)" strokeWidth="1.2" />
-            <line x1={peakX} y1={peakY - 5} x2={peakX - 2} y2={PAD.top + 4}
-              stroke="rgba(239,68,68,0.3)" strokeWidth="0.8" />
-            <rect x={peakX - 36} y={PAD.top - 2} width={68} height={13} rx={3}
-              fill="#020c02" fillOpacity={0.9} stroke="rgba(239,68,68,0.2)" />
-            <text x={peakX - 2} y={PAD.top + 8} textAnchor="middle" fontSize="7.5"
-              fill="rgba(239,68,68,0.8)" fontFamily="var(--font-mono),monospace">peak 617.8 Mt</text>
-          </motion.g>
-
-          {/* COVID callout */}
-          <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}>
-            <circle cx={sx(2020, xMin, xMax)} cy={sy(499.2, yMin, yMax)} r={3.5}
-              fill="none" stroke="rgba(0,255,65,0.35)" strokeWidth="1" />
-            <text x={sx(2020, xMin, xMax) + 5} y={sy(499.2, yMin, yMax) - 5} fontSize="7.5"
-              fill="rgba(0,255,65,0.4)" fontFamily="var(--font-mono),monospace">COVID −19 Mt</text>
-          </motion.g>
-
-          {/* Today marker */}
-          <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
-            <line x1={todayX} x2={todayX} y1={PAD.top} y2={H - PAD.bottom}
-              stroke="rgba(0,255,65,0.22)" strokeWidth="1" strokeDasharray="2,3" />
-            <circle cx={todayX} cy={todayY} r={5} fill="#020c02" stroke="#00FF41" strokeWidth="1.5" />
-            <circle cx={todayX} cy={todayY} r={2} fill="#00FF41" />
-            <rect x={todayX - 28} y={todayY - 26} width={60} height={19} rx={3}
-              fill="#020c02" fillOpacity={0.9} stroke="#003300" />
-            <text x={todayX + 2} y={todayY - 12} textAnchor="middle" fontSize="8.5"
-              fill="#00FF41" fontFamily="var(--font-mono),monospace">now · 448 Mt</text>
-          </motion.g>
-        </>
-      )}
-
-      {/* Legend */}
-      <g transform={`translate(${PAD.left + 4},${PAD.top + 6})`}>
-        {[
-          { color: "#00FF41",             label: "Actual",           dash: undefined },
-          { color: "rgba(0,255,65,0.45)", label: "Policy pathway",   dash: "4,3" },
-          { color: "rgba(239,68,68,0.6)", label: "Business-as-usual",dash: "5,4" },
-        ].map((l, i) => (
-          <g key={i} transform={`translate(0,${i * 13})`}>
-            <line x1={0} x2={14} y1={5} y2={5} stroke={l.color} strokeWidth="1.5" strokeDasharray={l.dash} />
-            <text x={18} y={8} fontSize="8" fill="#8B949E" fontFamily="var(--font-inter),sans-serif">{l.label}</text>
+        {[100, 200, 300, 400, 500, 600].map((mt) => (
+          <g key={mt}>
+            <line x1={PAD.left} x2={W - PAD.right} y1={sy(mt, yMin, yMax)} y2={sy(mt, yMin, yMax)}
+              stroke="#003300" strokeWidth="0.5" />
+            <text x={PAD.left - 6} y={sy(mt, yMin, yMax) + 4} textAnchor="end" fontSize="9"
+              fill="#006600" fontFamily="var(--font-mono),monospace">{mt}</text>
           </g>
         ))}
-      </g>
+        {[2000, 2010, 2020, 2030, 2040, 2050].map((yr) => (
+          <g key={yr}>
+            <line x1={sx(yr, xMin, xMax)} x2={sx(yr, xMin, xMax)} y1={PAD.top} y2={H - PAD.bottom}
+              stroke="#003300" strokeWidth="0.5" />
+            <text x={sx(yr, xMin, xMax)} y={H - PAD.bottom + 14} textAnchor="middle" fontSize="9"
+              fill="#006600" fontFamily="var(--font-mono),monospace">{yr}</text>
+          </g>
+        ))}
+        <text x={PAD.left - 40} y={PAD.top + IH / 2} textAnchor="middle" fontSize="9"
+          fill="#006600" fontFamily="var(--font-mono),monospace"
+          transform={`rotate(-90,${PAD.left - 40},${PAD.top + IH / 2})`}>Mt CO₂-e</text>
 
-      {/* Hover */}
-      {EMISSIONS_HISTORY.map((p) => (
-        <circle key={p.year} cx={sx(p.year, xMin, xMax)} cy={sy(p.total, yMin, yMax)} r={7}
-          fill="transparent" style={{ cursor: "crosshair" }}
-          onMouseEnter={() => setHover(p)} onMouseLeave={() => setHover(null)} />
-      ))}
-      {hover && (
-        <g>
-          <line x1={sx(hover.year, xMin, xMax)} x2={sx(hover.year, xMin, xMax)}
-            y1={PAD.top} y2={H - PAD.bottom} stroke="rgba(0,255,65,0.15)" strokeWidth="1" />
-          <rect x={sx(hover.year, xMin, xMax) - 38} y={sy(hover.total, yMin, yMax) - 30}
-            width={76} height={22} rx={4} fill="#020c02" stroke="#003300" />
-          <text x={sx(hover.year, xMin, xMax)} y={sy(hover.total, yMin, yMax) - 14}
-            textAnchor="middle" fontSize="9" fill="#00FF41" fontFamily="var(--font-mono),monospace">
-            {hover.year}: {hover.total.toFixed(0)} Mt
-          </text>
-        </g>
-      )}
-    </svg>
+        {/* 2005 baseline rule — label at bottom so it clears the peak area */}
+        <line x1={sx(2005, xMin, xMax)} x2={sx(2005, xMin, xMax)} y1={PAD.top} y2={H - PAD.bottom}
+          stroke="rgba(0,255,65,0.1)" strokeWidth="1" strokeDasharray="3,4" />
+        <text x={sx(2005, xMin, xMax) + 3} y={H - PAD.bottom - 4} fontSize="7.5"
+          fill="rgba(0,255,65,0.3)" fontFamily="var(--font-mono),monospace">2005 baseline</text>
+
+        {inView && (
+          <>
+            <motion.path d={areaPath(bauVsTarget)} fill="url(#gapGrad)"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0, duration: 0.8 }} />
+            <motion.path d={areaPath(corridor)} fill="url(#corGrad)"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.8 }} />
+
+            <AnimPath d={bauPath}    stroke="rgba(239,68,68,0.6)"  width={1.5} dash="5,4" delay={0.8} />
+            <AnimPath d={policyPath} stroke="rgba(0,255,65,0.45)"  width={1.5} dash="4,3" delay={1.0} />
+            <AnimPath d={targetLine} stroke="rgba(0,255,65,0.8)"   width={1}   dash="2,3" delay={1.2} />
+            <AnimPath d={histPath}   stroke="#00FF41"              width={2.5}             delay={0}   />
+
+            {/* 2030 target dot */}
+            <motion.circle cx={sx(2030, xMin, xMax)} cy={sy(TARGETS.target2030, yMin, yMax)} r={5} fill="#00FF41"
+              initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1.4, type: "spring" }} />
+            <motion.text x={sx(2030, xMin, xMax) + 7} y={sy(TARGETS.target2030, yMin, yMax) + 4}
+              fontSize="9" fill="#00FF41" fontFamily="var(--font-mono),monospace"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}>
+              342.9 Mt
+            </motion.text>
+
+            {/* Net zero */}
+            <motion.circle cx={sx(2050, xMin, xMax) - 4} cy={sy(0, yMin, yMax)} r={5} fill="#10B981"
+              initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1.6, type: "spring" }} />
+            <motion.text x={sx(2050, xMin, xMax) - 12} y={sy(0, yMin, yMax) - 8}
+              textAnchor="middle" fontSize="9" fill="#10B981" fontFamily="var(--font-mono),monospace"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.7 }}>
+              Net Zero
+            </motion.text>
+
+            {/* Peak — dot + right-of-dot label, no box */}
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+              <circle cx={peakX} cy={peakY} r={4} fill="none" stroke="rgba(239,68,68,0.65)" strokeWidth="1.2" />
+              <text x={peakX + 7} y={peakY - 2} fontSize="8"
+                fill="rgba(239,68,68,0.75)" fontFamily="var(--font-mono),monospace">peak 617.8 Mt</text>
+            </motion.g>
+
+            {/* COVID callout */}
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}>
+              <circle cx={sx(2020, xMin, xMax)} cy={sy(499.2, yMin, yMax)} r={3.5}
+                fill="none" stroke="rgba(0,255,65,0.35)" strokeWidth="1" />
+              <text x={sx(2020, xMin, xMax) + 5} y={sy(499.2, yMin, yMax) - 5} fontSize="7.5"
+                fill="rgba(0,255,65,0.4)" fontFamily="var(--font-mono),monospace">COVID −19 Mt</text>
+            </motion.g>
+
+            {/* Today marker */}
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
+              <line x1={todayX} x2={todayX} y1={PAD.top} y2={H - PAD.bottom}
+                stroke="rgba(0,255,65,0.22)" strokeWidth="1" strokeDasharray="2,3" />
+              <circle cx={todayX} cy={todayY} r={5} fill="#020c02" stroke="#00FF41" strokeWidth="1.5" />
+              <circle cx={todayX} cy={todayY} r={2} fill="#00FF41" />
+              {/* Tooltip above the dot — clear of the data lines in that region */}
+              <rect x={todayX - 28} y={todayY - 26} width={60} height={19} rx={3}
+                fill="#020c02" fillOpacity={0.9} stroke="#003300" />
+              <text x={todayX + 2} y={todayY - 12} textAnchor="middle" fontSize="8.5"
+                fill="#00FF41" fontFamily="var(--font-mono),monospace">now · 448 Mt</text>
+            </motion.g>
+          </>
+        )}
+
+        {/* Hover */}
+        {EMISSIONS_HISTORY.map((p) => (
+          <circle key={p.year} cx={sx(p.year, xMin, xMax)} cy={sy(p.total, yMin, yMax)} r={7}
+            fill="transparent" style={{ cursor: "crosshair" }}
+            onMouseEnter={() => setHover(p)} onMouseLeave={() => setHover(null)} />
+        ))}
+        {hover && (
+          <g>
+            <line x1={sx(hover.year, xMin, xMax)} x2={sx(hover.year, xMin, xMax)}
+              y1={PAD.top} y2={H - PAD.bottom} stroke="rgba(0,255,65,0.15)" strokeWidth="1" />
+            <rect x={sx(hover.year, xMin, xMax) - 38} y={sy(hover.total, yMin, yMax) - 30}
+              width={76} height={22} rx={4} fill="#020c02" stroke="#003300" />
+            <text x={sx(hover.year, xMin, xMax)} y={sy(hover.total, yMin, yMax) - 14}
+              textAnchor="middle" fontSize="9" fill="#00FF41" fontFamily="var(--font-mono),monospace">
+              {hover.year}: {hover.total.toFixed(0)} Mt
+            </text>
+          </g>
+        )}
+      </svg>
+
+      {/* Legend below SVG — no overlap possible */}
+      <div className="flex flex-wrap gap-x-5 gap-y-1 mt-2 px-1">
+        {[
+          { color: "#00FF41",             label: "Actual emissions",    dash: false },
+          { color: "rgba(0,255,65,0.55)", label: "Policy pathway",      dash: true  },
+          { color: "rgba(239,68,68,0.7)", label: "Business-as-usual",   dash: true  },
+        ].map((l) => (
+          <div key={l.label} className="flex items-center gap-1.5">
+            <svg width="18" height="10">
+              <line x1="0" y1="5" x2="18" y2="5" stroke={l.color} strokeWidth="1.5"
+                strokeDasharray={l.dash ? "4,3" : undefined} />
+            </svg>
+            <span className="text-[10px]" style={{ color: "#8B949E", fontFamily: "var(--font-inter),sans-serif" }}>
+              {l.label}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
