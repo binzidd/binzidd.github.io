@@ -508,13 +508,14 @@ function EVChart() {
   );
 
   return (
-    <svg ref={ref} viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ overflow: "visible" }}>
-      <defs>
-        <linearGradient id="evArea" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#10B981" stopOpacity="0.16" />
-          <stop offset="100%" stopColor="#10B981" stopOpacity="0" />
-        </linearGradient>
-      </defs>
+    <div>
+      <svg ref={ref} viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ overflow: "visible" }}>
+        <defs>
+          <linearGradient id="evArea" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#10B981" stopOpacity="0.16" />
+            <stop offset="100%" stopColor="#10B981" stopOpacity="0" />
+          </linearGradient>
+        </defs>
 
       {[60, 70, 80, 90, 100, 110].map((mt) => (
         <g key={mt}>
@@ -592,19 +593,6 @@ function EVChart() {
         </>
       )}
 
-      {/* Legend */}
-      <g transform={`translate(${PAD.left + 4},${PAD.top + 4})`}>
-        {[
-          { color: "#3B82F6", label: "Transport emissions (left)" },
-          { color: "#10B981", label: "Annual EV sales (right)" },
-        ].map((l, i) => (
-          <g key={i} transform={`translate(0,${i * 13})`}>
-            <line x1={0} x2={14} y1={5} y2={5} stroke={l.color} strokeWidth="1.5" />
-            <text x={18} y={8} fontSize="8" fill="#8B949E" fontFamily="var(--font-inter),sans-serif">{l.label}</text>
-          </g>
-        ))}
-      </g>
-
       {/* Hover tooltip */}
       {hover && (() => {
         const evd = EV_DATA.find((d) => d.year === hover);
@@ -628,6 +616,26 @@ function EVChart() {
         );
       })()}
     </svg>
+
+    {/* Legend below SVG */}
+    <div className="flex flex-wrap gap-x-5 gap-y-1 mt-2 px-1">
+      {[
+        { color: "#3B82F6", label: "Transport emissions (left axis)",  dash: false },
+        { color: "#10B981", label: "Annual EV sales (right axis)",     dash: false },
+        { color: "#10B981", label: "Projected",                        dash: true  },
+      ].map((l) => (
+        <div key={l.label} className="flex items-center gap-1.5">
+          <svg width="18" height="10">
+            <line x1="0" y1="5" x2="18" y2="5" stroke={l.color} strokeWidth="1.5"
+              strokeDasharray={l.dash ? "4,3" : undefined} />
+          </svg>
+          <span className="text-[10px]" style={{ color: "#8B949E", fontFamily: "var(--font-inter),sans-serif" }}>
+            {l.label}
+          </span>
+        </div>
+      ))}
+    </div>
+    </div>
   );
 }
 
