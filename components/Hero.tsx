@@ -1,7 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import {
+  motion, animate, useMotionValue, useSpring, useTransform,
+  useScroll, useMotionTemplate,
+} from "framer-motion";
+import AustraliaDataField from "@/components/AustraliaDataField";
 
 const roles = [
   "Data & Analytics Lead",
@@ -10,20 +14,56 @@ const roles = [
   "AI Engineering Lead",
 ];
 
+// num animates from 0; post renders with the big digits, suffix stays small
 const stats = [
-  { value: "9", suffix: " yrs", label: "Analytics Experience" },
-  { value: "5+", suffix: " yrs", label: "People Leadership" },
-  { value: "200+", suffix: "", label: "GenAI Users Onboarded" },
-  { value: "3×", suffix: "", label: "AWS Certified" },
+  { num: 9,   post: "",  suffix: " yrs", label: "Analytics Experience" },
+  { num: 5,   post: "+", suffix: " yrs", label: "People Leadership" },
+  { num: 200, post: "+", suffix: "",     label: "GenAI Users Onboarded" },
+  { num: 3,   post: "×", suffix: "",     label: "AWS Certified" },
 ];
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+// Magnetic wrapper — element leans toward the cursor, springs back on leave
+function Magnetic({ children }: { children: React.ReactNode }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 260, damping: 18 });
+  const sy = useSpring(y, { stiffness: 260, damping: 18 });
+
+  return (
+    <motion.div
+      className="inline-block"
+      style={{ x: sx, y: sy }}
+      onMouseMove={(e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        x.set((e.clientX - (r.left + r.width / 2)) * 0.32);
+        y.set((e.clientY - (r.top + r.height / 2)) * 0.32);
+      }}
+      onMouseLeave={() => { x.set(0); y.set(0); }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 function StatCard({ stat, index }: { stat: typeof stats[0]; index: number }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [16, -16]), { stiffness: 420, damping: 28 });
   const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-16, 16]), { stiffness: 420, damping: 28 });
+
+  // Count-up: digits roll from 0 as the card lands
+  const [display, setDisplay] = useState(0);
+  useEffect(() => {
+    const controls = animate(0, stat.num, {
+      duration: 1.5,
+      delay: 1.2 + index * 0.08,
+      ease: EASE,
+      onUpdate: (v) => setDisplay(Math.round(v)),
+    });
+    return () => controls.stop();
+  }, [stat.num, index]);
 
   return (
     <motion.div
@@ -46,8 +86,8 @@ function StatCard({ stat, index }: { stat: typeof stats[0]; index: number }) {
       whileHover={{ boxShadow: "0 8px 32px rgba(0,255,65,0.12), 0 0 0 1px rgba(0,255,65,0.2)" }}
       className="flex flex-col items-center px-5 py-3 rounded-xl cursor-default"
     >
-      <span className="text-3xl md:text-4xl font-semibold" style={{ color: "#00FF41", fontFamily: "var(--font-cormorant), serif" }}>
-        {stat.value}<span className="text-2xl">{stat.suffix}</span>
+      <span className="text-3xl md:text-4xl font-semibold tabular-nums" style={{ color: "#00FF41", fontFamily: "var(--font-cormorant), serif" }}>
+        {display}{stat.post}<span className="text-2xl">{stat.suffix}</span>
       </span>
       <span className="text-[10px] mt-1 text-center" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace", letterSpacing: "0.08em" }}>
         {stat.label}
@@ -60,6 +100,18 @@ export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0);
   const [displayed, setDisplayed] = useState("");
   const [typing, setTyping] = useState(true);
+
+  // Apple-style scroll exit: content recedes, blurs and fades as you leave
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
+  const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -70]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const blurPx = useTransform(scrollYProgress, [0, 0.6], [0, 8]);
+  const contentFilter = useMotionTemplate`blur(${blurPx}px)`;
+  // The continent recedes at a different rate — depth between layers
+  const mapY = useTransform(scrollYProgress, [0, 1], [0, 110]);
+  const mapOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
   // Mouse position for parallax (normalised -1 → 1)
   const mouseX = useMotionValue(0);
@@ -100,6 +152,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
+      ref={sectionRef}
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden dot-grid"
       style={{ background: "#000500" }}
       onMouseMove={(e) => {
@@ -124,7 +177,15 @@ export default function Hero() {
           className="absolute left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(0,255,65,0.04), transparent)" }} />
       </div>
 
-      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+      {/* Australia rendered as ~1,000 live data points — assembles behind the name */}
+      <motion.div className="absolute inset-0 pointer-events-none" style={{ y: mapY, opacity: mapOpacity, zIndex: 2 }}>
+        <AustraliaDataField />
+      </motion.div>
+
+      <motion.div
+        className="relative z-10 text-center px-6 max-w-4xl mx-auto"
+        style={{ scale: contentScale, y: contentY, opacity: contentOpacity, filter: contentFilter }}
+      >
         {/* Eyebrow */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.7 }}
           className="flex items-center justify-center gap-3 mb-8">
@@ -177,25 +238,29 @@ export default function Hero() {
           ))}
         </motion.div>
 
-        {/* CTAs */}
+        {/* CTAs — magnetic: they lean toward the cursor */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5, duration: 0.6 }}
           className="flex flex-wrap items-center justify-center gap-4">
-          <button onClick={() => document.getElementById("timeline")?.scrollIntoView({ behavior: "smooth" })}
-            className="px-7 py-3 rounded-full text-sm font-medium transition-all duration-300"
-            style={{ background: "#00FF41", color: "#000500", fontFamily: "var(--font-mono), monospace" }}
-            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 28px rgba(0,255,65,0.5)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}>
-            ./explore_work
-          </button>
-          <a href="https://linkedin.com/in/binaysiddharth" target="_blank" rel="noopener noreferrer"
-            className="px-7 py-3 rounded-full text-sm font-medium transition-all duration-300"
-            style={{ border: "1px solid #003300", color: "#8B949E", fontFamily: "var(--font-mono), monospace" }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(0,255,65,0.3)"; e.currentTarget.style.color = "#00FF41"; e.currentTarget.style.transform = "translateY(-3px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#003300"; e.currentTarget.style.color = "#8B949E"; e.currentTarget.style.transform = "none"; }}>
-            connect --linkedin
-          </a>
+          <Magnetic>
+            <button onClick={() => document.getElementById("timeline")?.scrollIntoView({ behavior: "smooth" })}
+              className="px-7 py-3 rounded-full text-sm font-medium transition-shadow duration-300"
+              style={{ background: "#00FF41", color: "#000500", fontFamily: "var(--font-mono), monospace" }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 28px rgba(0,255,65,0.5)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}>
+              ./explore_work
+            </button>
+          </Magnetic>
+          <Magnetic>
+            <a href="https://linkedin.com/in/binaysiddharth" target="_blank" rel="noopener noreferrer"
+              className="inline-block px-7 py-3 rounded-full text-sm font-medium transition-colors duration-300"
+              style={{ border: "1px solid #003300", color: "#8B949E", fontFamily: "var(--font-mono), monospace" }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(0,255,65,0.3)"; e.currentTarget.style.color = "#00FF41"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#003300"; e.currentTarget.style.color = "#8B949E"; }}>
+              connect --linkedin
+            </a>
+          </Magnetic>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Scroll indicator */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.0, duration: 0.8 }}
