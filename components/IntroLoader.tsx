@@ -108,10 +108,21 @@ export default function IntroLoader() {
   const submitFeedback = useCallback(() => {
     if (fbVal.trim()) {
       try {
-        const prev = JSON.parse(localStorage.getItem("portfolio_feedback") ?? "[]");
-        prev.push({ name: vName || "Anonymous", feedback: fbVal.trim(), ts: Date.now() });
+        const raw = localStorage.getItem("portfolio_feedback") ?? "[]";
+        // Prototype-safe reviver: drop __proto__ / constructor keys
+        const parsed = JSON.parse(raw, (k, v) =>
+          k === "__proto__" || k === "constructor" || k === "prototype" ? undefined : v
+        );
+        const prev: Array<{ name: string; feedback: string; ts: number }> = Array.isArray(parsed)
+          ? parsed.slice(-49)  // cap at 49 existing before adding new entry
+          : [];
+        prev.push({
+          name:     (vName || "Anonymous").slice(0, 80),
+          feedback: fbVal.trim().slice(0, 500),
+          ts:       Date.now(),
+        });
         localStorage.setItem("portfolio_feedback", JSON.stringify(prev));
-      } catch {/* ignore */}
+      } catch {/* ignore quota/parse errors */}
     }
     setStep("thanks");
     setTimeout(exit, 1600);

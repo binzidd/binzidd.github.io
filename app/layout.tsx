@@ -53,6 +53,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        {/*
+          GitHub Pages cannot set HTTP security headers, so these meta equivalents
+          are the best available mitigations for a static export.
+          'unsafe-inline' is required by Framer Motion (inline style mutations).
+        */}
+        <meta httpEquiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://api.github.com; frame-ancestors 'none';" />
+        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
+        <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+        <meta name="permissions-policy" content="geolocation=(), microphone=(), camera=()" />
+      </head>
       <body className={`${cormorant.variable} ${inter.variable} ${jetbrains.variable} antialiased`}>
         {children}
       </body>
