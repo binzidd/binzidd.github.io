@@ -8,14 +8,18 @@ import HeadingReveal from "@/components/motion/HeadingReveal";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.1 } } };
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.12 } } };
 const cardVariants = {
-  hidden: { opacity: 0, x: -24, rotateY: -6 },
-  visible: { opacity: 1, x: 0, rotateY: 0, transition: { duration: 0.65, ease: EASE } },
+  hidden: { opacity: 0, x: -32, rotateY: -10, scale: 0.97 },
+  visible: { opacity: 1, x: 0, rotateY: 0, scale: 1, transition: { duration: 0.7, ease: EASE } },
 };
 const bulletVariants = {
   hidden: { opacity: 0, x: -12 },
   visible: (i: number) => ({ opacity: 1, x: 0, transition: { delay: i * 0.05, duration: 0.4 } }),
+};
+const lineVariants = {
+  hidden: { scaleY: 0 },
+  visible: { scaleY: 1, transition: { duration: 1.4, ease: EASE } },
 };
 
 export default function Timeline() {
@@ -32,7 +36,19 @@ export default function Timeline() {
         </motion.div>
 
         <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="relative" style={{ perspective: "1200px" }}>
-          <div className="absolute left-[11px] top-3 bottom-3 w-px" style={{ background: "linear-gradient(to bottom, #00FF4144, #003300, transparent)" }} />
+          {/* Animated vertical timeline line */}
+          <motion.div
+            variants={lineVariants}
+            className="absolute left-[11px] top-3 bottom-3 w-px origin-top"
+            style={{ background: "linear-gradient(to bottom, #00FF4144, #003300, transparent)" }}
+          />
+          {/* Scanning pulse dot */}
+          <motion.div
+            className="absolute left-[8px] w-[7px] h-[7px] rounded-full"
+            style={{ background: "#00FF41", boxShadow: "0 0 8px #00FF41", top: "12px" }}
+            animate={{ top: ["12px", "calc(100% - 12px)", "12px"] }}
+            transition={{ duration: 4.5, ease: "linear", repeat: Infinity, repeatDelay: 1 }}
+          />
 
           <div className="space-y-3">
             {experience.map((exp) => {
