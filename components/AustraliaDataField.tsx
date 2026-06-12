@@ -116,8 +116,7 @@ export default function AustraliaDataField() {
             ay: ty + Math.sin(ang) * dist,
             az: (Math.random() - 0.5) * 800,
             delay: ((jLon - 112) / 42) * ASSEMBLE_SPREAD + Math.random() * 0.25,
-            // Three brightness tiers — more contrast than before
-            bright: i % 6 === 0 ? 1.0 : i % 3 === 0 ? 0.65 : 0.42,
+                bright: i % 6 === 0 ? 0.55 : i % 3 === 0 ? 0.32 : 0.18,
             twSpeed: 0.5 + Math.random() * 1.5,
             twPhase: Math.random() * Math.PI * 2,
             col: COLORS[Math.floor(Math.random() * COLORS.length)],
@@ -169,9 +168,9 @@ export default function AustraliaDataField() {
       // Global assembly progress 0→1 drives silhouette + coastline fade-in
       const globalE = Math.min(Math.max(tAssemble / (ASSEMBLE_SPREAD + ASSEMBLE_DUR), 0), 1);
 
-      // ── 1. Faint filled silhouette — always present, fades in with assembly ──
-      const fillAlpha = globalE * 0.055;
-      if (fillAlpha > 0.002) {
+      // ── 1. Faint filled silhouette ────────────────────────────────────────────
+      const fillAlpha = globalE * 0.025;
+      if (fillAlpha > 0.001) {
         ctx.beginPath();
         tracePoly(MAINLAND);
         ctx.fillStyle = `rgba(0,255,65,${fillAlpha.toFixed(3)})`;
@@ -183,14 +182,14 @@ export default function AustraliaDataField() {
         ctx.fill();
       }
 
-      // ── 2. Glowing coastline stroke — fades in as continent assembles ────────
-      const strokeAlpha = globalE * 0.32;
-      if (strokeAlpha > 0.01) {
-        // Outer glow pass (wider, dimmer)
+      // ── 2. Coastline stroke ───────────────────────────────────────────────────
+      const strokeAlpha = globalE * 0.16;
+      if (strokeAlpha > 0.005) {
+        // Outer glow pass
         ctx.beginPath();
         tracePoly(MAINLAND);
-        ctx.strokeStyle = `rgba(0,255,65,${(strokeAlpha * 0.35).toFixed(3)})`;
-        ctx.lineWidth = 4;
+        ctx.strokeStyle = `rgba(0,255,65,${(strokeAlpha * 0.3).toFixed(3)})`;
+        ctx.lineWidth = 3;
         ctx.lineJoin = "round";
         ctx.stroke();
 
@@ -202,7 +201,7 @@ export default function AustraliaDataField() {
         ctx.beginPath();
         tracePoly(MAINLAND);
         ctx.strokeStyle = `rgba(0,255,65,${strokeAlpha.toFixed(3)})`;
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 1;
         ctx.stroke();
 
         ctx.beginPath();
@@ -228,23 +227,21 @@ export default function AustraliaDataField() {
 
         const { px, py, s } = project(x, y, z);
         const tw = reduceMotion ? 1 : 0.72 + 0.28 * Math.sin(t * p.twSpeed + p.twPhase);
-        // Minimum alpha 0.42 for dim points (was 0.3 * 0.3 = 0.09 effective)
-        const alpha = p.bright * tw * (0.42 + 0.58 * e);
-        // Much larger dots: base 2.8px, bright points 5.8px (was 0.9/2.4)
-        const rad = (2.8 + p.bright * 3.0) * s;
+        const alpha = p.bright * tw * (0.5 + 0.5 * e);
+        const rad = (1.6 + p.bright * 2.2) * s;
         const [r, g, b] = p.col;
 
-        // Outer glow halo (all points)
+        // Outer glow halo
         ctx.beginPath();
-        ctx.arc(px, py, rad * 2.8, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${r},${g},${b},${(alpha * 0.18).toFixed(3)})`;
+        ctx.arc(px, py, rad * 2.4, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${g},${b},${(alpha * 0.12).toFixed(3)})`;
         ctx.fill();
 
-        // Mid glow (bright + medium points)
-        if (p.bright > 0.4) {
+        // Mid glow (bright points only)
+        if (p.bright > 0.3) {
           ctx.beginPath();
-          ctx.arc(px, py, rad * 1.7, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${r},${g},${b},${(alpha * 0.42).toFixed(3)})`;
+          ctx.arc(px, py, rad * 1.5, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${r},${g},${b},${(alpha * 0.28).toFixed(3)})`;
           ctx.fill();
         }
 
@@ -267,7 +264,7 @@ export default function AustraliaDataField() {
             const ph = ((t * 0.55 + off) % 1);
             ctx.beginPath();
             ctx.arc(px, py, (4 + ph * 36) * s, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(0,255,65,${((1 - ph) * 0.55 * fade).toFixed(3)})`;
+            ctx.strokeStyle = `rgba(0,255,65,${((1 - ph) * 0.30 * fade).toFixed(3)})`;
             ctx.lineWidth = 1.2;
             ctx.stroke();
           }
