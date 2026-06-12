@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
+import { smoothScrollTo } from "@/components/SmoothScroll";
 
 const navItems = [
   { label: "About", href: "#hero" },
@@ -37,7 +38,8 @@ export default function Navigation() {
   }, []);
 
   const scrollTo = (href: string) => {
-    document.getElementById(href.slice(1))?.scrollIntoView({ behavior: "smooth" });
+    const el = document.getElementById(href.slice(1));
+    if (el) smoothScrollTo(el);
   };
 
   return (

@@ -209,8 +209,9 @@ export default function CommandPalette() {
                 </button>
               </div>
 
-              {/* Messages */}
+              {/* Messages — data-lenis-prevent keeps inner scroll native under smooth-scroll */}
               <div
+                data-lenis-prevent
                 className="px-5 py-4 overflow-y-auto"
                 style={{ maxHeight: "340px", minHeight: messages.length ? "200px" : "0px" }}
               >

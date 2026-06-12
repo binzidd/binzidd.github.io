@@ -6,10 +6,10 @@ import { motion, AnimatePresence } from "framer-motion";
 // ── Boot sequence lines ────────────────────────────────────────────────────────
 const BOOT_LINES = [
   { text: "BIOS v9.0.0  —  BINAY SIDDHARTH PORTFOLIO", bright: true,  delay: 0    },
-  { text: "RAM check: 9 yrs analytics ... OK",          bright: false, delay: 200  },
+  { text: "RAM check: 10 yrs analytics ... OK",         bright: false, delay: 200  },
   { text: "Loading kernel modules:",                     bright: false, delay: 390  },
   { text: "  [  OK  ] data_analytics.core",             bright: false, delay: 530  },
-  { text: "  [  OK  ] people_leadership.mod (5+ yrs)",  bright: false, delay: 650  },
+  { text: "  [  OK  ] people_leadership.mod (6+ yrs)",  bright: false, delay: 650  },
   { text: "  [  OK  ] genai_engineering.mod (200+ usr)",bright: false, delay: 770  },
   { text: "  [  OK  ] aws_certs.mod (×3 certified)",    bright: false, delay: 890  },
   { text: "  [  OK  ] hci_design.mod",                  bright: false, delay: 990  },

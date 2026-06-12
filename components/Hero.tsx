@@ -6,6 +6,7 @@ import {
   useScroll, useMotionTemplate,
 } from "framer-motion";
 import AustraliaDataField from "@/components/AustraliaDataField";
+import { smoothScrollTo } from "@/components/SmoothScroll";
 
 const roles = [
   "Data & Analytics Lead",
@@ -242,7 +243,7 @@ export default function Hero() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5, duration: 0.6 }}
           className="flex flex-wrap items-center justify-center gap-4">
           <Magnetic>
-            <button onClick={() => document.getElementById("timeline")?.scrollIntoView({ behavior: "smooth" })}
+            <button onClick={() => { const el = document.getElementById("timeline"); if (el) smoothScrollTo(el); }}
               className="px-7 py-3 rounded-full text-sm font-medium transition-shadow duration-300"
               style={{ background: "#00FF41", color: "#000500", fontFamily: "var(--font-mono), monospace" }}
               onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 28px rgba(0,255,65,0.5)"; }}
