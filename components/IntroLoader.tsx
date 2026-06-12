@@ -28,16 +28,15 @@ function progressBar(pct: number): string {
 }
 
 // ── Steps ─────────────────────────────────────────────────────────────────────
-type Step = "boot" | "name" | "feedback" | "thanks";
+type Step = "boot" | "name" | "thanks";
 
 const CRUMBS: { key: Step; label: string }[] = [
-  { key: "boot",     label: "Init"     },
-  { key: "name",     label: "Identify" },
-  { key: "feedback", label: "Feedback" },
-  { key: "thanks",   label: "Launch"   },
+  { key: "boot",   label: "Init"     },
+  { key: "name",   label: "Identify" },
+  { key: "thanks", label: "Launch"   },
 ];
 
-const STEP_ORDER: Step[] = ["boot", "name", "feedback", "thanks"];
+const STEP_ORDER: Step[] = ["boot", "name", "thanks"];
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function IntroLoader() {
@@ -47,11 +46,9 @@ export default function IntroLoader() {
   const [bootLines,  setBootLines]  = useState<number>(0);   // how many lines shown
   const [progress,   setProgress]   = useState(0);           // 0–1
   const [nameVal,    setNameVal]    = useState("");
-  const [fbVal,      setFbVal]      = useState("");
   const [vName,      setVName]      = useState("");
   const [exiting,    setExiting]    = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
-  const fbRef   = useRef<HTMLTextAreaElement>(null);
 
   // ── Session gate ──────────────────────────────────────────────────────────
   useEffect(() => {
@@ -91,10 +88,9 @@ export default function IntroLoader() {
     };
   }, [mounted, step]);
 
-  // Focus inputs on step change
+  // Focus input on step change
   useEffect(() => {
-    if (step === "name")     setTimeout(() => nameRef.current?.focus(), 60);
-    if (step === "feedback") setTimeout(() => fbRef.current?.focus(), 60);
+    if (step === "name") setTimeout(() => nameRef.current?.focus(), 60);
   }, [step]);
 
   // ── Exit ──────────────────────────────────────────────────────────────────
@@ -104,31 +100,10 @@ export default function IntroLoader() {
     setTimeout(() => setVisible(false), 700);
   }, []);
 
-  // ── Feedback submit ────────────────────────────────────────────────────────
-  const submitFeedback = useCallback(() => {
-    if (fbVal.trim()) {
-      try {
-        const raw = localStorage.getItem("portfolio_feedback") ?? "[]";
-        // Prototype-safe reviver: drop __proto__ / constructor keys
-        const parsed = JSON.parse(raw, (k, v) =>
-          k === "__proto__" || k === "constructor" || k === "prototype" ? undefined : v
-        );
-        const prev: Array<{ name: string; feedback: string; ts: number }> = Array.isArray(parsed)
-          ? parsed.slice(-49)  // cap at 49 existing before adding new entry
-          : [];
-        prev.push({
-          name:     (vName || "Anonymous").slice(0, 80),
-          feedback: fbVal.trim().slice(0, 500),
-          ts:       Date.now(),
-        });
-        localStorage.setItem("portfolio_feedback", JSON.stringify(prev));
-      } catch {/* ignore quota/parse errors */}
-    }
-    setStep("thanks");
-    setTimeout(exit, 1600);
-  }, [fbVal, vName, exit]);
-
-  const skipFeedback = useCallback(() => {
+  const goThanks = useCallback((name: string) => {
+    const safe = name.slice(0, 80); // clamp length before storing
+    setVName(safe);
+    if (safe) sessionStorage.setItem("visitorName", safe);
     setStep("thanks");
     setTimeout(exit, 1600);
   }, [exit]);
@@ -253,10 +228,7 @@ export default function IntroLoader() {
                     value={nameVal}
                     onChange={(e) => setNameVal(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter" && nameVal.trim()) {
-                        setVName(nameVal.trim());
-                        setStep("feedback");
-                      }
+                      if (e.key === "Enter") goThanks(nameVal.trim());
                     }}
                     placeholder="type your name..."
                     className="flex-1 bg-transparent outline-none text-[13px] placeholder:opacity-30"
@@ -269,7 +241,7 @@ export default function IntroLoader() {
                 </div>
                 <div className="flex gap-3">
                   <button
-                    onClick={() => { if (nameVal.trim()) { setVName(nameVal.trim()); setStep("feedback"); } }}
+                    onClick={() => goThanks(nameVal.trim())}
                     disabled={!nameVal.trim()}
                     className="px-4 py-1.5 text-[11px] rounded transition-all"
                     style={{
@@ -278,66 +250,10 @@ export default function IntroLoader() {
                       color: nameVal.trim() ? "#00FF41" : "#003300",
                     }}
                   >
-                    ./continue
+                    ./launch
                   </button>
                   <button
-                    onClick={() => { setVName(""); setStep("feedback"); }}
-                    className="px-4 py-1.5 text-[11px] rounded transition-all"
-                    style={{ background: "transparent", border: "1px solid #002200", color: "#003300" }}
-                    onMouseEnter={(e) => { e.currentTarget.style.color = "#006600"; e.currentTarget.style.borderColor = "#003300"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.color = "#003300"; e.currentTarget.style.borderColor = "#002200"; }}
-                  >
-                    --anonymous
-                  </button>
-                </div>
-              </motion.div>
-            )}
-
-            {/* ── FEEDBACK ── */}
-            {step === "feedback" && (
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35 }}
-              >
-                <p className="text-[11px] mb-5" style={{ color: "#006600" }}>
-                  &gt; {vName ? <span style={{ color: "#008F11" }}>Hello, {vName}.</span> : <span style={{ color: "#008F11" }}>Hello.</span>} Leave a log entry before you explore.
-                </p>
-                <div className="mb-2 text-[12px]" style={{ color: "#00FF41" }}>
-                  &gt; FEEDBACK.LOG:
-                </div>
-                <textarea
-                  ref={fbRef}
-                  value={fbVal}
-                  onChange={(e) => setFbVal(e.target.value)}
-                  placeholder="// thoughts, impressions, suggestions..."
-                  rows={4}
-                  className="w-full bg-transparent outline-none resize-none text-[12px] placeholder:opacity-25 leading-6"
-                  style={{
-                    color: "#00FF41",
-                    caretColor: "#00FF41",
-                    borderBottom: "1px solid #003300",
-                    paddingBottom: 8,
-                    marginBottom: 20,
-                    fontFamily: "var(--font-mono), monospace",
-                  }}
-                />
-                <div className="flex gap-3">
-                  <button
-                    onClick={submitFeedback}
-                    className="px-4 py-1.5 text-[11px] rounded transition-all"
-                    style={{
-                      background: "rgba(0,255,65,0.1)",
-                      border: "1px solid rgba(0,255,65,0.4)",
-                      color: "#00FF41",
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,255,65,0.18)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,255,65,0.1)"; }}
-                  >
-                    ./submit &amp; launch
-                  </button>
-                  <button
-                    onClick={skipFeedback}
+                    onClick={() => goThanks("")}
                     className="px-4 py-1.5 text-[11px] rounded transition-all"
                     style={{ background: "transparent", border: "1px solid #002200", color: "#003300" }}
                     onMouseEnter={(e) => { e.currentTarget.style.color = "#006600"; e.currentTarget.style.borderColor = "#003300"; }}
