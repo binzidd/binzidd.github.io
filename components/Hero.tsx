@@ -16,8 +16,8 @@ const roles = [
 
 // num animates from 0; post renders with the big digits, suffix stays small
 const stats = [
-  { num: 9,   post: "",  suffix: " yrs", label: "Analytics Experience" },
-  { num: 5,   post: "+", suffix: " yrs", label: "People Leadership" },
+  { num: 10,  post: "",  suffix: " yrs", label: "Analytics Experience" },
+  { num: 6,   post: "+", suffix: " yrs", label: "People Leadership" },
   { num: 200, post: "+", suffix: "",     label: "GenAI Users Onboarded" },
   { num: 3,   post: "×", suffix: "",     label: "AWS Certified" },
 ];

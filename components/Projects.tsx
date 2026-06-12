@@ -18,8 +18,8 @@ const statusConfig: Record<Project["status"], { label: string; color: string; bg
 
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.09 } } };
 const cardVariants = {
-  hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
+  hidden: { opacity: 0, y: 32, rotateX: -10, scale: 0.96 },
+  visible: { opacity: 1, y: 0, rotateX: 0, scale: 1, transition: { duration: 0.6, ease: EASE } },
 };
 
 function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
@@ -81,6 +81,10 @@ function ProjectCard3D({ project, onClick }: { project: Project; onClick: () => 
   const shineOpacity = useSpring(0, { stiffness: 320, damping: 26 });
 
   const status = statusConfig[project.status];
+  const scanVariants = {
+    hidden: { scaleX: 0, opacity: 0.6 },
+    visible: { scaleX: [0, 1, 0], opacity: [0.6, 0.6, 0], transition: { duration: 0.55, ease: EASE, delay: 0.1 } },
+  };
 
   return (
     <motion.div
@@ -102,6 +106,12 @@ function ProjectCard3D({ project, onClick }: { project: Project; onClick: () => 
       }}
     >
       <div className="relative rounded-2xl p-6 overflow-hidden" style={{ background: "#000500", border: "1px solid #003300" }}>
+        {/* Entry scanline sweep */}
+        <motion.div
+          variants={scanVariants}
+          className="absolute inset-x-0 top-0 h-[1px] origin-left pointer-events-none"
+          style={{ background: "linear-gradient(90deg, transparent, #00FF41, transparent)" }}
+        />
         {/* Cursor-tracked shine overlay */}
         <motion.div
           className="absolute inset-0 pointer-events-none rounded-2xl"
