@@ -19,7 +19,7 @@ const bulletVariants = {
 };
 
 export default function Timeline() {
-  const [openId, setOpenId] = useState<string>("cba-chapter-lead");
+  const [openId, setOpenId] = useState<string>("cba-chapter-area-lead");
   const [chatOpen, setChatOpen] = useState(false);
 
   return (

@@ -93,7 +93,7 @@ export default function Navigation() {
           })}
           <div className="w-px h-3 mx-1" style={{ background: "#003300" }} />
           <button
-            onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }))}
+            onClick={() => document.dispatchEvent(new CustomEvent("palette-open"))}
             className="px-2.5 py-1.5 text-[10px] rounded-full transition-all duration-200"
             style={{ color: "#006600", border: "1px solid #003300", fontFamily: "var(--font-mono), monospace" }}
             onMouseEnter={(e) => { e.currentTarget.style.color = "#00FF41"; e.currentTarget.style.borderColor = "rgba(0,255,65,0.3)"; }}

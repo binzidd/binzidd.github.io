@@ -101,8 +101,9 @@ export default function IntroLoader() {
   }, []);
 
   const goThanks = useCallback((name: string) => {
-    setVName(name);
-    if (name) sessionStorage.setItem("visitorName", name);
+    const safe = name.slice(0, 80); // clamp length before storing
+    setVName(safe);
+    if (safe) sessionStorage.setItem("visitorName", safe);
     setStep("thanks");
     setTimeout(exit, 1600);
   }, [exit]);

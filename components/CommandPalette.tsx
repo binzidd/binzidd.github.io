@@ -130,11 +130,20 @@ export default function CommandPalette() {
     return () => document.removeEventListener("keydown", handler);
   }, [open, handleOpen, handleClose]);
 
-  // Custom event from Timeline
+  // palette-open: triggered by Navigation ⌘K button
+  useEffect(() => {
+    const handler = () => handleOpen();
+    document.addEventListener("palette-open", handler);
+    return () => document.removeEventListener("palette-open", handler);
+  }, [handleOpen]);
+
+  // palette-query: triggered by Timeline suggestion buttons
   useEffect(() => {
     const handler = (e: CustomEvent) => {
+      if (typeof e.detail !== "string") return;
+      const query = e.detail.slice(0, 200); // guard against oversized payloads
       setOpen(true);
-      setTimeout(() => handleSubmit(e.detail as string), 200);
+      setTimeout(() => handleSubmit(query), 200);
     };
     document.addEventListener("palette-query", handler as EventListener);
     return () => document.removeEventListener("palette-query", handler as EventListener);
