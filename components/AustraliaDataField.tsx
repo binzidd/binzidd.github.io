@@ -3,8 +3,6 @@
 import { useEffect, useRef } from "react";
 
 // ─── Simplified Australia coastline (lon, lat) ─────────────────────────────
-// Verified by ASCII render: Cape York, Gulf of Carpentaria, Great Australian
-// Bight and Tasmania all read correctly at this vertex density.
 const MAINLAND: [number, number][] = [
   [142.5, -10.7], [143.6, -14.0], [145.3, -15.0], [145.8, -17.0], [146.3, -18.9],
   [148.7, -20.2], [149.5, -22.3], [150.8, -23.5], [152.9, -25.3], [153.2, -27.5],
@@ -28,14 +26,12 @@ const TASMANIA: [number, number][] = [
 ];
 const SYDNEY: [number, number] = [151.21, -33.87];
 
-// Map projection constants — equirectangular, x compressed by cos(mean lat)
 const C_LON = 133, C_LAT = -26.5;
 const COS_LAT = Math.cos((27 * Math.PI) / 180);
-const SPAN_X = 42 * COS_LAT;   // ≈ 37.4 projected degrees wide
-const SPAN_Y = 35;             // degrees tall
+const SPAN_X = 42 * COS_LAT;
+const SPAN_Y = 35;
 const FOV = 900;
 
-// Colour rhythm — mostly matrix green, occasional cyan / violet accents
 const COLORS: [number, number, number][] = [
   [0, 255, 65], [0, 255, 65], [0, 255, 65], [0, 255, 65], [0, 255, 65],
   [0, 255, 65], [0, 255, 65], [0, 255, 65], [0, 217, 255], [170, 100, 255],
@@ -51,11 +47,11 @@ function inPoly(poly: [number, number][], x: number, y: number): boolean {
 }
 
 interface Pt {
-  tx: number; ty: number;          // target world position (px, map plane)
-  ax: number; ay: number; az: number; // assembly start (scattered)
-  delay: number;                    // assembly stagger (s)
-  bright: number;                   // base alpha tier
-  twSpeed: number; twPhase: number; // twinkle
+  tx: number; ty: number;
+  ax: number; ay: number; az: number;
+  delay: number;
+  bright: number;
+  twSpeed: number; twPhase: number;
   col: [number, number, number];
 }
 
@@ -78,9 +74,9 @@ export default function AustraliaDataField() {
     let tiltX = 0, tiltY = 0, tgtTX = 0, tgtTY = 0;
     let isMobile = false;
     const t0 = performance.now() / 1000;
-    const ASSEMBLE_START = 0.7;   // wait for the name letters to land first
-    const ASSEMBLE_DUR = 1.15;    // per-point flight time
-    const ASSEMBLE_SPREAD = 1.0;  // west→east stagger window
+    const ASSEMBLE_START = 0.7;
+    const ASSEMBLE_DUR   = 1.15;
+    const ASSEMBLE_SPREAD = 1.0;
 
     const lonLatToWorld = (lon: number, lat: number): [number, number] => [
       (lon - C_LON) * COS_LAT * scale,
@@ -89,18 +85,18 @@ export default function AustraliaDataField() {
 
     const init = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = canvas.clientWidth;
-      H = canvas.clientHeight;
-      canvas.width = W * dpr;
+      W = canvas.clientWidth  || window.innerWidth;
+      H = canvas.clientHeight || window.innerHeight;
+      canvas.width  = W * dpr;
       canvas.height = H * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       isMobile = W < 768;
-      scale = Math.min((W * 0.82) / SPAN_X, (H * 0.58) / SPAN_Y);
+      // Larger on screen: 85% width or 62% height, whichever is tighter
+      scale = Math.min((W * 0.85) / SPAN_X, (H * 0.62) / SPAN_Y);
       cx = W / 2;
-      cy = H * 0.56;
+      cy = H * 0.54;
 
-      // Hex-offset grid filled into the coastline polygons, jittered
-      const target = isMobile ? 420 : 950;
+      const target = isMobile ? 380 : 880;
       const step = Math.sqrt((42 * 35 * 0.5) / target);
       pts = [];
       let row = 0;
@@ -112,16 +108,17 @@ export default function AustraliaDataField() {
           if (!inPoly(MAINLAND, jLon, jLat) && !inPoly(TASMANIA, jLon, jLat)) continue;
           const [tx, ty] = lonLatToWorld(jLon, jLat);
           const i = pts.length;
-          const ang = Math.random() * Math.PI * 2;
-          const dist = 320 + Math.random() * 720;
+          const ang  = Math.random() * Math.PI * 2;
+          const dist = 300 + Math.random() * 700;
           pts.push({
             tx, ty,
             ax: tx + Math.cos(ang) * dist,
             ay: ty + Math.sin(ang) * dist,
-            az: (Math.random() - 0.5) * 900,
-            delay: ((jLon - 112) / 42) * ASSEMBLE_SPREAD + Math.random() * 0.3,
-            bright: i % 7 === 0 ? 0.85 : i % 3 === 0 ? 0.5 : 0.3,
-            twSpeed: 0.6 + Math.random() * 1.6,
+            az: (Math.random() - 0.5) * 800,
+            delay: ((jLon - 112) / 42) * ASSEMBLE_SPREAD + Math.random() * 0.25,
+            // Three brightness tiers — more contrast than before
+            bright: i % 6 === 0 ? 1.0 : i % 3 === 0 ? 0.65 : 0.42,
+            twSpeed: 0.5 + Math.random() * 1.5,
             twPhase: Math.random() * Math.PI * 2,
             col: COLORS[Math.floor(Math.random() * COLORS.length)],
           });
@@ -130,34 +127,93 @@ export default function AustraliaDataField() {
     };
 
     const project = (x: number, y: number, z: number) => {
-      const bx = isMobile ? 0.34 : 0.4;
+      // Reduced base tilt (was 0.4/0.34) so the shape reads more clearly
+      const bx = isMobile ? 0.22 : 0.28;
       const rx = bx + tiltX, ry = tiltY;
       const cosX = Math.cos(rx), sinX = Math.sin(rx);
-      const y1 = y * cosX - z * sinX;
-      const z1 = y * sinX + z * cosX;
+      const y1 =  y * cosX - z * sinX;
+      const z1 =  y * sinX + z * cosX;
       const cosY = Math.cos(ry), sinY = Math.sin(ry);
-      const x1 = x * cosY + z1 * sinY;
+      const x1 =  x * cosY + z1 * sinY;
       const z2 = -x * sinY + z1 * cosY;
       const s = FOV / (FOV + z2);
       return { px: cx + x1 * s, py: cy + y1 * s, s };
     };
 
+    // Trace a polygon onto the canvas using the 3D projection
+    const tracePoly = (poly: [number, number][]) => {
+      const [lon0, lat0] = poly[0];
+      const [wx0, wy0] = lonLatToWorld(lon0, lat0);
+      const { px: x0, py: y0 } = project(wx0, wy0, 0);
+      ctx.moveTo(x0, y0);
+      for (let i = 1; i < poly.length; i++) {
+        const [lon, lat] = poly[i];
+        const [wx, wy] = lonLatToWorld(lon, lat);
+        const { px, py } = project(wx, wy, 0);
+        ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+    };
+
     const drawFrame = (t: number) => {
       ctx.clearRect(0, 0, W, H);
 
-      // Smooth mouse-follow tilt; gentle autonomous sway on mobile
       if (isMobile) {
-        tgtTX = Math.sin(t * 0.35) * 0.05;
-        tgtTY = Math.sin(t * 0.22) * 0.09;
+        tgtTX = Math.sin(t * 0.35) * 0.04;
+        tgtTY = Math.sin(t * 0.22) * 0.07;
       }
       tiltX += (tgtTX - tiltX) * 0.055;
       tiltY += (tgtTY - tiltY) * 0.055;
 
       const tAssemble = t - ASSEMBLE_START;
+      // Global assembly progress 0→1 drives silhouette + coastline fade-in
+      const globalE = Math.min(Math.max(tAssemble / (ASSEMBLE_SPREAD + ASSEMBLE_DUR), 0), 1);
+
+      // ── 1. Faint filled silhouette — always present, fades in with assembly ──
+      const fillAlpha = globalE * 0.055;
+      if (fillAlpha > 0.002) {
+        ctx.beginPath();
+        tracePoly(MAINLAND);
+        ctx.fillStyle = `rgba(0,255,65,${fillAlpha.toFixed(3)})`;
+        ctx.fill();
+
+        ctx.beginPath();
+        tracePoly(TASMANIA);
+        ctx.fillStyle = `rgba(0,255,65,${fillAlpha.toFixed(3)})`;
+        ctx.fill();
+      }
+
+      // ── 2. Glowing coastline stroke — fades in as continent assembles ────────
+      const strokeAlpha = globalE * 0.32;
+      if (strokeAlpha > 0.01) {
+        // Outer glow pass (wider, dimmer)
+        ctx.beginPath();
+        tracePoly(MAINLAND);
+        ctx.strokeStyle = `rgba(0,255,65,${(strokeAlpha * 0.35).toFixed(3)})`;
+        ctx.lineWidth = 4;
+        ctx.lineJoin = "round";
+        ctx.stroke();
+
+        ctx.beginPath();
+        tracePoly(TASMANIA);
+        ctx.stroke();
+
+        // Inner sharp line
+        ctx.beginPath();
+        tracePoly(MAINLAND);
+        ctx.strokeStyle = `rgba(0,255,65,${strokeAlpha.toFixed(3)})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.beginPath();
+        tracePoly(TASMANIA);
+        ctx.stroke();
+      }
+
+      // ── 3. Data points ────────────────────────────────────────────────────────
       const assembled = tAssemble > ASSEMBLE_SPREAD + ASSEMBLE_DUR + 0.3;
 
       for (const p of pts) {
-        // Assembly: scattered → home with cubic ease-out
         let x = p.tx, y = p.ty, z = 0, e = 1;
         if (!reduceMotion && !assembled) {
           const lp = Math.min(Math.max((tAssemble - p.delay) / ASSEMBLE_DUR, 0), 1);
@@ -166,75 +222,79 @@ export default function AustraliaDataField() {
           y = p.ay + (p.ty - p.ay) * e;
           z = p.az * (1 - e);
         }
-        // Living surface: slow ripple across the continent once formed
         if (!reduceMotion) {
-          z += Math.sin(t * 1.2 + p.tx * 0.012 + p.ty * 0.017) * 13 * e;
+          z += Math.sin(t * 1.1 + p.tx * 0.011 + p.ty * 0.016) * 12 * e;
         }
 
         const { px, py, s } = project(x, y, z);
-        const tw = reduceMotion ? 1 : 0.78 + 0.22 * Math.sin(t * p.twSpeed + p.twPhase);
-        const alpha = p.bright * tw * (0.3 + 0.7 * e);
-        const rad = (0.9 + p.bright * 1.5) * s;
+        const tw = reduceMotion ? 1 : 0.72 + 0.28 * Math.sin(t * p.twSpeed + p.twPhase);
+        // Minimum alpha 0.42 for dim points (was 0.3 * 0.3 = 0.09 effective)
+        const alpha = p.bright * tw * (0.42 + 0.58 * e);
+        // Much larger dots: base 2.8px, bright points 5.8px (was 0.9/2.4)
+        const rad = (2.8 + p.bright * 3.0) * s;
         const [r, g, b] = p.col;
 
-        if (p.bright > 0.6) {
+        // Outer glow halo (all points)
+        ctx.beginPath();
+        ctx.arc(px, py, rad * 2.8, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${g},${b},${(alpha * 0.18).toFixed(3)})`;
+        ctx.fill();
+
+        // Mid glow (bright + medium points)
+        if (p.bright > 0.4) {
           ctx.beginPath();
-          ctx.arc(px, py, rad * 2.6, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${r},${g},${b},${(alpha * 0.12).toFixed(3)})`;
+          ctx.arc(px, py, rad * 1.7, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${r},${g},${b},${(alpha * 0.42).toFixed(3)})`;
           ctx.fill();
         }
+
+        // Bright core
         ctx.beginPath();
         ctx.arc(px, py, rad, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${r},${g},${b},${alpha.toFixed(3)})`;
         ctx.fill();
       }
 
-      // Sydney beacon — appears once the continent has formed
+      // ── 4. Sydney beacon ──────────────────────────────────────────────────────
       const tBeacon = t - (ASSEMBLE_START + ASSEMBLE_SPREAD + ASSEMBLE_DUR);
       if (reduceMotion || tBeacon > 0) {
-        const fade = reduceMotion ? 1 : Math.min(tBeacon / 0.7, 1);
+        const fade = reduceMotion ? 1 : Math.min(tBeacon / 0.6, 1);
         const [wx, wy] = lonLatToWorld(SYDNEY[0], SYDNEY[1]);
         const { px, py, s } = project(wx, wy, 0);
 
-        // expanding sonar rings
         if (!reduceMotion) {
           for (const off of [0, 0.5]) {
             const ph = ((t * 0.55 + off) % 1);
             ctx.beginPath();
-            ctx.arc(px, py, (3 + ph * 30) * s, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(0,255,65,${((1 - ph) * 0.4 * fade).toFixed(3)})`;
-            ctx.lineWidth = 1;
+            ctx.arc(px, py, (4 + ph * 36) * s, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(0,255,65,${((1 - ph) * 0.55 * fade).toFixed(3)})`;
+            ctx.lineWidth = 1.2;
             ctx.stroke();
           }
         }
-        // core dot
         ctx.beginPath();
-        ctx.arc(px, py, 3.2 * s, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0,255,65,${(0.95 * fade).toFixed(3)})`;
+        ctx.arc(px, py, 4 * s, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0,255,65,${(0.98 * fade).toFixed(3)})`;
         ctx.fill();
-        // callout
-        const lx = px + 14, ly = py - 14;
-        ctx.strokeStyle = `rgba(0,255,65,${(0.45 * fade).toFixed(3)})`;
+
+        const lx = px + 16, ly = py - 16;
+        ctx.strokeStyle = `rgba(0,255,65,${(0.55 * fade).toFixed(3)})`;
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(px + 4, py - 4);
         ctx.lineTo(lx, ly);
-        ctx.lineTo(lx + 8, ly);
+        ctx.lineTo(lx + 10, ly);
         ctx.stroke();
-        ctx.font = "10px 'JetBrains Mono', monospace";
-        ctx.fillStyle = `rgba(0,255,65,${(0.85 * fade).toFixed(3)})`;
-        ctx.fillText("SYD // home_base", lx + 12, ly + 3);
+        ctx.font = "bold 10px 'JetBrains Mono', monospace";
+        ctx.fillStyle = `rgba(0,255,65,${(0.90 * fade).toFixed(3)})`;
+        ctx.fillText("SYD // home_base", lx + 14, ly + 3);
       }
     };
 
-    // ── RAF loop, capped ~30fps, paused when offscreen ───────────────────
     let last = 0;
     const loop = (now: number) => {
       if (!running) return;
-      if (now - last >= 33) {
-        last = now;
-        drawFrame(now / 1000 - t0);
-      }
+      if (now - last >= 33) { last = now; drawFrame(now / 1000 - t0); }
       raf = requestAnimationFrame(loop);
     };
     const start = () => {
@@ -242,25 +302,19 @@ export default function AustraliaDataField() {
       running = true;
       raf = requestAnimationFrame(loop);
     };
-    const stop = () => {
-      running = false;
-      cancelAnimationFrame(raf);
-    };
+    const stop = () => { running = false; cancelAnimationFrame(raf); };
 
     const onMouse = (e: MouseEvent) => {
       if (isMobile) return;
-      tgtTX = ((e.clientY / window.innerHeight) - 0.5) * 0.18;
-      tgtTY = ((e.clientX / window.innerWidth) - 0.5) * -0.26;
+      tgtTX = ((e.clientY / window.innerHeight) - 0.5) *  0.14;
+      tgtTY = ((e.clientX / window.innerWidth)  - 0.5) * -0.22;
     };
-    const onResize = () => {
-      init();
-      if (reduceMotion) drawFrame(100);
-    };
+    const onResize     = () => { init(); if (reduceMotion) drawFrame(100); };
     const onVisibility = () => (document.hidden ? stop() : start());
 
     init();
     if (reduceMotion) {
-      drawFrame(100); // single static frame — continent fully formed
+      drawFrame(100);
     } else {
       start();
       window.addEventListener("mousemove", onMouse);
@@ -271,8 +325,7 @@ export default function AustraliaDataField() {
     const io = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
       if (reduceMotion) return;
-      if (visible) start();
-      else stop();
+      if (visible) start(); else stop();
     });
     io.observe(canvas);
 
