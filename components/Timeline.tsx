@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { experience } from "@/data/resume";
 import MatrixDecoder from "@/components/MatrixDecoder";
 import HeadingReveal from "@/components/motion/HeadingReveal";
+import SceneDolly from "@/components/motion/SceneDolly";
+import VelocityWarp from "@/components/motion/VelocityWarp";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -28,13 +30,14 @@ export default function Timeline() {
 
   return (
     <section id="timeline" className="py-28 px-6 grid-lines" style={{ background: "#000500" }}>
-      <div className="max-w-3xl mx-auto">
+      <SceneDolly className="max-w-3xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="mb-20">
           <p className="text-[10px] tracking-[0.25em] uppercase mb-3" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}><MatrixDecoder text="// employment_history" /></p>
           <h2 className="text-5xl md:text-6xl font-light mb-4" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}><HeadingReveal><MatrixDecoder text="Where I've Been" /></HeadingReveal></h2>
-          <p className="text-sm" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>Nine years across finance, academia, and tech. Click any role to explore.</p>
+          <p className="text-sm" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>Ten years across finance, academia, and tech. Click any role to explore.</p>
         </motion.div>
 
+        <VelocityWarp>
         <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="relative" style={{ perspective: "1200px" }}>
           {/* Animated vertical timeline line */}
           <motion.div
@@ -125,6 +128,7 @@ export default function Timeline() {
             })}
           </div>
         </motion.div>
+        </VelocityWarp>
 
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3, duration: 0.6 }} className="mt-14 flex justify-center">
           <button onClick={() => setChatOpen(true)}
@@ -137,7 +141,7 @@ export default function Timeline() {
             <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: "rgba(0,255,65,0.08)", color: "#00FF41", border: "1px solid rgba(0,255,65,0.15)" }}>⌘K</span>
           </button>
         </motion.div>
-      </div>
+      </SceneDolly>
 
       {chatOpen && (
         <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.7)" }} onClick={() => setChatOpen(false)}>

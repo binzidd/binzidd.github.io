@@ -10,13 +10,19 @@ import CommandPalette from "@/components/CommandPalette";
 import TermColumns from "@/components/TermColumns";
 import HarryPotterEggs from "@/components/HarryPotterEggs";
 import IntroLoader from "@/components/IntroLoader";
+import SmoothScroll from "@/components/SmoothScroll";
+import DataFireflies from "@/components/DataFireflies";
 
 export default function Home() {
   return (
     <>
+      {/* Lenis-driven inertial scrolling — the whole page reads as one journey */}
+      <SmoothScroll />
       {/* Fixed domain-vocabulary columns — DOM text, screen-blend, visible on mobile */}
       <IntroLoader />
       <TermColumns />
+      {/* Ambient drifting motes with scroll/mouse parallax — environmental depth */}
+      <DataFireflies />
       <HarryPotterEggs />
       {/* Cinematic edge vignette for depth — center stays transparent */}
       <div className="cinematic-vignette" />

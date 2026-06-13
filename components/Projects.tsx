@@ -5,6 +5,8 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useMo
 import { projects, type Project } from "@/data/resume";
 import MatrixDecoder from "@/components/MatrixDecoder";
 import HeadingReveal from "@/components/motion/HeadingReveal";
+import SceneDolly from "@/components/motion/SceneDolly";
+import VelocityWarp from "@/components/motion/VelocityWarp";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -146,19 +148,21 @@ export default function Projects() {
 
   return (
     <section id="projects" className="py-28 px-6" style={{ background: "#020c02" }}>
-      <div className="max-w-6xl mx-auto">
+      <SceneDolly className="max-w-6xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="mb-16">
           <p className="text-[10px] tracking-[0.25em] uppercase mb-3" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}><MatrixDecoder text="// projects.genai" /></p>
           <h2 className="text-5xl md:text-6xl font-light mb-4" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}><HeadingReveal><MatrixDecoder text="Projects & Prototypes" /></HeadingReveal></h2>
           <p className="text-sm max-w-lg" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>From GenAI in production to exploratory prototypes - click any card to dive deeper.</p>
         </motion.div>
 
-        <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {projects.map((project) => (
-            <ProjectCard3D key={project.id} project={project} onClick={() => setSelected(project)} />
-          ))}
-        </motion.div>
-      </div>
+        <VelocityWarp>
+          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {projects.map((project) => (
+              <ProjectCard3D key={project.id} project={project} onClick={() => setSelected(project)} />
+            ))}
+          </motion.div>
+        </VelocityWarp>
+      </SceneDolly>
 
       <AnimatePresence>{selected && <ProjectModal project={selected} onClose={() => setSelected(null)} />}</AnimatePresence>
     </section>
