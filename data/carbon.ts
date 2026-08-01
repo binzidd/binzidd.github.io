@@ -32,7 +32,7 @@ export const TARGETS = {
 
 // ─── Last updated — overwritten by fetch script ───────────────────────────────
 // AUTO-UPDATED
-export const LAST_UPDATED = "2026-07-01";
+export const LAST_UPDATED = "2026-08-01";
 
 // ─── Historical total emissions ───────────────────────────────────────────────
 // Source: DCCEEW National Greenhouse Gas Inventory Quarterly Update
