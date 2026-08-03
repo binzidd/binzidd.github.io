@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 /* ── Loop & Scoop palette ──────────────────────────────────────────────────
    Same six scoops, same 125.30 gap as the live page at
-   loop-engineering-deepagents-theta.vercel.app                              */
+   loop-engineering-deepagents.vercel.app                              */
 const BG   = "#14100f";
 const S1   = "#1e1917";
 const S2   = "#282220";
@@ -258,7 +258,7 @@ export default function LoopScoopViz() {
           {note}
         </motion.p>
         <a
-          href="https://loop-engineering-deepagents-theta.vercel.app"
+          href="https://loop-engineering-deepagents.vercel.app"
           target="_blank"
           rel="noopener noreferrer"
           style={{
