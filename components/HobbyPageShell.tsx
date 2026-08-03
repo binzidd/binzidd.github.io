@@ -25,6 +25,7 @@ const VIZ: Record<string, React.ComponentType> = {
   banking: dynamic(() => import("@/components/BankingViz"),    { ssr: false, loading: () => <VizSkeleton color="#F0A742" /> }),
   moto:    dynamic(() => import("@/components/MotoViz"),       { ssr: false, loading: () => <VizSkeleton color="#E8A020" /> }),
   carbon:  dynamic(() => import("@/components/CarbonViz"),     { ssr: false, loading: () => <VizSkeleton color="#10B981" /> }),
+  loopscoop: dynamic(() => import("@/components/LoopScoopViz"),{ ssr: false, loading: () => <VizSkeleton color="#f2889f" /> }),
 };
 
 // ── EASE ──────────────────────────────────────────────────────────────────────

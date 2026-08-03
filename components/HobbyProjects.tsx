@@ -35,6 +35,10 @@ const CarbonViz = dynamic(() => import("@/components/CarbonViz"), {
   ssr: false,
   loading: () => <VizLoader bg="#020c02" border="#003300" color="#10B981" label="loading emissions data..." />,
 });
+const LoopScoopViz = dynamic(() => import("@/components/LoopScoopViz"), {
+  ssr: false,
+  loading: () => <VizLoader bg="#14100f" border="#2f2724" color="#9b8a7d" label="opening the till..." />,
+});
 const MatrixRain = dynamic(() => import("@/components/MatrixRain"), { ssr: false });
 
 function VizLoader({ bg = "#0A0E14", border = "#21262D", color = "#1a3a1a", label }: {
@@ -59,23 +63,6 @@ const MB  = "#003300";   // border
 // ─── Projects ─────────────────────────────────────────────────────────────────
 const projects = [
   {
-    id: "carbon",
-    icon: "🌏",
-    title: "Australia's Carbon Story - Emissions, Targets & the EV Inflection",
-    tags: ["Climate Data", "DCCEEW", "OWID", "EV Adoption", "Net Zero 2050"],
-    githubUrl: "https://github.com/binzidd/au_carbon_emissions",
-    story: (
-      <>
-        <span style={{ color: "#10B981", fontWeight: 600 }}>90 Mt short of the 43% target.</span>{" "}
-        Electricity is bending fast; transport is stubbornly flat. Scroll through three chapters:
-        the gap between actual and legislated trajectories, which industry owns how much,
-        and the EV adoption S-curve that will finally bend transport emissions from 2026 onward.{" "}
-        <span style={{ color: MG }}>Auto-refreshes from OWID + DCCEEW every month via GitHub Actions.</span>
-      </>
-    ),
-    component: <CarbonViz />,
-  },
-  {
     id: "agents",
     slug: "agents",
     icon: "🤖",
@@ -92,6 +79,27 @@ const projects = [
       </>
     ),
     component: <AgentsViz />,
+  },
+  {
+    id: "loopscoop",
+    slug: "loopscoop",
+    icon: "🍦",
+    title: "Loop & Scoop: Four Loops, One Till, Forty Minutes Back",
+    tags: ["deepagents", "LangChain", "Loop Engineering", "Self-Improving Agents", "HITL"],
+    githubUrl: "https://github.com/binzidd/loop-engineering-deepagents",
+    story: (
+      <>
+        <span style={{ color: "#f2889f", fontWeight: 600 }}>An ice cream shop, a drawer 125.30 short.</span>{" "}
+        Loop engineering explained on the smallest reconciliation in the world. Loop 1 runs it,
+        Loop 2 grades the deliverable and bounces the run back, Loop 3 fires it unattended for thirty
+        nights, and Loop 4 lets the agent rewrite its own harness with Marco approving one edit and
+        blocking the other.{" "}
+        <span style={{ color: MG }}>
+          Swap the cones for journals and nothing about the shape changes. Press run.
+        </span>
+      </>
+    ),
+    component: <LoopScoopViz />,
   },
   {
     id: "budget",
@@ -292,9 +300,10 @@ export default function HobbyProjects() {
               animate={{ opacity: revealed ? 1 : 0, y: revealed ? 0 : 10 }}
               transition={{ duration: 0.6, delay: 0.9 }}
             >
-              Data viz doesn&apos;t stop at 5pm. Multi-agent briefings, F1 championship races,
-              satellite constellations, post-COVID banking dynamics, and motorbike spec battles.
-              All built with the same rigour as production code.
+              Data viz doesn&apos;t stop at 5pm. Multi-agent briefings, an ice cream shop teaching
+              itself to reconcile, F1 championship races, satellite constellations, post-COVID
+              banking dynamics, and motorbike spec battles. All built with the same rigour as
+              production code.
             </motion.p>
           </motion.div>
 
@@ -441,7 +450,7 @@ export default function HobbyProjects() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              NODES: 5 | STATUS: ONLINE
+              NODES: {projects.length} | STATUS: ONLINE
             </motion.p>
           </>
         )}
