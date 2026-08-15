@@ -3,16 +3,16 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// ── Boot sequence lines ────────────────────────────────────────────────────────
+// ── Boot sequence lines ──────────────────────────────────────────────────────────
 const BOOT_LINES = [
   { text: "BIOS v9.0.0  —  BINAY SIDDHARTH PORTFOLIO", bright: true,  delay: 0    },
-  { text: "RAM check: 10 yrs analytics ... OK",         bright: false, delay: 200  },
+  { text: "RAM check: 12 yrs analytics ... OK",         bright: false, delay: 200  },
   { text: "Loading kernel modules:",                     bright: false, delay: 390  },
   { text: "  [  OK  ] data_analytics.core",             bright: false, delay: 530  },
   { text: "  [  OK  ] people_leadership.mod (6+ yrs)",  bright: false, delay: 650  },
-  { text: "  [  OK  ] genai_engineering.mod (200+ usr)",bright: false, delay: 770  },
+  { text: "  [  OK  ] genai_engineering.mod (2,000+ usr)",bright: false, delay: 770  },
   { text: "  [  OK  ] aws_certs.mod (×3 certified)",    bright: false, delay: 890  },
-  { text: "  [  OK  ] hci_design.mod",                  bright: false, delay: 990  },
+  { text: "  [  OK  ] agentic_ai.mod",                  bright: false, delay: 990  },
   { text: "Mounting filesystems ... done",              bright: false, delay: 1120 },
   { text: "Network: Sydney, AU  //  data & GenAI",      bright: false, delay: 1280 },
   { text: "System ready.",                              bright: true,  delay: 1460 },
@@ -27,7 +27,7 @@ function progressBar(pct: number): string {
   return "[" + "█".repeat(filled) + "░".repeat(W - filled) + "]  " + Math.round(pct * 100) + "%";
 }
 
-// ── Steps ─────────────────────────────────────────────────────────────────────
+// ── Steps ───────────────────────────────────────────────────────────────────
 type Step = "boot" | "name" | "thanks";
 
 const CRUMBS: { key: Step; label: string }[] = [
@@ -38,7 +38,7 @@ const CRUMBS: { key: Step; label: string }[] = [
 
 const STEP_ORDER: Step[] = ["boot", "name", "thanks"];
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// ── Component ────────────────────────────────────────────────────────────────────
 export default function IntroLoader() {
   const [mounted,    setMounted]    = useState(false);
   const [visible,    setVisible]    = useState(true);
@@ -50,7 +50,7 @@ export default function IntroLoader() {
   const [exiting,    setExiting]    = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
 
-  // ── Session gate ──────────────────────────────────────────────────────────
+  // ── Session gate ────────────────────────────────────────────────────
   useEffect(() => {
     if (sessionStorage.getItem("introShown")) {
       setVisible(false);
@@ -59,7 +59,7 @@ export default function IntroLoader() {
     }
   }, []);
 
-  // ── Boot sequence: reveal lines + progress bar ─────────────────────────────
+  // ── Boot sequence: reveal lines + progress bar ──────────────────────────────────
   useEffect(() => {
     if (!mounted || step !== "boot") return;
 
@@ -93,7 +93,7 @@ export default function IntroLoader() {
     if (step === "name") setTimeout(() => nameRef.current?.focus(), 60);
   }, [step]);
 
-  // ── Exit ──────────────────────────────────────────────────────────────────
+  // ── Exit ───────────────────────────────────────────────────────────────────────
   const exit = useCallback(() => {
     sessionStorage.setItem("introShown", "1");
     setExiting(true);
