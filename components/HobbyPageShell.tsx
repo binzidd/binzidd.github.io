@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { PROJECT_META } from "@/data/hobby-projects";
 
-// ── Per-project lazy viz components ──────────────────────────────────────────
+// ── Per-project lazy viz components ───────────────────────────────
 function VizSkeleton({ color = "#00FF41" }: { color?: string }) {
   return (
     <div className="rounded-3xl h-72 flex items-center justify-center"
@@ -25,12 +25,13 @@ const VIZ: Record<string, React.ComponentType> = {
   banking: dynamic(() => import("@/components/BankingViz"),    { ssr: false, loading: () => <VizSkeleton color="#F0A742" /> }),
   moto:    dynamic(() => import("@/components/MotoViz"),       { ssr: false, loading: () => <VizSkeleton color="#E8A020" /> }),
   carbon:  dynamic(() => import("@/components/CarbonViz"),     { ssr: false, loading: () => <VizSkeleton color="#10B981" /> }),
+  loopscoop: dynamic(() => import("@/components/LoopScoopViz"),{ ssr: false, loading: () => <VizSkeleton color="#f2889f" /> }),
 };
 
-// ── EASE ──────────────────────────────────────────────────────────────────────
+// ── EASE ───────────────────────────────────────────────────────────────
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-// ── Page shell ────────────────────────────────────────────────────────────────
+// ── Page shell ───────────────────────────────────────────────────────────────
 export default function HobbyPageShell({ slug }: { slug: string }) {
   const p = PROJECT_META[slug];
   if (!p) return null;
@@ -40,7 +41,7 @@ export default function HobbyPageShell({ slug }: { slug: string }) {
   return (
     <div className="min-h-screen" style={{ background: "#000500" }}>
 
-      {/* ── Sticky nav ─────────────────────────────────────────────────────── */}
+      {/* ── Sticky nav ──────────────────────────────────────────────── */}
       <nav className="sticky top-0 z-40 flex items-center justify-between px-5 py-3"
         style={{ background: "rgba(0,5,0,0.92)", borderBottom: "1px solid #003300", backdropFilter: "blur(12px)" }}>
         <Link href="/#hobbies"
@@ -68,7 +69,7 @@ export default function HobbyPageShell({ slug }: { slug: string }) {
         </a>
       </nav>
 
-      {/* ── Hero ───────────────────────────────────────────────────────────── */}
+      {/* ── Hero ───────────────────────────────────────────────────── */}
       <header className="max-w-5xl mx-auto px-6 pt-16 pb-10">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: EASE }}>
@@ -96,7 +97,7 @@ export default function HobbyPageShell({ slug }: { slug: string }) {
         </motion.div>
       </header>
 
-      {/* ── Metrics strip ──────────────────────────────────────────────────── */}
+      {/* ── Metrics strip ──────────────────────────────────────────────── */}
       <motion.div className="max-w-5xl mx-auto px-6 mb-10"
         initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.15, ease: EASE }}>
@@ -117,14 +118,14 @@ export default function HobbyPageShell({ slug }: { slug: string }) {
         </div>
       </motion.div>
 
-      {/* ── Visualisation ──────────────────────────────────────────────────── */}
+      {/* ── Visualisation ─────────────────────────────────────────────── */}
       <motion.div className="max-w-5xl mx-auto px-6 mb-12"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.3, ease: EASE }}>
         <VizComponent />
       </motion.div>
 
-      {/* ── Analysis grid ──────────────────────────────────────────────────── */}
+      {/* ── Analysis grid ─────────────────────────────────────────────── */}
       <div className="max-w-5xl mx-auto px-6 pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
 

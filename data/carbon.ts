@@ -1,4 +1,4 @@
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Types ──────────────────────────────────────────────────────────────────
 
 export interface EmissionsPoint {
   year: number;
@@ -30,53 +30,60 @@ export const TARGETS = {
   netZeroYear:     2050,
 };
 
-// ─── Last updated — overwritten by fetch script ───────────────────────────────
+// ─── Last updated — overwritten by fetch script ────────────────────────────
 // AUTO-UPDATED
-export const LAST_UPDATED = "2026-06-01";
+export const LAST_UPDATED = "2026-08-01";
 
-// ─── Historical total emissions ───────────────────────────────────────────────
+// ─── Historical total emissions ─────────────────────────────────────────
 // Source: DCCEEW National Greenhouse Gas Inventory Quarterly Update
 // Script refreshes this from Our World in Data (OWID) owid-co2-data.csv
 // AUTO-UPDATED
 export const EMISSIONS_HISTORY: EmissionsPoint[] = [
-  { year: 1990, total: 556.5 },
-  { year: 1991, total: 557.2 },
-  { year: 1992, total: 559.0 },
-  { year: 1993, total: 561.8 },
-  { year: 1994, total: 566.4 },
-  { year: 1995, total: 572.0 },
-  { year: 1996, total: 575.1 },
-  { year: 1997, total: 574.8 },
-  { year: 1998, total: 570.0 },
-  { year: 1999, total: 568.2 },
-  { year: 2000, total: 571.5 },
-  { year: 2001, total: 575.3 },
-  { year: 2002, total: 578.6 },
-  { year: 2003, total: 583.2 },
-  { year: 2004, total: 591.8 },
-  { year: 2005, total: 601.6 },
-  { year: 2006, total: 610.2 },
-  { year: 2007, total: 617.8 }, // peak
-  { year: 2008, total: 609.4 },
-  { year: 2009, total: 591.0 },
-  { year: 2010, total: 571.8 },
-  { year: 2011, total: 570.4 },
-  { year: 2012, total: 568.4 },
-  { year: 2013, total: 554.8 },
-  { year: 2014, total: 544.0 },
-  { year: 2015, total: 537.1 },
-  { year: 2016, total: 534.2 },
-  { year: 2017, total: 531.8 },
-  { year: 2018, total: 530.6 },
-  { year: 2019, total: 528.1 },
-  { year: 2020, total: 499.2 }, // COVID drop
-  { year: 2021, total: 490.0 },
-  { year: 2022, total: 474.1 },
-  { year: 2023, total: 462.0 },
-  { year: 2024, total: 448.0 },
+  { year: 1990, total: 538.5 },
+  { year: 1991, total: 522.5 },
+  { year: 1992, total: 569.0 },
+  { year: 1993, total: 580.7 },
+  { year: 1994, total: 554.1 },
+  { year: 1995, total: 672.7 },
+  { year: 1996, total: 677.2 },
+  { year: 1997, total: 649.4 },
+  { year: 1998, total: 705.6 },
+  { year: 1999, total: 710.7 },
+  { year: 2000, total: 771.4 },
+  { year: 2001, total: 736.1 },
+  { year: 2002, total: 700.2 },
+  { year: 2003, total: 734.6 },
+  { year: 2004, total: 761.9 },
+  { year: 2005, total: 637.5 },
+  { year: 2006, total: 662.8 },
+  { year: 2007, total: 697.4 },
+  { year: 2008, total: 797.3 },
+  { year: 2009, total: 709.3 },
+  { year: 2010, total: 908.2 },
+  { year: 2011, total: 868.7 },
+  { year: 2012, total: 796.3 },
+  { year: 2013, total: 693.8 },
+  { year: 2014, total: 671.2 },
+  { year: 2015, total: 638.0 },
+  { year: 2016, total: 677.4 },
+  { year: 2017, total: 716.3 },
+  { year: 2018, total: 681.1 },
+  { year: 2019, total: 645.7 },
+  { year: 2020, total: 637.9 },
+  { year: 2021, total: 626.0 },
+  { year: 2022, total: 609.0 },
+  { year: 2023, total: 611.5 },
+  { year: 2024, total: 609.9 },
+  { year: 2026, total: 415.0 },
+  { year: 2028, total: 378.0 },
+  { year: 2030, total: 342.9 },
+  { year: 2035, total: 240.0 },
+  { year: 2040, total: 135.0 },
+  { year: 2045, total: 55.0 },
+  { year: 2050, total: 0.0 },
 ];
 
-// ─── Projected trajectories ───────────────────────────────────────────────────
+// ─── Projected trajectories ────────────────────────────────────────────────
 
 export const PROJECTED_BAU: EmissionsPoint[] = [
   { year: 2024, total: 448.0 },
@@ -100,7 +107,7 @@ export const PROJECTED_POLICY: EmissionsPoint[] = [
   { year: 2050, total: 0 },     // net zero
 ];
 
-// ─── Sector breakdown ─────────────────────────────────────────────────────────
+// ─── Sector breakdown ─────────────────────────────────────────────────
 // Source: DCCEEW Quarterly Update — sector breakdown by economic category
 // Electricity declining rapidly; transport stubbornly flat until EV inflection
 export const SECTOR_DATA: SectorPoint[] = [
@@ -119,7 +126,7 @@ export const SECTOR_DATA: SectorPoint[] = [
   { year: 2024, electricity: 130, transport: 87,  fugitive: 90,  agriculture: 80,  industry: 44,  other: 32 },
 ];
 
-// ─── EV adoption ──────────────────────────────────────────────────────────────
+// ─── EV adoption ─────────────────────────────────────────────────────────
 // Source: FCAI VFACTS annual reports
 // AUTO-UPDATED (script attempts to parse VFACTS data)
 export const EV_DATA: EVPoint[] = [
@@ -142,7 +149,7 @@ export const EV_PROJECTED: { year: number; sales: number; transportEmissions: nu
   { year: 2030, sales: 400000, transportEmissions: 60 },
 ];
 
-// ─── Industry commitments (narrative cards) ───────────────────────────────────
+// ─── Industry commitments (narrative cards) ───────────────────────────────────────
 export const INDUSTRY_PLEDGES = [
   { sector: "Electricity",  icon: "⚡", color: "#F59E0B", pledge: "82% renewables by 2030 — AEMO tracking ahead of schedule. 6.4 GW solar/wind added in 2023." },
   { sector: "Transport",    icon: "🚗", color: "#3B82F6", pledge: "Fuel efficiency standards from Jan 2025. EV sales up 195% in 2023. Fleet electrification lag ~7 yrs." },

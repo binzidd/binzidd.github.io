@@ -17,6 +17,38 @@ export interface ProjectMeta {
 
 export const PROJECT_META: Record<string, ProjectMeta> = {
 
+  loopscoop: {
+    icon: "🍦",
+    title: "Loop & Scoop: Four Loops, One Till",
+    code: "// loop_engineering",
+    thesis: "Loop engineering taught on the smallest reconciliation in the world: an ice cream shop whose drawer is 125.30 short. Four loops, one cone, and an agent that ends up editing its own harness with the owner holding the pen.",
+    tags: ["deepagents", "LangChain", "Loop Engineering", "Self-Improving Agents", "HITL", "Reconciliation"],
+    githubUrl: "https://github.com/binzidd/loop-engineering-deepagents",
+    metrics: [
+      { value: "125.30", label: "the gap to explain",     sub: "till 1,412.50 vs drawer 1,287.20" },
+      { value: "6",      label: "scoops on the cone",     sub: "4 on the card, 2 nobody wrote down" },
+      { value: "40→3",   label: "minutes of Marco",       sub: "and the last three are the point" },
+      { value: "1 of 2", label: "harness edits approved", sub: "the void check stays, by rule" },
+    ],
+    findings: [
+      "Loop 1 is the one everyone builds and the one that quietly lies. Automating the four reasons on the laminated card clears 62.70 and leaves 62.60 unexplained, faster than before and no more correct.",
+      "Loop 2 is four lines of Python, not a model. The cone has to add up to the gap and every void has to be labelled 'ask Marco'. A deterministic checker that returns jump_to: model is cheaper and stricter than any LLM judge.",
+      "Loop 3 removes the human who starts the run, not the human who thinks. Thirty unattended nights is the win. Thirty nights of asking the same two questions is the tell that something upstream never learned.",
+      "Loop 4 is the loop nobody ships: the agent proposes a patch to its own memory and prompt, an eval suite scores it against a held-out split, and an acceptance gate rejects anything that is not a strict improvement.",
+      "The acceptance gate matters more than the optimiser. Disable it and the score wanders. Drop the generalise constraint and the training set hits 100% while held-out never moves, which is overfitting made visible rather than assumed.",
+      "Some minutes are waste and some are the job. The over/short habit gets learned once. The void run stays in front of a person forever, because a shop where nobody looks at the till voids is not efficient, it just has a problem it has not found yet.",
+    ],
+    sources: [
+      { label: "The Art of Loop Engineering, LangChain", url: "https://www.langchain.com/blog/the-art-of-loop-engineering" },
+      { label: "Deep Agents documentation", url: "https://docs.langchain.com/oss/python/deepagents/overview" },
+      { label: "Reflexion: Language Agents with Verbal Reinforcement Learning (2023)", url: "https://arxiv.org/abs/2303.11366" },
+      { label: "ReAct: Synergizing Reasoning and Acting in Language Models (2022)", url: "https://arxiv.org/abs/2210.03629" },
+      { label: "Every API signature verified against deepagents 0.6.12 with inspect.signature" },
+    ],
+    stack: ["deepagents 0.6.12", "LangChain 1.3.14", "Python 3.12", "Jupyter", "Vanilla JS + CSS (zero-dependency demo page)"],
+    note: "The companion notebook runs all four loops against a live model. The demo page is self-contained and computes every figure in the browser from the same six scoops, so the numbers on screen are worked out rather than typed in.",
+  },
+
   agents: {
     icon: "🤖",
     title: "Story of Agents",
@@ -92,7 +124,7 @@ export const PROJECT_META: Record<string, ProjectMeta> = {
       { value: "24",    label: "rounds (2025 season)",  sub: "Bahrain → Abu Dhabi" },
       { value: "20",    label: "drivers tracked",       sub: "full grid, all teams" },
       { value: "25 pts",label: "winner takes",          sub: "per race, 1 for fastest lap" },
-      { value: "∆47",   label: "Monza swing",           sub: "Norris DNF → Max extends" },
+      { value: "∙47",   label: "Monza swing",           sub: "Norris DNF → Max extends" },
     ],
     findings: [
       "McLaren's MCL39 was the dominant car through the first 8 rounds — their 2024 aero philosophy (high-rake, rear-loaded downforce) translated directly to the new regs.",
