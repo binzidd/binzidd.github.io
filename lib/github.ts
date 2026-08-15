@@ -112,13 +112,13 @@ const FALLBACK_REPOS: GitHubRepo[] = [
   },
   {
     id: 4,
-    name: "nl-to-sql",
-    description: "Natural language to SQL interface using LangGraph + LangFuse with reranking & embedding cache",
+    name: "sql-weaver",
+    description: "GenAI natural-language-to-SQL platform using LangGraph + LangFuse with reranking & embedding cache — in production, 2,000 users",
     html_url: "https://github.com/binzidd",
     stargazers_count: 0,
     forks_count: 0,
     language: "Python",
-    updated_at: "2025-06-01T00:00:00Z",
+    updated_at: "2026-06-01T00:00:00Z",
     topics: ["langgraph", "langfuse", "genai", "sql"],
   },
   {
@@ -135,12 +135,12 @@ const FALLBACK_REPOS: GitHubRepo[] = [
   {
     id: 6,
     name: "xclaim-app",
-    description: "Streamlit + AWS claims automation prototype",
+    description: "OCR receipt capture for CBA's enterprise expense claim app — production, 90% of 10,000 users",
     html_url: "https://github.com/binzidd",
     stargazers_count: 0,
     forks_count: 0,
     language: "Python",
-    updated_at: "2024-12-01T00:00:00Z",
-    topics: ["streamlit", "aws", "automation"],
+    updated_at: "2026-04-01T00:00:00Z",
+    topics: ["ocr", "streamlit", "aws", "automation"],
   },
 ];
