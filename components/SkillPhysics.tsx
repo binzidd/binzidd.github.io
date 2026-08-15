@@ -38,6 +38,10 @@ const SLOP = 0.4;
 const SLEEP_LINEAR = 6;
 const SLEEP_ANGULAR = 0.25;
 const SLEEP_FRAMES = 40;
+// Below this closing speed a contact is "resting" (gravity holding a body down),
+// not a real impact — resting contacts must not reset the sleep timer, or gravity
+// re-triggers wake() every single frame and no pile ever sleeps.
+const REST_THRESHOLD = 60;
 
 const CATEGORY_COLOURS: Record<string, string> = {
   "Generative AI": "#00FF41",
@@ -116,8 +120,11 @@ export default function SkillPhysics() {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const bodiesRef = useRef<Body[]>([]);
   const rafRef = useRef<number | null>(null);
-  const dragRef = useRef<{ body: Body | null; px: number; py: number; lx: number; ly: number }>({
-    body: null, px: 0, py: 0, lx: 0, ly: 0,
+  const dragRef = useRef<{
+    body: Body | null; px: number; py: number; lx: number; ly: number;
+    pointerId: number | null; lastT: number;
+  }>({
+    body: null, px: 0, py: 0, lx: 0, ly: 0, pointerId: null, lastT: 0,
   });
   const shakeRef = useRef<() => void>(() => {});
   const reduced = useReducedMotion();
@@ -149,6 +156,18 @@ export default function SkillPhysics() {
     let W = wrap.clientWidth;
     let H = wrap.clientHeight;
 
+    // Static grid layout used for the reduced-motion fallback — re-run on resize
+    // so the layout doesn't go stale after a viewport change or orientation flip.
+    const layoutReduced = () => {
+      const bodies = bodiesRef.current;
+      let cx = 20, cy = H - 60, rowH = 0;
+      for (const b of bodies) {
+        if (cx + b.r * 2 > W - 20) { cx = 20; cy -= rowH + 12; rowH = 0; }
+        b.x = cx + b.r; b.y = cy - b.r; b.angle = 0;
+        cx += b.r * 2 + 10; rowH = Math.max(rowH, b.r * 2);
+      }
+    };
+
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       W = wrap.clientWidth;
@@ -158,6 +177,10 @@ export default function SkillPhysics() {
       canvas.style.width = W + "px";
       canvas.style.height = H + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (reduced) {
+        layoutReduced();
+        draw(ctx, bodiesRef.current, W, H);
+      }
     };
     resize();
 
@@ -179,16 +202,15 @@ export default function SkillPhysics() {
       };
     });
 
+    // Registered in both branches so a reduced-motion container that resizes
+    // (viewport change, orientation flip) re-lays-out instead of staying stale.
+    const ro = new ResizeObserver(resize);
+    ro.observe(wrap);
+
     if (reduced) {
-      const bodies = bodiesRef.current;
-      let cx = 20, cy = H - 60, rowH = 0;
-      for (const b of bodies) {
-        if (cx + b.r * 2 > W - 20) { cx = 20; cy -= rowH + 12; rowH = 0; }
-        b.x = cx + b.r; b.y = cy - b.r; b.angle = 0;
-        cx += b.r * 2 + 10; rowH = Math.max(rowH, b.r * 2);
-      }
-      draw(ctx, bodies, W, H);
-      return;
+      layoutReduced();
+      draw(ctx, bodiesRef.current, W, H);
+      return () => ro.disconnect();
     }
 
     const wake = (b: Body) => { b.asleep = false; b.sleepFor = 0; };
@@ -234,7 +256,8 @@ export default function SkillPhysics() {
       const denom = invSum + raCrossN * raCrossN * invIA + rbCrossN * rbCrossN * invIB;
       if (denom <= 0) return;
 
-      const e = Math.abs(velAlongNormal) < 60 ? 0 : RESTITUTION;
+      const isRealImpact = Math.abs(velAlongNormal) >= REST_THRESHOLD;
+      const e = isRealImpact ? RESTITUTION : 0;
       const jn = (-(1 + e) * velAlongNormal) / denom;
 
       const inx = jn * nx, iny = jn * ny;
@@ -271,7 +294,9 @@ export default function SkillPhysics() {
       a.x -= corr * invMA * nx; a.y -= corr * invMA * ny;
       if (b) { b.x += corr * invMB * nx; b.y += corr * invMB * ny; }
 
-      wake(a); if (b) wake(b);
+      // Only a real impact resets the sleep timer — a body already at rest and
+      // held by gravity must not be kept awake by its own resting contact.
+      if (isRealImpact) { wake(a); if (b) wake(b); }
     };
 
     const collide = () => {
@@ -337,6 +362,10 @@ export default function SkillPhysics() {
     };
 
     const onDown = (e: PointerEvent) => {
+      // A drag is already in progress under another pointer (second finger,
+      // stylus + touch, etc.) — ignore, don't let it steal the active body.
+      if (dragRef.current.body) return;
+
       const { x, y } = pointFrom(e);
       let best: Body | null = null;
       let bestD = Infinity;
@@ -346,29 +375,40 @@ export default function SkillPhysics() {
       }
       if (best) {
         canvas.setPointerCapture(e.pointerId);
-        dragRef.current = { body: best, px: x, py: y, lx: x, ly: y };
+        dragRef.current = {
+          body: best, px: x, py: y, lx: x, ly: y,
+          pointerId: e.pointerId, lastT: performance.now(),
+        };
         wake(best);
       }
     };
 
     const onMove = (e: PointerEvent) => {
       const d = dragRef.current;
-      if (!d.body) return;
+      if (!d.body || e.pointerId !== d.pointerId) return;
       const { x, y } = pointFrom(e);
+      const now = performance.now();
+      // Real elapsed time between move events, not the fixed physics timestep —
+      // pointermove doesn't fire at 1/120s, so DT here would over/under-shoot
+      // throw velocity by however far off the actual event rate is.
+      const dt = Math.max((now - d.lastT) / 1000, 1 / 240);
+      d.lastT = now;
       d.lx = d.px; d.ly = d.py;
       d.px = x; d.py = y;
       d.body.x = x; d.body.y = y;
-      d.body.vx = ((d.px - d.lx) / DT) * 0.12;
-      d.body.vy = ((d.py - d.ly) / DT) * 0.12;
+      d.body.vx = ((d.px - d.lx) / dt) * 0.12;
+      d.body.vy = ((d.py - d.ly) / dt) * 0.12;
     };
 
     const onUp = (e: PointerEvent) => {
       const d = dragRef.current;
+      if (e.pointerId !== d.pointerId) return;
       if (d.body) {
         d.body.omega += (d.px - d.lx) * 0.05;
         wake(d.body);
       }
       d.body = null;
+      d.pointerId = null;
       if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
     };
 
@@ -386,9 +426,6 @@ export default function SkillPhysics() {
         b.omega += (Math.random() - 0.5) * 12;
       }
     };
-
-    const ro = new ResizeObserver(resize);
-    ro.observe(wrap);
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
