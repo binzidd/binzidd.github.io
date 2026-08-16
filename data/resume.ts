@@ -52,8 +52,29 @@ export const experience: Experience[] = [
     color: "#00FF41",
     sections: [
       {
+        heading: "Flagship Programme: Agentic Virtual Accountant (AVA)",
+        bullets: [
+          "Architected and built the skill layer that makes agentic AI scale in Finance: Finance SMEs author agent skills themselves, rather than engineers hand-writing deterministic Python functions for every process variant.",
+          "Wrote the architecture decision records behind that design. Those ADRs are in use now and govern how the wider portfolio of Finance AI applications is scaled and reviewed, not only AVA.",
+          "Lead AVA itself, spanning every business unit finance team across the bank, targeting the manual touchpoints that run finance operations: month-end close, organisational restructure and redundancy processing. A multi-year programme sequenced with the wider Finance transformation.",
+          "Drive the enterprise definition layer, harmonising metric, process and control definitions across BU finance teams so agents operate against one agreed set of meanings rather than local variants.",
+          "Own data requirements and transformation design end to end, with human-in-the-loop control points, auditability and lineage designed in from the start.",
+        ],
+      },
+      {
+        heading: "Delivery, Adoption & Product Ownership",
+        bullets: [
+          "Delivered and change-managed the Finance AI portfolio into business-as-usual, taking products built as Chapter Lead through rollout, training, adoption and operational ownership. SQL Weaver received a CFO quarterly excellence award in 2026.",
+          "Product owner for SQL Weaver as a Service, extending it from a standalone application in production with 2,000 users into a consumable service, delivered with a fully offshore engineering team.",
+          "Run delivery across timezones with squad members in Sydney and Bangalore, setting the operating rhythms and handover practices that make distributed work reliable.",
+          "Partner with the Engineering chapter lead to keep applications lean and available, holding non-functional standards on cost, performance, resilience and uptime alongside feature delivery.",
+          "Take products through the bank's architecture governance: high-level solution architecture (HLSA) reviews and risk assessment forums, defending design decisions to enterprise architects and risk partners.",
+        ],
+      },
+      {
         heading: "Management & Leadership",
         bullets: [
+          "Two chapters report to me, Reporting & Automation and AI & Platforms, including chapter leads and senior managers. Data scientists are chaptered into my squads, where I lead them on delivery.",
           "Provide system-level stewardship to build scalable analytics/engineering capability across domains and deliver long-term business outcomes.",
           "Strengthen leadership across chapters by improving prioritisation discipline, delivery standards and capability benches for current demand and future strategy.",
           "Translate innovation into sustainable BAU by establishing clear ownership, operating rhythms, monitoring and lifecycle management from day one.",
@@ -85,7 +106,7 @@ export const experience: Experience[] = [
         heading: "Chapter Management",
         bullets: [
           "Lead BI Reporting - chapter-level stewardship for analytics across finance.",
-          "Defined capability & workforce plans with Talent Acquisition; zero attrition, steady IA→AA role conversions, AWS certification initiative to upskill the team.",
+          "Defined capability & workforce plans with Talent Acquisition; steady IA→AA role conversions and an AWS certification initiative to upskill the team.",
           "Standardised tooling & ways of working (Tableau, Alteryx, DHP and GenAI patterns); created shared playbook and peer-review process.",
           "Designed chapter capability uplift roadmap: competency bands, learning pathways, staged assessments.",
           "Launched technical guilds, mentoring and cross-chapter forums; ran finance-cohort ML/GenAI training and manager coaching clinics.",
@@ -95,17 +116,19 @@ export const experience: Experience[] = [
       {
         heading: "Generative AI & AI Integration",
         bullets: [
-          "NL-to-SQL (Pre-prod): Built a GenAI interface using LangGraph + LangFuse, reranking and embedding cache. Adopted by 200+ FS users; authored rollout playbook.",
-          "Policy RAG Bot (Pre-prod): Leading design of a Retrieval-Augmented Generation bot for policy queries - chunking, orchestration and embedding reuse.",
-          "Agentic Month-End & MCP Ecosystem (Ideation): Driving strategy and architecture for AI agents in month-end reporting workflows.",
-          "XClaim App (Prototype): Delivered Streamlit/AWS prototype demonstrating end-to-end claims automation.",
+          "SQL Weaver (Production): Built a GenAI natural-language-to-SQL platform using LangGraph + LangFuse, reranking and embedding cache. In production with 2,000 users; authored the rollout playbook and training behind adoption.",
+          "XClaim (Production): Enhanced CBA's enterprise expense claim application with OCR capture and parsing that auto-populates expense categories in place of manual entry. Used by 90% of the application's 10,000 users; improved expense coding and general ledger hygiene at source.",
+          "Policy RAG Bot (Production): Designed and shipped a Retrieval-Augmented Generation assistant for policy queries, covering chunking strategy, orchestration and embedding reuse.",
         ],
       },
       {
         heading: "Process Optimisation & Strategic Data",
         bullets: [
+          "Built a governed metric layer housing 700+ finance metrics previously compiled by hand in Excel across separate teams. Every metric now resolves to an accountable source system, with auditable Tableau dashboards providing quality control.",
+          "Delivered the Executive Leadership Team (ELT) Scorecard on top of it, giving leadership one consistent view of financial performance in place of competing spreadsheet versions.",
+          "Built Payment Times statutory reporting with fuzzy matching across vendor addresses to resolve entity mismatches automatically, removing 30 hours of manual reconciliation from every submission.",
+          "Built Market Share reporting that scrapes published APRA data and merges it with internal positions, removing 16 hours of manual collation from a monthly run, roughly 190 hours a year.",
           "Transformed manual reporting into automated pipelines and repeatable processes to improve reliability and reduce manual effort.",
-          "ELT Scorecard: Designed a reusable data-lake architecture and Tableau layer with lineage and drill-through into financial lead and lag indicators.",
         ],
       },
     ],
@@ -266,55 +289,69 @@ export const experience: Experience[] = [
 // ─── Projects ─────────────────────────────────────────────────────────────────
 export const projects: Project[] = [
   {
-    id: "nl-to-sql",
-    title: "Natural Language to SQL",
+    id: "ava",
+    title: "AVA - Agentic Virtual Accountant",
+    tagline: "Finance SMEs author the agents. Not engineers.",
+    description:
+      "The flagship agentic AI programme for Finance, spanning every business unit finance team across the bank. AVA targets the manual touchpoints that run finance operations: month-end close, organisational restructure and redundancy processing. The part that makes it scale is the skill layer, where Finance subject matter experts author agent skills themselves rather than engineers hand-writing deterministic Python functions for every process variant. Capability grows with the domain experts who own the process rather than with engineering headcount. The architecture decision records behind it are in use now and govern how the rest of the Finance AI portfolio scales and gets reviewed.",
+    tech: ["MCP", "Agentic AI", "SME-Authored Skills", "ADRs", "LLM Orchestration", "Python"],
+    status: "ideation",
+    icon: "🤖",
+    highlight: "Skill layer and ADRs shipped",
+  },
+  {
+    id: "sql-weaver",
+    title: "SQL Weaver",
     tagline: "Ask your data warehouse questions in plain English.",
     description:
-      "A GenAI-powered interface that translates natural language questions into optimised SQL queries. Built with LangGraph orchestration and LangFuse observability, featuring reranking and an embedding cache for performance. Rolled out to 200+ FS users at CBA with a dedicated adoption playbook and chapter-wide training programme.",
+      "A GenAI platform that translates natural language questions into optimised SQL. Built with LangGraph orchestration and LangFuse observability, with reranking and an embedding cache for latency. In production with 2,000 users and recognised with a CFO quarterly excellence award. Now being extended from a standalone application into a consumable service, delivered with a fully offshore engineering team.",
     tech: ["LangGraph", "LangFuse", "Python", "SQL", "Embeddings", "Reranking"],
-    status: "pre-prod",
+    status: "production",
     icon: "🔍",
-    highlight: "200+ users adopted",
+    highlight: "2,000 users · CFO excellence award",
+  },
+  {
+    id: "xclaim-app",
+    title: "XClaim",
+    tagline: "Stop typing your receipts in.",
+    description:
+      "CBA's enterprise expense claim application, available to every employee. The enhancement added OCR capture and parsing that reads a receipt and auto-populates the expense category, replacing manual data entry. That removed a bank-wide manual step and improved expense coding and general ledger hygiene at source, which is the part Finance actually cares about. Used by 90% of the application's 10,000 users.",
+    tech: ["OCR", "Document AI", "Streamlit", "AWS", "Python", "GenAI"],
+    status: "production",
+    icon: "⚡",
+    highlight: "9,000 users · GL hygiene at source",
   },
   {
     id: "policy-rag-bot",
     title: "Policy RAG Bot",
     tagline: "Instant answers from policy documents via RAG.",
     description:
-      "A Retrieval-Augmented Generation bot that enables finance staff to query complex policy documentation through a conversational interface. Focuses on intelligent chunking strategies, orchestration patterns, and embedding reuse to minimise latency and maximise answer quality.",
+      "A Retrieval-Augmented Generation assistant that lets finance staff query complex policy documentation conversationally. Focuses on chunking strategy, orchestration patterns and embedding reuse to keep latency down and answer quality up. Shipped to production.",
     tech: ["RAG", "LangChain", "Python", "Vector DB", "Chunking", "Embeddings"],
-    status: "pre-prod",
+    status: "production",
     icon: "📋",
   },
   {
-    id: "xclaim-app",
-    title: "XClaim App",
-    tagline: "Automated claims processing - from days to minutes.",
+    id: "metric-layer",
+    title: "Governed Metric Layer",
+    tagline: "700+ metrics, one accountable source each.",
     description:
-      "A Streamlit and AWS-backed prototype demonstrating end-to-end claims automation. The app showcases how GenAI can reduce manual claims handling through intelligent document parsing, classification, and workflow automation - built as a proof-of-concept to drive executive buy-in.",
-    tech: ["Streamlit", "AWS", "Python", "GenAI", "Document AI"],
-    status: "prototype",
-    icon: "⚡",
-  },
-  {
-    id: "agentic-month-end",
-    title: "Agentic Month-End & MCP Ecosystem",
-    tagline: "AI agents for autonomous finance close processes.",
-    description:
-      "A strategic initiative to architect an MCP (Model Context Protocol) ecosystem enabling AI agents to autonomously execute month-end reporting workflows. Currently in ideation and design phases, defining agent topology, human-in-the-loop checkpoints, and measurable business impact metrics.",
-    tech: ["MCP", "Agentic AI", "LLM Orchestration", "Python", "AWS"],
-    status: "ideation",
-    icon: "🤖",
-  },
-  {
-    id: "elt-scorecard",
-    title: "ELT Scorecard",
-    tagline: "A single source of truth for finance KPIs.",
-    description:
-      "Designed a reusable data-lake architecture underpinning a Tableau reporting layer with full lineage tracking and drill-through capability into financial lead and lag indicators. Transformed how IB&M Finance teams access and trust their data, replacing fragmented manual reports.",
-    tech: ["Tableau", "SQL", "Teradata", "Data Lake", "Python"],
+      "Replaced more than 700 finance metrics that were previously compiled by hand in Excel spreadsheets across separate teams. Every metric now resolves to an accountable source system, with auditable Tableau dashboards providing quality control and drill-through into financial lead and lag indicators. The Executive Leadership Team Scorecard sits on top of it, giving leadership one consistent view of financial performance instead of competing spreadsheet versions.",
+    tech: ["Tableau", "SQL", "Teradata", "Data Lake", "Lineage", "Python"],
     status: "production",
     icon: "📊",
+    highlight: "700+ metrics off spreadsheets",
+  },
+  {
+    id: "payment-times",
+    title: "Payment Times & Market Share Reporting",
+    tagline: "Fuzzy matching on vendor addresses. APRA data on a schedule.",
+    description:
+      "Two regulatory and market reporting builds. Payment Times is a statutory submission where vendor entity mismatches used to be reconciled by hand; fuzzy matching across vendor addresses now resolves them automatically, removing 30 hours from every submission and taking manual handling out of a regulated report. Market Share scrapes published APRA data and merges it with internal positions, removing 16 hours from a monthly run.",
+    tech: ["Python", "Fuzzy Matching", "Web Scraping", "SQL", "Tableau", "APRA Data"],
+    status: "production",
+    icon: "⚖️",
+    highlight: "~190 hours a year returned",
   },
   {
     id: "usyd-space-heatmaps",
@@ -402,27 +439,27 @@ export const qaEntries: QAEntry[] = [
   {
     keywords: ["nl to sql", "natural language", "sql", "langgraph", "langfuse"],
     answer:
-      "The NL-to-SQL interface is a GenAI project built with LangGraph + LangFuse, featuring reranking and embedding caching. It allows 200+ FS users at CBA to query databases in plain English. Binay authored the rollout playbook and ran chapter-wide training to ensure adoption.",
+      "SQL Weaver is a GenAI natural-language-to-SQL platform built with LangGraph + LangFuse, featuring reranking and embedding caching. It is in production with 2,000 users at CBA and received a CFO quarterly excellence award in 2026. Binay authored the rollout playbook and ran chapter-wide training to drive adoption, and is now extending it into a consumable service with a fully offshore engineering team.",
   },
   {
     keywords: ["rag", "policy", "policy bot", "retrieval"],
     answer:
-      "The Policy RAG Bot (pre-production) is a Retrieval-Augmented Generation system enabling finance staff to query policy documents conversationally. Binay is leading its design, focusing on chunking strategies, orchestration patterns, and embedding reuse to maximise answer quality and minimise latency.",
+      "The Policy RAG Bot is in production, enabling finance staff to query policy documents conversationally. Binay led its design, focusing on chunking strategies, orchestration patterns, and embedding reuse to maximise answer quality and minimise latency.",
   },
   {
-    keywords: ["xclaim", "claims", "streamlit", "automation"],
+    keywords: ["xclaim", "claims", "expense", "ocr", "automation"],
     answer:
-      "XClaim is a Streamlit + AWS prototype demonstrating end-to-end claims automation with GenAI. Built as a proof-of-concept, it showcases intelligent document parsing and workflow automation to reduce manual claims handling from days to minutes.",
+      "XClaim is CBA's enterprise expense claim application, used by every employee. Binay enhanced it with OCR capture and parsing that auto-populates expense categories in place of manual entry. It is in production, used by 90% of the application's 10,000 users, and has improved expense coding and general ledger hygiene at source.",
   },
   {
-    keywords: ["education", "university", "masters", "degree", "mit", "hci"],
+    keywords: ["education", "university", "masters", "degree", "mit"],
     answer:
-      "Binay holds two Masters degrees from The University of Sydney (2015–2017): a Masters of Information Technology specialising in Human-Computer Interaction, and a Masters of IT Management focusing on Software Engineering Management. He holds a Bachelor of Technology in Computer Science from ITER, India (2008–2012).",
+      "Binay holds a dual Masters from The University of Sydney (2015–2017): a Master of Software Engineering and a Master of Software Engineering Management. He holds a Bachelor of Technology in Computer Science from ITER, India (2008–2012).",
   },
   {
-    keywords: ["cba", "commonwealth bank", "chapter lead", "chapter"],
+    keywords: ["cba", "commonwealth bank", "chapter lead", "chapter area lead", "chapter"],
     answer:
-      "Since March 2022, Binay has been Chapter Area Lead - FS Analytics at CBA. He leads BI reporting stewardship across finance, has achieved zero chapter attrition, launched AWS certification initiatives, standardised tooling (Tableau, Alteryx, GenAI patterns), and runs technical guilds and ML/GenAI training.",
+      "Since February 2026, Binay has been Chapter Area Lead at CBA, with two chapters reporting to him, Reporting & Automation and AI & Platforms, including their chapter leads and senior managers. Data scientists are chaptered into his squads, where he leads them on delivery. His flagship programme is AVA (Agentic Virtual Accountant), a multi-year effort to automate manual finance-ops touchpoints across every business unit finance team at the bank.",
   },
   {
     keywords: ["skills", "technologies", "tech stack", "tools"],
