@@ -7,7 +7,7 @@ import MatrixDecoder from "@/components/MatrixDecoder";
 import HeadingReveal from "@/components/motion/HeadingReveal";
 import SceneDolly from "@/components/motion/SceneDolly";
 import SkillStack from "@/components/SkillStack";
-import SkillPhysics from "@/components/SkillPhysics";
+import JellyfishTank from "@/components/JellyfishTank";
 
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } };
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -92,7 +92,7 @@ export default function Skills() {
             onMouseLeave={(e) => { if (!showPlayground) { e.currentTarget.style.color = "#006600"; e.currentTarget.style.borderColor = "#003300"; } }}
           >
             <motion.span animate={{ rotate: showPlayground ? 45 : 0 }} transition={{ duration: 0.2 }}>+</motion.span>
-            {showPlayground ? "close_playground()" : "same_weights.throw_them_around()"}
+            {showPlayground ? "surface()" : "same_depths.let_them_swim()"}
           </button>
 
           <AnimatePresence initial={false}>
@@ -105,7 +105,7 @@ export default function Skills() {
                 style={{ overflow: "hidden" }}
               >
                 <div className="pt-5">
-                  <SkillPhysics />
+                  <JellyfishTank />
                 </div>
               </motion.div>
             )}

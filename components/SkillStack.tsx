@@ -5,7 +5,7 @@
  * ----------
  * The default, no-interaction-required view of skill depth.
  *
- * The physics sim (SkillPhysics) is fun but fails the job this section exists to
+ * The physics sim (JellyfishTank) is fun but fails the job this section exists to
  * do: a recruiter scanning for 4 seconds needs pattern recognition, not a puzzle.
  * Circles piled by gravity give three problems a hiring manager actually hits:
  *   - no stable reading order (today's pile isn't tomorrow's pile)
