@@ -1,18 +1,23 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useTheme } from "@/lib/theme";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 /**
- * HeadingReveal — the signature editorial line reveal. The child sits inside
- * an overflow-clipped frame and slides up from below its own baseline, as if
- * rising out of the surface. Pairs with MatrixDecoder: the line slides up
- * showing scrambled glyphs, which then decode in place.
+ * HeadingReveal — the signature editorial line reveal, in two dialects.
  *
- * `as` lets the clip frame render as the correct block element (h2, p, etc.)
- * so layout/spacing is preserved exactly.
+ *  matrix       the line slides up from below its own baseline inside an
+ *               overflow-clipped frame, as if rising out of the surface.
+ *               Mechanical and hard-edged; pairs with the glyph scramble.
+ *  interstellar the line arrives like light from a distance: it fades up
+ *               through a blur with the letter-spacing settling from wide to
+ *               normal. No clip frame, because nothing is "emerging from"
+ *               anything — it's resolving into focus.
+ *
+ * `className`/`style` land on the outer frame so layout is preserved either way.
  */
 export default function HeadingReveal({
   children,
@@ -29,6 +34,39 @@ export default function HeadingReveal({
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-50px" });
+  const theme = useTheme();
+  const reduce = useReducedMotion();
+
+  if (reduce) {
+    return (
+      <span ref={ref} className={className} style={{ display: "inline-block", ...style }}>
+        {children}
+      </span>
+    );
+  }
+
+  if (theme === "interstellar") {
+    return (
+      <span
+        ref={ref}
+        className={className}
+        style={{ display: "inline-block", ...style }}
+      >
+        <motion.span
+          style={{ display: "inline-block", willChange: "filter, opacity, transform" }}
+          initial={{ opacity: 0, y: "18%", filter: "blur(10px)", letterSpacing: "0.18em" }}
+          animate={
+            inView
+              ? { opacity: 1, y: "0%", filter: "blur(0px)", letterSpacing: "0em" }
+              : { opacity: 0, y: "18%", filter: "blur(10px)", letterSpacing: "0.18em" }
+          }
+          transition={{ duration: duration * 1.25, delay, ease: EASE }}
+        >
+          {children}
+        </motion.span>
+      </span>
+    );
+  }
 
   return (
     // Clip frame — slightly padded so descenders (g, y, p) aren't shaved
