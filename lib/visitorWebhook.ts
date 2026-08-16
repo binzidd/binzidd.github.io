@@ -14,7 +14,14 @@ export const SHEETS_WEBHOOK_URL =
 
 export type VisitorEvent =
   | { type: "visit"; path: string; referrer: string }
-  | { type: "identify"; name: string; relationship: string; contactUrl: string; isOwner: boolean };
+  | {
+      type: "identify";
+      name: string;
+      relationship: string;
+      contactUrl: string;
+      contactKind: "linkedin" | "github" | "email" | null;
+      isOwner: boolean;
+    };
 
 /**
  * Fire-and-forget POST to the Sheet webhook. Apps Script Web Apps don't
