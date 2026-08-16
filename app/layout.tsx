@@ -56,11 +56,13 @@ export default function RootLayout({
       <head>
         {/*
           GitHub Pages cannot set HTTP security headers, so these meta equivalents
-          are the best available mitigations for a static export.
+          are the best available mitigations for a static export. frame-ancestors
+          is deliberately absent: browsers ignore it when delivered via <meta>,
+          so including it only emitted a console warning on every page load.
           'unsafe-inline' is required by Framer Motion (inline style mutations).
         */}
         <meta httpEquiv="Content-Security-Policy"
-          content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://api.github.com https://script.google.com https://script.googleusercontent.com; frame-ancestors 'none';" />
+          content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://api.github.com https://script.google.com https://script.googleusercontent.com;" />
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
         <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
         <meta name="permissions-policy" content="geolocation=(), microphone=(), camera=()" />

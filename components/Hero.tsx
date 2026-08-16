@@ -7,6 +7,7 @@ import {
 } from "framer-motion";
 import AustraliaDataField from "@/components/AustraliaDataField";
 import { smoothScrollTo } from "@/components/SmoothScroll";
+import { useTheme } from "@/lib/theme";
 
 const roles = [
   "Finance Engineering & Analytics",
@@ -24,6 +25,13 @@ const stats = [
 ];
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+// Deterministic 0-1 from an integer. Used for per-letter scatter: Math.random()
+// here would differ between SSR and hydration and desync the entrance.
+function hash(i: number): number {
+  const x = Math.sin(i * 12.9898) * 43758.5453;
+  return x - Math.floor(x);
+}
 
 // Magnetic wrapper — element leans toward the cursor, springs back on leave
 function Magnetic({ children }: { children: React.ReactNode }) {
@@ -98,6 +106,8 @@ function StatCard({ stat, index }: { stat: typeof stats[0]; index: number }) {
 }
 
 export default function Hero() {
+  const theme = useTheme();
+  const stellar = theme === "interstellar";
   const [roleIndex, setRoleIndex] = useState(0);
   const [displayed, setDisplayed] = useState("");
   const [typing, setTyping] = useState(true);
@@ -133,20 +143,20 @@ export default function Hero() {
     let timeout: ReturnType<typeof setTimeout>;
     if (typing) {
       if (displayed.length < currentRole.length) {
-        timeout = setTimeout(() => setDisplayed(currentRole.slice(0, displayed.length + 1)), 55);
+        timeout = setTimeout(() => setDisplayed(currentRole.slice(0, displayed.length + 1)), stellar ? 72 : 55);
       } else {
         timeout = setTimeout(() => setTyping(false), 2200);
       }
     } else {
       if (displayed.length > 0) {
-        timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 30);
+        timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), stellar ? 38 : 30);
       } else {
         setRoleIndex((i) => (i + 1) % roles.length);
         setTyping(true);
       }
     }
     return () => clearTimeout(timeout);
-  }, [displayed, typing, roleIndex]);
+  }, [displayed, typing, roleIndex, stellar]);
 
   const nameLetters = "Binay Siddharth".split("");
 
@@ -197,15 +207,31 @@ export default function Hero() {
           <span className="h-px w-10" style={{ background: "linear-gradient(90deg, var(--c-accent), transparent)" }} />
         </motion.div>
 
-        {/* Name — 3D entrance: letters fold in from above via rotateX */}
+        {/* Name.
+            matrix       letters fold in from below via rotateX, mechanical and in step.
+            interstellar letters converge out of scattered drift through a blur, as if
+                         light from different distances arriving at once. Offsets are
+                         hashed from the index, not random, so SSR and client agree. */}
         <div className="mb-4" style={{ fontFamily: "var(--font-cormorant), serif", perspective: "1000px" }}>
           <div className="flex justify-center flex-wrap" style={{ transformStyle: "preserve-3d" }}>
             {nameLetters.map((letter, i) => (
               <motion.span
                 key={i}
-                initial={{ opacity: 0, y: 50, rotateX: -55 }}
-                animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                transition={{ delay: 0.4 + i * 0.03, duration: 0.75, ease: EASE }}
+                initial={stellar
+                  ? {
+                      opacity: 0,
+                      y: (hash(i) - 0.5) * 90,
+                      x: (hash(i + 41) - 0.5) * 46,
+                      filter: "blur(14px)",
+                      scale: 0.88,
+                    }
+                  : { opacity: 0, y: 50, rotateX: -55 }}
+                animate={stellar
+                  ? { opacity: 1, y: 0, x: 0, filter: "blur(0px)", scale: 1 }
+                  : { opacity: 1, y: 0, rotateX: 0 }}
+                transition={stellar
+                  ? { delay: 0.35 + hash(i + 7) * 0.5, duration: 1.5, ease: EASE }
+                  : { delay: 0.4 + i * 0.03, duration: 0.75, ease: EASE }}
                 whileHover={letter !== " " ? {
                   rotateY: 18,
                   color: "var(--c-accent)",
@@ -225,9 +251,23 @@ export default function Hero() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0, duration: 0.5 }}
           className="h-12 flex items-center justify-center mb-12">
           <span className="text-base md:text-xl" style={{ color: "var(--c-muted)", fontFamily: "var(--font-mono), monospace" }}>
-            <span style={{ color: "var(--c-dim)" }}>&gt; </span>
+            <span style={{ color: "var(--c-dim)" }}>{stellar ? "\u25B8 " : "> "}</span>
             <span style={{ color: "var(--c-accent)" }}>{displayed}</span>
-            <span className="cursor-blink inline-block w-[2px] h-5 ml-0.5 align-middle" style={{ background: "var(--c-accent)" }} />
+            {stellar ? (
+              // A soft transponder pulse rather than a hard terminal caret
+              <motion.span
+                className="inline-block rounded-full ml-1.5 align-middle"
+                style={{ width: 7, height: 7, background: "var(--c-accent)" }}
+                animate={{ opacity: [0.25, 1, 0.25], boxShadow: [
+                  "0 0 0px rgba(var(--c-accent-rgb),0)",
+                  "0 0 12px rgba(var(--c-accent-rgb),0.85)",
+                  "0 0 0px rgba(var(--c-accent-rgb),0)",
+                ] }}
+                transition={{ duration: 1.9, repeat: Infinity, ease: "easeInOut" }}
+              />
+            ) : (
+              <span className="cursor-blink inline-block w-[2px] h-5 ml-0.5 align-middle" style={{ background: "var(--c-accent)" }} />
+            )}
           </span>
         </motion.div>
 
