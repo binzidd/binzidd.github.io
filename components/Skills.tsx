@@ -1,61 +1,13 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { skillCategories, certifications, type SkillCategory, type Certification } from "@/data/resume";
+import { useState } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { certifications, type Certification } from "@/data/resume";
 import MatrixDecoder from "@/components/MatrixDecoder";
 import HeadingReveal from "@/components/motion/HeadingReveal";
 import SceneDolly from "@/components/motion/SceneDolly";
+import SkillStack from "@/components/SkillStack";
 import SkillPhysics from "@/components/SkillPhysics";
-
-function SkillCategoryCard({ category, index }: { category: SkillCategory; index: number }) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [6, -6]), { stiffness: 300, damping: 30 });
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-6, 6]), { stiffness: 300, damping: 30 });
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1, duration: 0.6 }}
-      style={{
-        rotateX,
-        rotateY,
-        transformPerspective: 1000,
-        background: "#020c02",
-        border: "1px solid #003300",
-      }}
-      onMouseMove={(e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        x.set((e.clientX - rect.left) / rect.width - 0.5);
-        y.set((e.clientY - rect.top) / rect.height - 0.5);
-      }}
-      onMouseLeave={() => { x.set(0); y.set(0); }}
-      whileHover={{ boxShadow: "0 16px 40px rgba(0,255,65,0.05), 0 0 0 1px rgba(0,255,65,0.15)" }}
-      className="rounded-2xl p-7"
-    >
-      <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-5" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>{"// "}{category.name.toLowerCase().replace(/ /g, "_")}
-      </p>
-      <div className="flex flex-wrap gap-2">
-        {category.skills.map((skill) => (
-          <span
-            key={skill.name}
-            className="text-xs px-2.5 py-1 rounded-md"
-            style={{
-              color: "#8B949E",
-              background: "#001a00",
-              border: "1px solid #003300",
-              fontFamily: "var(--font-inter), sans-serif",
-            }}
-          >
-            {skill.name}
-          </span>
-        ))}
-      </div>
-    </motion.div>
-  );
-}
 
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } };
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -106,6 +58,8 @@ function CertCard({ cert }: { cert: Certification }) {
 }
 
 export default function Skills() {
+  const [showPlayground, setShowPlayground] = useState(false);
+
   return (
     <section id="skills" className="py-28 px-6" style={{ background: "#000500" }}>
       <SceneDolly className="max-w-6xl mx-auto">
@@ -117,16 +71,45 @@ export default function Skills() {
           </p>
         </motion.div>
 
-        {/* Rigid-body sim: mass encodes depth, replacing self-rated percentages */}
-        <div className="mb-12">
-          <SkillPhysics />
+        {/* Primary view: grouped, ordered, legible at a glance — no interaction required */}
+        <div className="mb-6">
+          <SkillStack />
         </div>
 
-        {/* Skills grid — each card tilts in 3D on hover */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
-          {skillCategories.map((category, ci) => (
-            <SkillCategoryCard key={category.name} category={category} index={ci} />
-          ))}
+        {/* Physics sim demoted to an opt-in playground — same weights, thrown around */}
+        <div className="mb-20">
+          <button
+            onClick={() => setShowPlayground((v) => !v)}
+            aria-expanded={showPlayground}
+            className="flex items-center gap-2 text-[11px] px-4 py-2 rounded-full transition-colors duration-150"
+            style={{
+              color: showPlayground ? "#00FF41" : "#006600",
+              border: `1px solid ${showPlayground ? "rgba(0,255,65,0.35)" : "#003300"}`,
+              fontFamily: "var(--font-mono), monospace",
+              background: "transparent",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "#00FF41"; e.currentTarget.style.borderColor = "rgba(0,255,65,0.35)"; }}
+            onMouseLeave={(e) => { if (!showPlayground) { e.currentTarget.style.color = "#006600"; e.currentTarget.style.borderColor = "#003300"; } }}
+          >
+            <motion.span animate={{ rotate: showPlayground ? 45 : 0 }} transition={{ duration: 0.2 }}>+</motion.span>
+            {showPlayground ? "close_playground()" : "same_weights.throw_them_around()"}
+          </button>
+
+          <AnimatePresence initial={false}>
+            {showPlayground && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.4, ease: EASE }}
+                style={{ overflow: "hidden" }}
+              >
+                <div className="pt-5">
+                  <SkillPhysics />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Certifications */}
