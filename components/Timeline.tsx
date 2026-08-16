@@ -29,12 +29,12 @@ export default function Timeline() {
   const [chatOpen, setChatOpen] = useState(false);
 
   return (
-    <section id="timeline" className="py-28 px-6 grid-lines" style={{ background: "#000500" }}>
+    <section id="timeline" className="py-28 px-6 grid-lines" style={{ background: "var(--c-bg)" }}>
       <SceneDolly className="max-w-3xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="mb-20">
-          <p className="text-[10px] tracking-[0.25em] uppercase mb-3" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}><MatrixDecoder text="// employment_history" /></p>
-          <h2 className="text-5xl md:text-6xl font-light mb-4" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}><HeadingReveal><MatrixDecoder text="Where I've Been" /></HeadingReveal></h2>
-          <p className="text-sm" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>Twelve years across finance, academia, and tech. Click any role to explore.</p>
+          <p className="text-[10px] tracking-[0.25em] uppercase mb-3" style={{ color: "var(--c-accent)", fontFamily: "var(--font-mono), monospace" }}><MatrixDecoder text="// employment_history" /></p>
+          <h2 className="text-5xl md:text-6xl font-light mb-4" style={{ color: "var(--c-text)", fontFamily: "var(--font-cormorant), serif" }}><HeadingReveal><MatrixDecoder text="Where I've Been" /></HeadingReveal></h2>
+          <p className="text-sm" style={{ color: "var(--c-muted)", fontFamily: "var(--font-inter), sans-serif" }}>Twelve years across finance, academia, and tech. Click any role to explore.</p>
         </motion.div>
 
         <VelocityWarp>
@@ -43,12 +43,12 @@ export default function Timeline() {
           <motion.div
             variants={lineVariants}
             className="absolute left-[11px] top-3 bottom-3 w-px origin-top"
-            style={{ background: "linear-gradient(to bottom, #00FF4144, #003300, transparent)" }}
+            style={{ background: "linear-gradient(to bottom, rgba(var(--c-accent-rgb),0.27), var(--c-border), transparent)" }}
           />
           {/* Scanning pulse dot */}
           <motion.div
             className="absolute left-[8px] w-[7px] h-[7px] rounded-full"
-            style={{ background: "#00FF41", boxShadow: "0 0 8px #00FF41", top: "12px" }}
+            style={{ background: "var(--c-accent)", boxShadow: "0 0 8px var(--c-accent)", top: "12px" }}
             animate={{ top: ["12px", "calc(100% - 12px)", "12px"] }}
             transition={{ duration: 4.5, ease: "linear", repeat: Infinity, repeatDelay: 1 }}
           />
@@ -61,17 +61,17 @@ export default function Timeline() {
                   <div className="relative pl-8">
                     <motion.div
                       className="absolute left-0 top-5 w-[22px] h-[22px] rounded-full flex items-center justify-center"
-                      style={{ background: isOpen ? "#000500" : "#020c02", border: `1.5px solid ${isOpen ? "#00FF41" : "#003300"}`, transition: "all 0.3s ease", boxShadow: isOpen ? "0 0 14px rgba(0,255,65,0.4)" : "none" }}
+                      style={{ background: isOpen ? "var(--c-bg)" : "var(--c-surface)", border: `1.5px solid ${isOpen ? "var(--c-accent)" : "var(--c-border)"}`, transition: "all 0.3s ease", boxShadow: isOpen ? "0 0 14px rgba(var(--c-accent-rgb),0.4)" : "none" }}
                       animate={{ scale: isOpen ? 1.1 : 1 }}>
-                      {isOpen && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-2 h-2 rounded-full" style={{ background: "#00FF41" }} />}
+                      {isOpen && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-2 h-2 rounded-full" style={{ background: "var(--c-accent)" }} />}
                     </motion.div>
 
                     <motion.div
                       className="rounded-2xl overflow-hidden cursor-pointer"
-                      style={{ background: isOpen ? "#020c02" : "transparent", border: `1px solid ${isOpen ? "#003300" : "transparent"}`, boxShadow: isOpen ? "0 0 30px rgba(0,255,65,0.05)" : "none", transition: "background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease" }}
+                      style={{ background: isOpen ? "var(--c-surface)" : "transparent", border: `1px solid ${isOpen ? "var(--c-border)" : "transparent"}`, boxShadow: isOpen ? "0 0 30px rgba(var(--c-accent-rgb),0.05)" : "none", transition: "background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease" }}
                       whileHover={!isOpen ? {
-                        background: "#020c02AA",
-                        borderColor: "#003300",
+                        background: "rgba(var(--c-surface-rgb),0.67)",
+                        borderColor: "var(--c-border)",
                         rotateY: 1,
                         transformPerspective: 1200,
                         transition: { duration: 0.2 },
@@ -83,17 +83,17 @@ export default function Timeline() {
                           <div>
                             <div className="flex items-center gap-2 mb-1">
                               {exp.current && (
-                                <span className="text-[9px] px-2 py-0.5 rounded-full font-medium" style={{ background: "rgba(0,255,65,0.1)", color: "#00FF41", border: "1px solid rgba(0,255,65,0.2)", fontFamily: "var(--font-mono), monospace" }}>CURRENT</span>
+                                <span className="text-[9px] px-2 py-0.5 rounded-full font-medium" style={{ background: "rgba(var(--c-accent-rgb),0.1)", color: "var(--c-accent)", border: "1px solid rgba(var(--c-accent-rgb),0.2)", fontFamily: "var(--font-mono), monospace" }}>CURRENT</span>
                               )}
-                              <span className="text-[10px]" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>{exp.period}</span>
+                              <span className="text-[10px]" style={{ color: "var(--c-dim)", fontFamily: "var(--font-mono), monospace" }}>{exp.period}</span>
                             </div>
-                            <h3 className="text-base font-semibold leading-snug" style={{ color: "#E6EDF3", fontFamily: "var(--font-inter), sans-serif" }}>{exp.role}</h3>
-                            <p className="text-xs mt-0.5" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>{exp.company} · {exp.location}</p>
+                            <h3 className="text-base font-semibold leading-snug" style={{ color: "var(--c-text)", fontFamily: "var(--font-inter), sans-serif" }}>{exp.role}</h3>
+                            <p className="text-xs mt-0.5" style={{ color: "var(--c-muted)", fontFamily: "var(--font-inter), sans-serif" }}>{exp.company} · {exp.location}</p>
                           </div>
                           <motion.div animate={{ rotate: isOpen ? 45 : 0 }} transition={{ duration: 0.25 }}
                             className="mt-1 flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full"
-                            style={{ background: isOpen ? "rgba(0,255,65,0.1)" : "transparent" }}>
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke={isOpen ? "#00FF41" : "#006600"} strokeWidth="1.5" strokeLinecap="round" /></svg>
+                            style={{ background: isOpen ? "rgba(var(--c-accent-rgb),0.1)" : "transparent" }}>
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke={isOpen ? "var(--c-accent)" : "var(--c-dim)"} strokeWidth="1.5" strokeLinecap="round" /></svg>
                           </motion.div>
                         </div>
                       </div>
@@ -102,15 +102,15 @@ export default function Timeline() {
                         {isOpen && (
                           <motion.div key="content" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.4, ease: EASE }} style={{ overflow: "hidden" }}>
                             <div className="px-6 pb-6 space-y-5">
-                              <div className="h-px" style={{ background: "#003300" }} />
+                              <div className="h-px" style={{ background: "var(--c-border)" }} />
                               {exp.sections.map((section, si) => (
                                 <div key={si}>
-                                  <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-3" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>{section.heading}</p>
+                                  <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-3" style={{ color: "var(--c-accent)", fontFamily: "var(--font-mono), monospace" }}>{section.heading}</p>
                                   <ul className="space-y-2">
                                     {section.bullets.map((bullet, bi) => (
                                       <motion.li key={bi} custom={si * 10 + bi} variants={bulletVariants} initial="hidden" animate="visible"
-                                        className="flex gap-3 text-xs leading-relaxed" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
-                                        <span className="mt-2 flex-shrink-0 w-1 h-1 rounded-full" style={{ background: "#00FF4144" }} />
+                                        className="flex gap-3 text-xs leading-relaxed" style={{ color: "var(--c-muted)", fontFamily: "var(--font-inter), sans-serif" }}>
+                                        <span className="mt-2 flex-shrink-0 w-1 h-1 rounded-full" style={{ background: "rgba(var(--c-accent-rgb),0.27)" }} />
                                         {bullet}
                                       </motion.li>
                                     ))}
@@ -133,12 +133,12 @@ export default function Timeline() {
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3, duration: 0.6 }} className="mt-14 flex justify-center">
           <button onClick={() => setChatOpen(true)}
             className="flex items-center gap-3 px-6 py-3 rounded-full transition-all duration-300"
-            style={{ background: "#020c02", border: "1px solid #003300", fontFamily: "var(--font-mono), monospace" }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(0,255,65,0.3)"; e.currentTarget.style.boxShadow = "0 0 20px rgba(0,255,65,0.06)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#003300"; e.currentTarget.style.boxShadow = "none"; }}>
+            style={{ background: "var(--c-surface)", border: "1px solid var(--c-border)", fontFamily: "var(--font-mono), monospace" }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(var(--c-accent-rgb),0.3)"; e.currentTarget.style.boxShadow = "0 0 20px rgba(var(--c-accent-rgb),0.06)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--c-border)"; e.currentTarget.style.boxShadow = "none"; }}>
             <span className="text-lg">💬</span>
-            <span className="text-xs font-medium" style={{ color: "#8B949E" }}>ask_me_anything --about-my-experience</span>
-            <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: "rgba(0,255,65,0.08)", color: "#00FF41", border: "1px solid rgba(0,255,65,0.15)" }}>⌘K</span>
+            <span className="text-xs font-medium" style={{ color: "var(--c-muted)" }}>ask_me_anything --about-my-experience</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: "rgba(var(--c-accent-rgb),0.08)", color: "var(--c-accent)", border: "1px solid rgba(var(--c-accent-rgb),0.15)" }}>⌘K</span>
           </button>
         </motion.div>
       </SceneDolly>
@@ -146,20 +146,20 @@ export default function Timeline() {
       {chatOpen && (
         <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.7)" }} onClick={() => setChatOpen(false)}>
           <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 40 }} onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-lg rounded-2xl p-6" style={{ background: "#020c02", border: "1px solid #003300" }}>
-            <p className="text-xs mb-2" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>// Press ⌘K for the full terminal Q&A interface</p>
+            className="w-full max-w-lg rounded-2xl p-6" style={{ background: "var(--c-surface)", border: "1px solid var(--c-border)" }}>
+            <p className="text-xs mb-2" style={{ color: "var(--c-dim)", fontFamily: "var(--font-mono), monospace" }}>// Press ⌘K for the full terminal Q&A interface</p>
             <div className="mt-4 space-y-2">
               {["Tell me about Adobe", "What is Project SPUR?", "What GenAI projects has he built?"].map((q) => (
                 <button key={q} onClick={() => { setChatOpen(false); setTimeout(() => { document.dispatchEvent(new CustomEvent("palette-query", { detail: q })); }, 200); }}
                   className="w-full text-left px-4 py-2.5 rounded-xl text-xs transition-colors duration-150"
-                  style={{ background: "#020c02", color: "#8B949E", fontFamily: "var(--font-mono), monospace", border: "1px solid #003300" }}
-                  onMouseEnter={(e) => e.currentTarget.style.borderColor = "rgba(0,255,65,0.2)"}
-                  onMouseLeave={(e) => e.currentTarget.style.borderColor = "#003300"}>
+                  style={{ background: "var(--c-surface)", color: "var(--c-muted)", fontFamily: "var(--font-mono), monospace", border: "1px solid var(--c-border)" }}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = "rgba(var(--c-accent-rgb),0.2)"}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = "var(--c-border)"}>
                   &gt; &ldquo;{q}&rdquo;
                 </button>
               ))}
             </div>
-            <button onClick={() => setChatOpen(false)} className="mt-4 w-full py-2 text-xs rounded-full" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>// close</button>
+            <button onClick={() => setChatOpen(false)} className="mt-4 w-full py-2 text-xs rounded-full" style={{ color: "var(--c-dim)", fontFamily: "var(--font-mono), monospace" }}>// close</button>
           </motion.div>
         </div>
       )}

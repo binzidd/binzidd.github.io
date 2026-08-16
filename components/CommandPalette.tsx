@@ -20,21 +20,21 @@ const SUGGESTIONS = [
 ];
 
 const HP_RESPONSES: [string[], string][] = [
-  [["lumos"],           "✨ Lumos! — I'm not technically a wizard, but I do work in the dark. Close this palette and type 'lumos' on the page (outside inputs) to cast the real spell."],
-  [["nox"],             "🌑 Nox. — The counter-charm to Lumos. Close this palette and type 'nox' on the page to cast."],
-  [["expecto patronum"],"🦌 Expecto Patronum! — My Patronus is probably a recursive function. Close this palette and type the full incantation on the page for the real effect."],
-  [["alohomora"],       "🔓 Alohomora! — Opens locks. This portfolio is already open, but type it on the page (outside this box) for a proper casting."],
-  [["accio"],           "🪄 Accio! — I would Accio my next role, but that's what this portfolio is for. Type the spell on the page to cast it."],
-  [["obliviate"],       "😶 Obliviate. — The memory charm. If you forget visiting this site, I'll take it as a compliment that it felt like a dream. Type it on the page to cast."],
-  [["wingardium leviosa", "leviosa", "wingardium"], "🪶 Wingardium Leviosa! — It's Levi-O-sa, not Levio-SA. Type any spell on the page (outside inputs) to cast it for real."],
-  [["mischief managed"], "🗺️ Mischief Managed. — The Marauder's Map goes blank. Type it on the page for the full effect."],
-  [["expelliarmus"],     "⚡ Expelliarmus! — The Disarming Charm. Nothing has been disarmed here, but your curiosity is noted."],
-  [["voldemort", "he who must not be named"], "😬 He Who Must Not Be Named. — Brave of you. Most people don't say it."],
-  [["hogwarts"],         "🏰 Hogwarts — Not listed on my CV, but I hear the data analytics programme is excellent. Owl post unavailable."],
-  [["quidditch"],        "🏆 Quidditch! — Fastest sport on a broomstick. The closest equivalent in my career is a sprint ceremony that actually finishes on time."],
+  [["lumos"],           "✨ Lumos! I'm not technically a wizard, but I do work in the dark. Close this palette and type 'lumos' on the page (outside inputs) to cast the real spell."],
+  [["nox"],             "🌑 Nox. The counter-charm to Lumos. Close this palette and type 'nox' on the page to cast."],
+  [["expecto patronum"],"🦌 Expecto Patronum! My Patronus is probably a recursive function. Close this palette and type the full incantation on the page for the real effect."],
+  [["alohomora"],       "🔓 Alohomora! Opens locks. This portfolio is already open, but type it on the page (outside this box) for a proper casting."],
+  [["accio"],           "🪄 Accio! I would Accio my next role, but that's what this portfolio is for. Type the spell on the page to cast it."],
+  [["obliviate"],       "😶 Obliviate. The memory charm. If you forget visiting this site, I'll take it as a compliment that it felt like a dream. Type it on the page to cast."],
+  [["wingardium leviosa", "leviosa", "wingardium"], "🪶 Wingardium Leviosa! It's Levi-O-sa, not Levio-SA. Type any spell on the page (outside inputs) to cast it for real."],
+  [["mischief managed"], "🗺️ Mischief Managed. The Marauder's Map goes blank. Type it on the page for the full effect."],
+  [["expelliarmus"],     "⚡ Expelliarmus! The Disarming Charm. Nothing has been disarmed here, but your curiosity is noted."],
+  [["voldemort", "he who must not be named"], "😬 He Who Must Not Be Named. Brave of you. Most people don't say it."],
+  [["hogwarts"],         "🏰 Hogwarts. Not listed on my CV, but I hear the data analytics programme is excellent. Owl post unavailable."],
+  [["quidditch"],        "🏆 Quidditch! Fastest sport on a broomstick. The closest equivalent in my career is a sprint ceremony that actually finishes on time."],
   [["patronus"],         "🦌 A Patronus takes the form of what brings you joy. Mine is probably a clean test suite."],
-  [["horcrux"],          "💀 Seven Horcruxes — I have seven GitHub repositories. Coincidence? Probably."],
-  [["dumbledore"],       "🧙 Dumbledore — 'It does not do to dwell on dreams and forget to live.' Good advice for any engineer lost in ticket backlogs."],
+  [["horcrux"],          "💀 Seven Horcruxes: I have seven GitHub repositories. Coincidence? Probably."],
+  [["dumbledore"],       "🧙 Dumbledore: 'It does not do to dwell on dreams and forget to live.' Good advice for any engineer lost in ticket backlogs."],
 ];
 
 function findAnswer(query: string): string {
@@ -76,7 +76,7 @@ function TypewriterText({ text, onDone }: { text: string; onDone?: () => void })
       {!done && (
         <span
           className="inline-block w-[2px] h-3.5 ml-0.5 align-middle"
-          style={{ background: "#00FF41", animation: "blink 1s step-end infinite" }}
+          style={{ background: "var(--c-accent)", animation: "blink 1s step-end infinite" }}
         />
       )}
     </span>
@@ -164,7 +164,7 @@ export default function CommandPalette() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[90]"
-            style={{ background: "rgba(0,5,0,0.75)", backdropFilter: "blur(4px)" }}
+            style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(4px)" }}
             onClick={handleClose}
           />
 
@@ -180,30 +180,30 @@ export default function CommandPalette() {
             <div
               className="rounded-2xl overflow-hidden"
               style={{
-                background: "#000500",
-                border: "1px solid #003300",
-                boxShadow: "0 0 60px rgba(0,255,65,0.08), 0 24px 64px rgba(0,0,0,0.8)",
+                background: "var(--c-bg)",
+                border: "1px solid var(--c-border)",
+                boxShadow: "0 0 60px rgba(var(--c-accent-rgb),0.08), 0 24px 64px rgba(0,0,0,0.8)",
               }}
             >
               {/* Terminal title bar */}
               <div
                 className="flex items-center gap-2 px-4 py-2.5"
-                style={{ background: "#020c02", borderBottom: "1px solid #003300" }}
+                style={{ background: "var(--c-surface)", borderBottom: "1px solid var(--c-border)" }}
               >
                 <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#003300" }} />
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#003300" }} />
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#003300" }} />
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--c-border)" }} />
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--c-border)" }} />
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--c-border)" }} />
                 </div>
-                <span className="text-xs ml-2" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>
+                <span className="text-xs ml-2" style={{ color: "var(--c-dim)", fontFamily: "var(--font-mono), monospace" }}>
                   binay@portfolio:~$ ask_me_anything
                 </span>
                 <button
                   onClick={handleClose}
                   className="ml-auto text-[10px] px-2 py-0.5 rounded transition-colors"
-                  style={{ color: "#006600", border: "1px solid #003300", fontFamily: "var(--font-mono), monospace" }}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = "#00FF41"; e.currentTarget.style.borderColor = "rgba(0,255,65,0.3)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = "#006600"; e.currentTarget.style.borderColor = "#003300"; }}
+                  style={{ color: "var(--c-dim)", border: "1px solid var(--c-border)", fontFamily: "var(--font-mono), monospace" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = "var(--c-accent)"; e.currentTarget.style.borderColor = "rgba(var(--c-accent-rgb),0.3)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = "var(--c-dim)"; e.currentTarget.style.borderColor = "var(--c-border)"; }}
                 >
                   esc
                 </button>
@@ -217,10 +217,10 @@ export default function CommandPalette() {
               >
                 {messages.length === 0 && (
                   <div>
-                    <p className="text-xs mb-4" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>
-                      <span style={{ color: "#00FF41" }}>$</span> query --about binay.siddharth
+                    <p className="text-xs mb-4" style={{ color: "var(--c-dim)", fontFamily: "var(--font-mono), monospace" }}>
+                      <span style={{ color: "var(--c-accent)" }}>$</span> query --about binay.siddharth
                       <br />
-                      <span style={{ color: "#003300" }}>// suggestions:</span>
+                      <span style={{ color: "var(--c-border)" }}>// suggestions:</span>
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {SUGGESTIONS.slice(0, 5).map((s) => (
@@ -230,18 +230,18 @@ export default function CommandPalette() {
                           className="px-3 py-1.5 rounded-full text-[11px] transition-all duration-150"
                           style={{
                             background: "transparent",
-                            color: "#008F11",
-                            border: "1px solid #003300",
+                            color: "var(--c-accent-dim)",
+                            border: "1px solid var(--c-border)",
                             fontFamily: "var(--font-mono), monospace",
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.color = "#00FF41";
-                            e.currentTarget.style.borderColor = "rgba(0,255,65,0.35)";
-                            e.currentTarget.style.background = "rgba(0,255,65,0.05)";
+                            e.currentTarget.style.color = "var(--c-accent)";
+                            e.currentTarget.style.borderColor = "rgba(var(--c-accent-rgb),0.35)";
+                            e.currentTarget.style.background = "rgba(var(--c-accent-rgb),0.05)";
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.color = "#008F11";
-                            e.currentTarget.style.borderColor = "#003300";
+                            e.currentTarget.style.color = "var(--c-accent-dim)";
+                            e.currentTarget.style.borderColor = "var(--c-border)";
                             e.currentTarget.style.background = "transparent";
                           }}
                         >
@@ -261,15 +261,15 @@ export default function CommandPalette() {
                   >
                     {msg.type === "user" ? (
                       <div className="flex items-start gap-2">
-                        <span style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace", fontSize: 11 }}>$</span>
-                        <span className="text-sm leading-relaxed" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>
+                        <span style={{ color: "var(--c-accent)", fontFamily: "var(--font-mono), monospace", fontSize: 11 }}>$</span>
+                        <span className="text-sm leading-relaxed" style={{ color: "var(--c-accent)", fontFamily: "var(--font-mono), monospace" }}>
                           {msg.text}
                         </span>
                       </div>
                     ) : (
                       <div
                         className="rounded-xl px-4 py-3 text-sm leading-relaxed"
-                        style={{ background: "#020c02", color: "#008F11", border: "1px solid #003300", fontFamily: "var(--font-inter), sans-serif" }}
+                        style={{ background: "var(--c-surface)", color: "var(--c-accent-dim)", border: "1px solid var(--c-border)", fontFamily: "var(--font-inter), sans-serif" }}
                       >
                         {i === messages.length - 1 ? (
                           <TypewriterText text={msg.text} />
@@ -287,8 +287,8 @@ export default function CommandPalette() {
                       <motion.div
                         key={dot}
                         className="w-1.5 h-1.5 rounded-full"
-                        style={{ background: "#003300" }}
-                        animate={{ background: ["#003300", "#00FF41", "#003300"] }}
+                        style={{ background: "var(--c-border)" }}
+                        animate={{ background: ["var(--c-border)", "var(--c-accent)", "var(--c-border)"] }}
                         transition={{ duration: 1, delay: dot * 0.2, repeat: Infinity }}
                       />
                     ))}
@@ -300,9 +300,9 @@ export default function CommandPalette() {
               {/* Input */}
               <div
                 className="flex items-center gap-3 px-4 py-3"
-                style={{ borderTop: "1px solid #003300" }}
+                style={{ borderTop: "1px solid var(--c-border)" }}
               >
-                <span style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace", fontSize: 13 }}>›</span>
+                <span style={{ color: "var(--c-accent)", fontFamily: "var(--font-mono), monospace", fontSize: 13 }}>›</span>
                 <input
                   ref={inputRef}
                   value={input}
@@ -311,19 +311,19 @@ export default function CommandPalette() {
                   placeholder="query --anything..."
                   className="flex-1 bg-transparent outline-none text-sm"
                   style={{
-                    color: "#00FF41",
+                    color: "var(--c-accent)",
                     fontFamily: "var(--font-mono), monospace",
-                    caretColor: "#00FF41",
+                    caretColor: "var(--c-accent)",
                   }}
                 />
                 <button
                   onClick={() => handleSubmit()}
                   disabled={!input.trim()}
                   className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-150"
-                  style={{ background: input.trim() ? "rgba(0,255,65,0.15)" : "transparent", border: `1px solid ${input.trim() ? "rgba(0,255,65,0.4)" : "#003300"}` }}
+                  style={{ background: input.trim() ? "rgba(var(--c-accent-rgb),0.15)" : "transparent", border: `1px solid ${input.trim() ? "rgba(var(--c-accent-rgb),0.4)" : "var(--c-border)"}` }}
                 >
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path d="M1 11L11 1M11 1H4M11 1V8" stroke={input.trim() ? "#00FF41" : "#003300"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M1 11L11 1M11 1H4M11 1V8" stroke={input.trim() ? "var(--c-accent)" : "var(--c-border)"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
               </div>

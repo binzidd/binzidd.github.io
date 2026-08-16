@@ -3,10 +3,14 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { logVisitorEvent } from "@/lib/visitorWebhook";
+import {
+  applyTheme, getStoredTheme, quoteFor, DEFAULT_THEME,
+  type Theme, type Quote,
+} from "@/lib/theme";
 
 // ── Boot sequence lines ──────────────────────────────────────────────────────────
 const BOOT_LINES = [
-  { text: "BIOS v9.0.0  —  BINAY SIDDHARTH PORTFOLIO", bright: true,  delay: 0    },
+  { text: "BIOS v9.0.0  ::  BINAY SIDDHARTH PORTFOLIO", bright: true,  delay: 0    },
   { text: "RAM check: 12 yrs analytics ... OK",         bright: false, delay: 200  },
   { text: "Loading kernel modules:",                     bright: false, delay: 390  },
   { text: "  [  OK  ] data_analytics.core",             bright: false, delay: 530  },
@@ -29,15 +33,39 @@ function progressBar(pct: number): string {
 }
 
 // ── Steps ────────────────────────────────────────────────────────────────────
-type Step = "boot" | "name" | "thanks";
+type Step = "boot" | "choose" | "name" | "thanks";
 
 const CRUMBS: { key: Step; label: string }[] = [
   { key: "boot",   label: "Init"     },
+  { key: "choose", label: "Reality"  },
   { key: "name",   label: "Identify" },
   { key: "thanks", label: "Launch"   },
 ];
 
-const STEP_ORDER: Step[] = ["boot", "name", "thanks"];
+const STEP_ORDER: Step[] = ["boot", "choose", "name", "thanks"];
+
+// ── Theme picker ─────────────────────────────────────────────────────────
+// Red pill / blue pill, because the site's own default theme invented the
+// device. Hovering a card live-applies the theme behind the overlay, so the
+// choice is previewed rather than described.
+const THEME_CARDS: {
+  key: Theme; pill: string; title: string; blurb: string; taste: string;
+}[] = [
+  {
+    key: "matrix",
+    pill: "RED PILL",
+    title: "THE MATRIX",
+    blurb: "green rain, terminal glow, the desert of the real",
+    taste: "you stay in Wonderland and I show you how deep the rabbit hole goes",
+  },
+  {
+    key: "interstellar",
+    pill: "BLUE PILL",
+    title: "INTERSTELLAR",
+    blurb: "starlight, dust, the pull of Gargantua",
+    taste: "we used to look up and wonder at our place in the stars",
+  },
+];
 
 // Lightweight shape-check, not live verification — a static site can't
 // resolve whether a profile actually exists without a backend to proxy the
@@ -74,6 +102,9 @@ export default function IntroLoader() {
   const [contactUrl,   setContactUrl]   = useState("");
   const [vName,      setVName]      = useState("");
   const [exiting,    setExiting]    = useState(false);
+  const [theme,      setThemeState] = useState<Theme>(DEFAULT_THEME);
+  const [hovered,    setHovered]    = useState<Theme | null>(null);
+  const [quote,      setQuote]      = useState<Quote | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
 
   const isOwner = nameVal.trim().toLowerCase().includes("binay");
@@ -82,11 +113,27 @@ export default function IntroLoader() {
 
   // ── Session gate ────────────────────────────────────────────────────
   useEffect(() => {
+    setThemeState(getStoredTheme());
     if (sessionStorage.getItem("introShown")) {
       setVisible(false);
     } else {
       setMounted(true);
     }
+  }, []);
+
+  // Live preview: hovering a card applies that theme behind the overlay, so
+  // the choice is felt rather than read. Falls back to the committed theme.
+  useEffect(() => {
+    if (step !== "choose") return;
+    applyTheme(hovered ?? theme);
+  }, [hovered, theme, step]);
+
+  const pickTheme = useCallback((next: Theme) => {
+    setThemeState(next);
+    applyTheme(next);
+    // Random line per visit, chosen client-side so SSR can't mismatch.
+    setQuote(quoteFor(next, Math.floor(Math.random() * 7)));
+    setStep("name");
   }, []);
 
   // ── Boot sequence: reveal lines + progress bar ──────────────────────────────────
@@ -108,8 +155,8 @@ export default function IntroLoader() {
       setTimeout(() => setBootLines((n) => Math.max(n, i + 1)), BOOT_LINES[i].delay)
     );
 
-    // Advance to name step after boot completes
-    const advance = setTimeout(() => setStep("name"), BOOT_TOTAL_MS + 220);
+    // Advance to the theme picker once boot completes
+    const advance = setTimeout(() => setStep("choose"), BOOT_TOTAL_MS + 220);
 
     return () => {
       cancelAnimationFrame(raf);
@@ -146,7 +193,7 @@ export default function IntroLoader() {
       });
     }
     setStep("thanks");
-    setTimeout(exit, 1600);
+    setTimeout(exit, 2800);
   }, [exit]);
 
   if (!visible) return null;
@@ -162,13 +209,13 @@ export default function IntroLoader() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.7 }}
           className="fixed inset-0 z-[300] flex flex-col"
-          style={{ background: "#000500", fontFamily: "var(--font-mono), monospace" }}
+          style={{ background: "var(--c-bg)", fontFamily: "var(--font-mono), monospace" }}
         >
           {/* Scanline overlay */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.015) 2px, rgba(0,255,65,0.015) 4px)",
+              backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(var(--c-accent-rgb),0.015) 2px, rgba(var(--c-accent-rgb),0.015) 4px)",
               zIndex: 1,
             }}
           />
@@ -176,9 +223,9 @@ export default function IntroLoader() {
           {/* Top bar — breadcrumb */}
           <div
             className="relative z-10 flex items-center gap-0 px-6 py-3"
-            style={{ borderBottom: "1px solid #001a00" }}
+            style={{ borderBottom: "1px solid var(--c-border-dim)" }}
           >
-            <span className="text-[10px]" style={{ color: "#003300", marginRight: 12 }}>
+            <span className="text-[10px]" style={{ color: "var(--c-border)", marginRight: 12 }}>
               binay@portfolio:~$
             </span>
             {CRUMBS.map((c, i) => {
@@ -187,12 +234,12 @@ export default function IntroLoader() {
               return (
                 <span key={c.key} className="flex items-center">
                   {i > 0 && (
-                    <span className="mx-2 text-[10px]" style={{ color: "#002200" }}>/</span>
+                    <span className="mx-2 text-[10px]" style={{ color: "var(--c-border-dim)" }}>/</span>
                   )}
                   <span
                     className="text-[10px] tracking-widest uppercase"
                     style={{
-                      color: active ? "#00FF41" : past ? "#004400" : "#002200",
+                      color: active ? "var(--c-accent)" : past ? "var(--c-accent-dim)" : "var(--c-border-dim)",
                       fontWeight: active ? 600 : 400,
                     }}
                   >
@@ -211,7 +258,7 @@ export default function IntroLoader() {
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
                 {/* ASCII header */}
                 <div className="mb-6 hidden md:block">
-                  <pre className="text-[11px] leading-tight select-none" style={{ color: "#00FF41" }}>{`
+                  <pre className="text-[11px] leading-tight select-none" style={{ color: "var(--c-accent)" }}>{`
  ██████╗ ██╗███╗   ██╗ █████╗ ██╗   ██╗
  ██╔══██╗██║████╗  ██║██╔══██╗╚██╗ ██╔╝
  ██████╔╝██║██╔██╗ ██║███████║ ╚████╔╝
@@ -221,7 +268,7 @@ export default function IntroLoader() {
                 </div>
                 {/* Mobile name */}
                 <div className="mb-6 md:hidden">
-                  <p className="text-2xl font-semibold tracking-widest" style={{ color: "#00FF41" }}>
+                  <p className="text-2xl font-semibold tracking-widest" style={{ color: "var(--c-accent)" }}>
                     BINAY SIDDHARTH
                   </p>
                 </div>
@@ -235,7 +282,7 @@ export default function IntroLoader() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18 }}
                       className="text-[12px] leading-6 whitespace-pre"
-                      style={{ color: line.bright ? "#00FF41" : "#006600" }}
+                      style={{ color: line.bright ? "var(--c-accent)" : "var(--c-dim)" }}
                     >
                       {line.text}
                     </motion.div>
@@ -243,9 +290,88 @@ export default function IntroLoader() {
                 </div>
 
                 {/* Progress bar */}
-                <div className="mt-5 text-[12px]" style={{ color: "#008F11" }}>
+                <div className="mt-5 text-[12px]" style={{ color: "var(--c-accent-dim)" }}>
                   {progressBar(progress)}
                 </div>
+              </motion.div>
+            )}
+
+            {/* ── CHOOSE YOUR REALITY ── */}
+            {step === "choose" && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35 }}
+              >
+                <p className="text-[11px] mb-1" style={{ color: "var(--c-dim)" }}>
+                  {"> "}<span style={{ color: "var(--c-accent-dim)" }}>SYSTEM READY.</span> This is your last chance.
+                </p>
+                <p className="text-[11px] mb-6" style={{ color: "var(--c-dim)" }}>
+                  {"> "}After this, there is no turning back. Well, there is. It&apos;s a toggle in the nav.
+                </p>
+
+                <div className="mb-2 text-[12px]" style={{ color: "var(--c-accent)" }}>
+                  &gt; SELECT_REALITY:
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                  {THEME_CARDS.map((card, i) => {
+                    const active = (hovered ?? theme) === card.key;
+                    return (
+                      <motion.button
+                        key={card.key}
+                        type="button"
+                        onClick={() => pickTheme(card.key)}
+                        onMouseEnter={() => setHovered(card.key)}
+                        onMouseLeave={() => setHovered(null)}
+                        onFocus={() => setHovered(card.key)}
+                        onBlur={() => setHovered(null)}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 + i * 0.08, duration: 0.35 }}
+                        whileHover={{ y: -3 }}
+                        className="text-left rounded-xl p-4 transition-colors duration-200"
+                        style={{
+                          background: active ? "rgba(var(--c-accent-rgb),0.07)" : "transparent",
+                          border: `1px solid ${active ? "var(--c-accent)" : "var(--c-border)"}`,
+                          boxShadow: active ? "0 0 26px rgba(var(--c-accent-rgb),0.13)" : "none",
+                        }}
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <span
+                            className="inline-block w-2 h-2 rounded-full"
+                            style={{
+                              background: active ? "var(--c-accent)" : "var(--c-border)",
+                              boxShadow: active ? "0 0 8px var(--c-accent)" : "none",
+                            }}
+                          />
+                          <span className="text-[9px] tracking-[0.2em]" style={{ color: "var(--c-dim)" }}>
+                            {card.pill}
+                          </span>
+                        </div>
+                        <div
+                          className="text-[13px] font-semibold tracking-wider mb-1"
+                          style={{ color: active ? "var(--c-accent)" : "var(--c-muted)" }}
+                        >
+                          {card.title}
+                        </div>
+                        <div className="text-[10px] leading-relaxed mb-2" style={{ color: "var(--c-dim)" }}>
+                          {card.blurb}
+                        </div>
+                        <div
+                          className="text-[10px] italic leading-relaxed"
+                          style={{ color: active ? "var(--c-accent-dim)" : "var(--c-border)" }}
+                        >
+                          &ldquo;{card.taste}&rdquo;
+                        </div>
+                      </motion.button>
+                    );
+                  })}
+                </div>
+
+                <p className="text-[10px]" style={{ color: "var(--c-border)" }}>
+                  &gt; hover to preview. click to commit. changeable any time from the nav.
+                </p>
               </motion.div>
             )}
 
@@ -256,14 +382,14 @@ export default function IntroLoader() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35 }}
               >
-                <p className="text-[11px] mb-6" style={{ color: "#006600" }}>
-                  {"> "}<span style={{ color: "#008F11" }}>SYSTEM READY.</span> Identify yourself to continue.
+                <p className="text-[11px] mb-6" style={{ color: "var(--c-dim)" }}>
+                  {"> "}<span style={{ color: "var(--c-accent-dim)" }}>SYSTEM READY.</span> Identify yourself to continue.
                 </p>
-                <div className="mb-2 text-[12px]" style={{ color: "#00FF41" }}>
+                <div className="mb-2 text-[12px]" style={{ color: "var(--c-accent)" }}>
                   &gt; WHO_ARE_YOU:
                 </div>
-                <div className="flex items-center gap-2 mb-2" style={{ borderBottom: "1px solid #003300", paddingBottom: 6 }}>
-                  <span className="text-[12px]" style={{ color: "#00FF41" }}>&gt;</span>
+                <div className="flex items-center gap-2 mb-2" style={{ borderBottom: "1px solid var(--c-border)", paddingBottom: 6 }}>
+                  <span className="text-[12px]" style={{ color: "var(--c-accent)" }}>&gt;</span>
                   <input
                     ref={nameRef}
                     value={nameVal}
@@ -273,11 +399,11 @@ export default function IntroLoader() {
                     }}
                     placeholder="type your name..."
                     className="flex-1 bg-transparent outline-none text-[13px] placeholder:opacity-30"
-                    style={{ color: "#00FF41", caretColor: "#00FF41" }}
+                    style={{ color: "var(--c-accent)", caretColor: "var(--c-accent)" }}
                   />
                   <span
                     className="inline-block w-[2px] h-4"
-                    style={{ background: "#00FF41", animation: "blink 1s step-end infinite" }}
+                    style={{ background: "var(--c-accent)", animation: "blink 1s step-end infinite" }}
                   />
                 </div>
 
@@ -289,7 +415,7 @@ export default function IntroLoader() {
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.25 }}
                       className="text-[11px] mt-2 mb-2"
-                      style={{ color: "#008F11" }}
+                      style={{ color: "var(--c-accent-dim)" }}
                     >
                       &gt; welcome back. skipping the paperwork.
                     </motion.p>
@@ -303,7 +429,7 @@ export default function IntroLoader() {
                       transition={{ duration: 0.3 }}
                       style={{ overflow: "hidden" }}
                     >
-                      <div className="mt-4 mb-2 text-[12px]" style={{ color: "#00FF41" }}>
+                      <div className="mt-4 mb-2 text-[12px]" style={{ color: "var(--c-accent)" }}>
                         &gt; RELATIONSHIP_TO_BINAY:
                       </div>
                       <div className="flex flex-wrap gap-2 mb-4">
@@ -314,9 +440,9 @@ export default function IntroLoader() {
                             onClick={() => setRelationship(r.value)}
                             className="px-3 py-1.5 text-[11px] rounded-full transition-all"
                             style={{
-                              background: relationship === r.value ? "rgba(0,255,65,0.15)" : "transparent",
-                              border: `1px solid ${relationship === r.value ? "#00FF41" : "#002200"}`,
-                              color: relationship === r.value ? "#00FF41" : "#006600",
+                              background: relationship === r.value ? "rgba(var(--c-accent-rgb),0.15)" : "transparent",
+                              border: `1px solid ${relationship === r.value ? "var(--c-accent)" : "var(--c-border-dim)"}`,
+                              color: relationship === r.value ? "var(--c-accent)" : "var(--c-dim)",
                             }}
                           >
                             {r.label}
@@ -324,11 +450,11 @@ export default function IntroLoader() {
                         ))}
                       </div>
 
-                      <div className="mb-2 text-[12px]" style={{ color: "#00FF41" }}>
+                      <div className="mb-2 text-[12px]" style={{ color: "var(--c-accent)" }}>
                         &gt; CONTACT (linkedin / github / email):
                       </div>
-                      <div className="flex items-center gap-2 mb-1" style={{ borderBottom: "1px solid #003300", paddingBottom: 6 }}>
-                        <span className="text-[12px]" style={{ color: "#00FF41" }}>&gt;</span>
+                      <div className="flex items-center gap-2 mb-1" style={{ borderBottom: "1px solid var(--c-border)", paddingBottom: 6 }}>
+                        <span className="text-[12px]" style={{ color: "var(--c-accent)" }}>&gt;</span>
                         <input
                           value={contactUrl}
                           onChange={(e) => setContactUrl(e.target.value)}
@@ -337,13 +463,13 @@ export default function IntroLoader() {
                           }}
                           placeholder="linkedin.com/in/... · github.com/... · you@email.com"
                           className="flex-1 bg-transparent outline-none text-[13px] placeholder:opacity-30"
-                          style={{ color: "#00FF41", caretColor: "#00FF41" }}
+                          style={{ color: "var(--c-accent)", caretColor: "var(--c-accent)" }}
                         />
                       </div>
-                      <p className="text-[10px] mb-2" style={{ color: contactUrl.trim() && !contactMatch ? "#CC5533" : "#003300" }}>
+                      <p className="text-[10px] mb-2" style={{ color: contactUrl.trim() && !contactMatch ? "#CC5533" : "var(--c-border)" }}>
                         {contactUrl.trim() && !contactMatch
                           ? "needs a linkedin.com/in/…, github.com/…, or a real email"
-                          : "no verification service on a static site — this just confirms the shape"}
+                          : "no verification service on a static site, this just confirms the shape"}
                       </p>
                     </motion.div>
                   )}
@@ -355,9 +481,9 @@ export default function IntroLoader() {
                     disabled={!canLaunch}
                     className="px-4 py-1.5 text-[11px] rounded transition-all"
                     style={{
-                      background: canLaunch ? "rgba(0,255,65,0.1)" : "transparent",
-                      border: `1px solid ${canLaunch ? "rgba(0,255,65,0.4)" : "#002200"}`,
-                      color: canLaunch ? "#00FF41" : "#003300",
+                      background: canLaunch ? "rgba(var(--c-accent-rgb),0.1)" : "transparent",
+                      border: `1px solid ${canLaunch ? "rgba(var(--c-accent-rgb),0.4)" : "var(--c-border-dim)"}`,
+                      color: canLaunch ? "var(--c-accent)" : "var(--c-border)",
                     }}
                   >
                     ./launch
@@ -365,9 +491,9 @@ export default function IntroLoader() {
                   <button
                     onClick={() => goThanks("", "", "")}
                     className="px-4 py-1.5 text-[11px] rounded transition-all"
-                    style={{ background: "transparent", border: "1px solid #002200", color: "#003300" }}
-                    onMouseEnter={(e) => { e.currentTarget.style.color = "#006600"; e.currentTarget.style.borderColor = "#003300"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.color = "#003300"; e.currentTarget.style.borderColor = "#002200"; }}
+                    style={{ background: "transparent", border: "1px solid var(--c-border-dim)", color: "var(--c-border)" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = "var(--c-dim)"; e.currentTarget.style.borderColor = "var(--c-border)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = "var(--c-border)"; e.currentTarget.style.borderColor = "var(--c-border-dim)"; }}
                   >
                     --skip
                   </button>
@@ -382,17 +508,40 @@ export default function IntroLoader() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4 }}
               >
-                <div className="space-y-1 text-[12px]" style={{ color: "#006600" }}>
+                <div className="space-y-1 text-[12px]" style={{ color: "var(--c-dim)" }}>
                   <p>&gt; log saved.</p>
-                  {vName && <p style={{ color: "#008F11" }}>&gt; access granted: {vName}</p>}
-                  <p style={{ color: "#00FF41" }}>&gt; launching portfolio...</p>
+                  {vName && <p style={{ color: "var(--c-accent-dim)" }}>&gt; access granted: {vName}</p>}
+                  <p style={{ color: "var(--c-dim)" }}>&gt; reality: {theme}</p>
+                  <p style={{ color: "var(--c-accent)" }}>&gt; launching portfolio...</p>
                 </div>
+
+                {/* Themed send-off line */}
+                {quote && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.35, duration: 0.6 }}
+                    className="mt-7 pl-3"
+                    style={{ borderLeft: "1px solid rgba(var(--c-accent-rgb),0.35)" }}
+                  >
+                    <p
+                      className="text-[13px] italic leading-relaxed"
+                      style={{ color: "var(--c-accent)", fontFamily: "var(--font-cormorant), serif" }}
+                    >
+                      &ldquo;{quote.line}&rdquo;
+                    </p>
+                    <p className="text-[10px] mt-1.5" style={{ color: "var(--c-dim)" }}>
+                      {quote.source}
+                    </p>
+                  </motion.div>
+                )}
+
                 {/* Blinking cursor at end */}
                 <div className="mt-3 flex items-center gap-1">
-                  <span className="text-[12px]" style={{ color: "#00FF41" }}>&gt;</span>
+                  <span className="text-[12px]" style={{ color: "var(--c-accent)" }}>&gt;</span>
                   <span
                     className="inline-block w-[2px] h-4"
-                    style={{ background: "#00FF41", animation: "blink 1s step-end infinite" }}
+                    style={{ background: "var(--c-accent)", animation: "blink 1s step-end infinite" }}
                   />
                 </div>
               </motion.div>
@@ -402,12 +551,12 @@ export default function IntroLoader() {
           {/* Bottom status bar */}
           <div
             className="relative z-10 flex items-center justify-between px-6 py-2"
-            style={{ borderTop: "1px solid #001a00" }}
+            style={{ borderTop: "1px solid var(--c-border-dim)" }}
           >
-            <span className="text-[10px]" style={{ color: "#002a00" }}>
+            <span className="text-[10px]" style={{ color: "var(--c-border-dim)" }}>
               Sydney, AU  //  data &amp; genai
             </span>
-            <span className="text-[10px]" style={{ color: "#002a00" }}>
+            <span className="text-[10px]" style={{ color: "var(--c-border-dim)" }}>
               {step === "boot" ? `BOOTING ${Math.round(progress * 100)}%` : step.toUpperCase()}
             </span>
           </div>

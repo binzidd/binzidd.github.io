@@ -151,9 +151,9 @@ export const EV_PROJECTED: { year: number; sales: number; transportEmissions: nu
 
 // ─── Industry commitments (narrative cards) ───────────────────────────────────
 export const INDUSTRY_PLEDGES = [
-  { sector: "Electricity",  icon: "⚡", color: "#F59E0B", pledge: "82% renewables by 2030 — AEMO tracking ahead of schedule. 6.4 GW solar/wind added in 2023." },
+  { sector: "Electricity",  icon: "⚡", color: "#F59E0B", pledge: "82% renewables by 2030. AEMO tracking ahead of schedule. 6.4 GW solar/wind added in 2023." },
   { sector: "Transport",    icon: "🚗", color: "#3B82F6", pledge: "Fuel efficiency standards from Jan 2025. EV sales up 195% in 2023. Fleet electrification lag ~7 yrs." },
-  { sector: "Mining",       icon: "⛏️", color: "#8B5CF6", pledge: "BHP, Rio Tinto net-zero pledges by 2050. Scope 3 (customer burn) excluded — the contested frontier." },
+  { sector: "Mining",       icon: "⛏️", color: "#8B5CF6", pledge: "BHP, Rio Tinto net-zero pledges by 2050. Scope 3 (customer burn) excluded: the contested frontier." },
   { sector: "Agriculture",  icon: "🌾", color: "#10B981", pledge: "Emissions Reduction Fund soil carbon projects. Methane from livestock hardest to abate technically." },
   { sector: "Industry",     icon: "🏭", color: "#F97316", pledge: "Green steel pilots (Whyalla). Hydrogen Headstart program. High-temp heat still largely fossil-fuel." },
 ];

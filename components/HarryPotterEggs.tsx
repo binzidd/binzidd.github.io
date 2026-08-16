@@ -298,7 +298,7 @@ function AlohomoraOverlay({ onDone }: { onDone: () => void }) {
       <div
         className="absolute inset-0"
         style={{
-          background: "radial-gradient(ellipse 60% 80% at 50% 50%, rgba(0,255,65,0.14) 0%, rgba(0,180,50,0.05) 55%, transparent 80%)",
+          background: "radial-gradient(ellipse 60% 80% at 50% 50%, rgba(var(--c-accent-rgb),0.14) 0%, rgba(0,180,50,0.05) 55%, transparent 80%)",
           opacity: phase === "open" ? 1 : 0,
           transition: "opacity 0.7s ease 0.5s",
         }}
@@ -419,17 +419,17 @@ export default function HarryPotterEggs() {
             className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[210] px-6 py-4 rounded-2xl select-none"
             style={{
               background: "rgba(0,5,0,0.94)",
-              border: "1px solid rgba(0,255,65,0.25)",
-              boxShadow: "0 0 32px rgba(0,255,65,0.12), 0 12px 40px rgba(0,0,0,0.7)",
+              border: "1px solid rgba(var(--c-accent-rgb),0.25)",
+              boxShadow: "0 0 32px rgba(var(--c-accent-rgb),0.12), 0 12px 40px rgba(0,0,0,0.7)",
               backdropFilter: "blur(16px)",
               minWidth: "300px",
               textAlign: "center",
             }}
           >
-            <p className="text-xl mb-1.5" style={{ fontFamily: "var(--font-cormorant), serif", color: "#00FF41", letterSpacing: "0.02em" }}>
+            <p className="text-xl mb-1.5" style={{ fontFamily: "var(--font-cormorant), serif", color: "var(--c-accent)", letterSpacing: "0.02em" }}>
               {toast.label}
             </p>
-            <p className="text-[11px]" style={{ color: "rgba(0,255,65,0.55)", fontFamily: "var(--font-mono), monospace" }}>
+            <p className="text-[11px]" style={{ color: "rgba(var(--c-accent-rgb),0.55)", fontFamily: "var(--font-mono), monospace" }}>
               {toast.message}
             </p>
           </motion.div>

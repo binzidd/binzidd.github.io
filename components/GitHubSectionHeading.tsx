@@ -8,14 +8,14 @@ export default function GitHubSectionHeading() {
     <div className="mb-16">
       <p
         className="text-[10px] tracking-[0.25em] uppercase mb-3"
-        style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}
+        style={{ color: "var(--c-accent)", fontFamily: "var(--font-mono), monospace" }}
       >
         <MatrixDecoder text="// open_source.experiments" />
       </p>
       <div className="flex items-end justify-between gap-4 flex-wrap">
         <h2
           className="text-5xl md:text-6xl font-light"
-          style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}
+          style={{ color: "var(--c-text)", fontFamily: "var(--font-cormorant), serif" }}
         >
           <HeadingReveal><MatrixDecoder text="GitHub Repos" delay={0.2} /></HeadingReveal>
         </h2>
@@ -25,8 +25,8 @@ export default function GitHubSectionHeading() {
           rel="noopener noreferrer"
           className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200"
           style={{
-            background: "#00FF41",
-            color: "#000500",
+            background: "var(--c-accent)",
+            color: "var(--c-bg)",
             fontFamily: "var(--font-mono), monospace",
             textDecoration: "none",
           }}
@@ -39,10 +39,10 @@ export default function GitHubSectionHeading() {
       </div>
       <p
         className="text-sm max-w-lg mt-4"
-        style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}
+        style={{ color: "var(--c-muted)", fontFamily: "var(--font-inter), sans-serif" }}
       >
         Live data from{" "}
-        <span style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>
+        <span style={{ color: "var(--c-accent)", fontFamily: "var(--font-mono), monospace" }}>
           github.com/binzidd
         </span>{" "}
         - fetched at build time.

@@ -558,7 +558,7 @@ export default function F1BarChartRace() {
       <div className="px-5 py-3" style={{ borderTop: "1px solid #1E1A17" }}>
         <p className="text-[9px]" style={{ color: "#3C3530", fontFamily: "var(--font-inter), sans-serif" }}>
           {activeTab === "2026"
-            ? "* 2026 data current to Round 5 (Canada, May 24). Sprint points not modelled — race-only standings shown. Next race: Monaco, June 5-7."
+            ? "* 2026 data current to Round 5 (Canada, May 24). Sprint points not modelled. Race-only standings shown. Next race: Monaco, June 5-7."
             : "* Data reflects race wins, DNFs, standings progression, fastest laps, and top speeds per round."}
         </p>
       </div>

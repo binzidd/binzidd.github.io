@@ -44,7 +44,7 @@ export interface QAEntry {
 export const experience: Experience[] = [
   {
     id: "cba-chapter-area-lead",
-    role: "Chapter Area Lead",
+    role: "Chapter Area Lead (Executive Manager)",
     company: "Commonwealth Bank of Australia",
     location: "Sydney",
     period: "Feb 2026 - Present",
@@ -459,7 +459,7 @@ export const qaEntries: QAEntry[] = [
   {
     keywords: ["cba", "commonwealth bank", "chapter lead", "chapter area lead", "chapter"],
     answer:
-      "Since February 2026, Binay has been Chapter Area Lead at CBA, with two chapters reporting to him, Reporting & Automation and AI & Platforms, including their chapter leads and senior managers. Data scientists are chaptered into his squads, where he leads them on delivery. His flagship programme is AVA (Agentic Virtual Accountant), a multi-year effort to automate manual finance-ops touchpoints across every business unit finance team at the bank.",
+      "Since February 2026, Binay has been Chapter Area Lead (Executive Manager) at CBA, with two chapters reporting to him, Reporting & Automation and AI & Platforms, including their chapter leads and senior managers. Data scientists are chaptered into his squads, where he leads them on delivery. His flagship programme is AVA (Agentic Virtual Accountant), a multi-year effort to automate manual finance-ops touchpoints across every business unit finance team at the bank.",
   },
   {
     keywords: ["skills", "technologies", "tech stack", "tools"],

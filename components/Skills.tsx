@@ -29,8 +29,8 @@ function CertCard({ cert }: { cert: Certification }) {
         rotateX,
         rotateY,
         transformPerspective: 800,
-        background: "#020c02",
-        border: "1px solid #003300",
+        background: "var(--c-surface)",
+        border: "1px solid var(--c-border)",
       }}
       onMouseMove={(e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -40,8 +40,8 @@ function CertCard({ cert }: { cert: Certification }) {
       onMouseLeave={() => { x.set(0); y.set(0); }}
       whileHover={{
         y: -6,
-        boxShadow: "0 16px 36px rgba(0,255,65,0.08), 0 0 0 1px rgba(0,255,65,0.28)",
-        borderColor: "rgba(0,255,65,0.28)",
+        boxShadow: "0 16px 36px rgba(var(--c-accent-rgb),0.08), 0 0 0 1px rgba(var(--c-accent-rgb),0.28)",
+        borderColor: "rgba(var(--c-accent-rgb),0.28)",
       }}
       className="group rounded-2xl p-4 cursor-default"
     >
@@ -50,8 +50,8 @@ function CertCard({ cert }: { cert: Certification }) {
           <span className="text-xl">{cert.icon}</span>
           <div className="w-1 h-1 rounded-full" style={{ background: cert.color }} />
         </div>
-        <p className="text-xs font-medium leading-snug" style={{ color: "#E6EDF3", fontFamily: "var(--font-inter), sans-serif" }}>{cert.name}</p>
-        <p className="text-[10px]" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>{cert.issuer}</p>
+        <p className="text-xs font-medium leading-snug" style={{ color: "var(--c-text)", fontFamily: "var(--font-inter), sans-serif" }}>{cert.name}</p>
+        <p className="text-[10px]" style={{ color: "var(--c-dim)", fontFamily: "var(--font-mono), monospace" }}>{cert.issuer}</p>
       </div>
     </motion.div>
   );
@@ -61,12 +61,12 @@ export default function Skills() {
   const [showPlayground, setShowPlayground] = useState(false);
 
   return (
-    <section id="skills" className="py-28 px-6" style={{ background: "#000500" }}>
+    <section id="skills" className="py-28 px-6" style={{ background: "var(--c-bg)" }}>
       <SceneDolly className="max-w-6xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="mb-16">
-          <p className="text-[10px] tracking-[0.25em] uppercase mb-3" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}><MatrixDecoder text="// capabilities.map" /></p>
-          <h2 className="text-5xl md:text-6xl font-light mb-4" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}><HeadingReveal><MatrixDecoder text="Skills & Certifications" /></HeadingReveal></h2>
-          <p className="text-sm max-w-lg" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
+          <p className="text-[10px] tracking-[0.25em] uppercase mb-3" style={{ color: "var(--c-accent)", fontFamily: "var(--font-mono), monospace" }}><MatrixDecoder text="// capabilities.map" /></p>
+          <h2 className="text-5xl md:text-6xl font-light mb-4" style={{ color: "var(--c-text)", fontFamily: "var(--font-cormorant), serif" }}><HeadingReveal><MatrixDecoder text="Skills & Certifications" /></HeadingReveal></h2>
+          <p className="text-sm max-w-lg" style={{ color: "var(--c-muted)", fontFamily: "var(--font-inter), sans-serif" }}>
             Twelve years of deliberate depth across data, AI, and people leadership.
           </p>
         </motion.div>
@@ -83,13 +83,13 @@ export default function Skills() {
             aria-expanded={showPlayground}
             className="flex items-center gap-2 text-[11px] px-4 py-2 rounded-full transition-colors duration-150"
             style={{
-              color: showPlayground ? "#00FF41" : "#006600",
-              border: `1px solid ${showPlayground ? "rgba(0,255,65,0.35)" : "#003300"}`,
+              color: showPlayground ? "var(--c-accent)" : "var(--c-dim)",
+              border: `1px solid ${showPlayground ? "rgba(var(--c-accent-rgb),0.35)" : "var(--c-border)"}`,
               fontFamily: "var(--font-mono), monospace",
               background: "transparent",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = "#00FF41"; e.currentTarget.style.borderColor = "rgba(0,255,65,0.35)"; }}
-            onMouseLeave={(e) => { if (!showPlayground) { e.currentTarget.style.color = "#006600"; e.currentTarget.style.borderColor = "#003300"; } }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--c-accent)"; e.currentTarget.style.borderColor = "rgba(var(--c-accent-rgb),0.35)"; }}
+            onMouseLeave={(e) => { if (!showPlayground) { e.currentTarget.style.color = "var(--c-dim)"; e.currentTarget.style.borderColor = "var(--c-border)"; } }}
           >
             <motion.span animate={{ rotate: showPlayground ? 45 : 0 }} transition={{ duration: 0.2 }}>+</motion.span>
             {showPlayground ? "surface()" : "same_depths.let_them_swim()"}
@@ -114,7 +114,7 @@ export default function Skills() {
 
         {/* Certifications */}
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="mb-8">
-          <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-8" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>{"// certifications.list"}</p>
+          <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-8" style={{ color: "var(--c-accent)", fontFamily: "var(--font-mono), monospace" }}>{"// certifications.list"}</p>
         </motion.div>
 
         <motion.div
@@ -136,9 +136,9 @@ export default function Skills() {
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.7 }}
           className="mt-16 rounded-2xl p-8"
-          style={{ background: "#020c02", border: "1px solid #003300" }}
+          style={{ background: "var(--c-surface)", border: "1px solid var(--c-border)" }}
         >
-          <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-6" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>{"// education.records"}</p>
+          <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-6" style={{ color: "var(--c-accent)", fontFamily: "var(--font-mono), monospace" }}>{"// education.records"}</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { degree: "Master of Software Engineering", focus: "Dual degree with Software Engineering Management", school: "The University of Sydney", period: "2015 – 2017" },
@@ -146,10 +146,10 @@ export default function Skills() {
               { degree: "Bachelor of Technology", focus: "Computer Science & Engineering", school: "ITER, India", period: "2008 – 2012" },
             ].map((edu) => (
               <div key={edu.degree}>
-                <p className="text-[10px] mb-1" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>{edu.period}</p>
-                <p className="text-sm font-semibold mb-0.5" style={{ color: "#E6EDF3", fontFamily: "var(--font-inter), sans-serif" }}>{edu.degree}</p>
-                <p className="text-xs mb-1" style={{ color: "#00FF41", fontFamily: "var(--font-inter), sans-serif" }}>{edu.focus}</p>
-                <p className="text-xs" style={{ color: "#006600", fontFamily: "var(--font-inter), sans-serif" }}>{edu.school}</p>
+                <p className="text-[10px] mb-1" style={{ color: "var(--c-dim)", fontFamily: "var(--font-mono), monospace" }}>{edu.period}</p>
+                <p className="text-sm font-semibold mb-0.5" style={{ color: "var(--c-text)", fontFamily: "var(--font-inter), sans-serif" }}>{edu.degree}</p>
+                <p className="text-xs mb-1" style={{ color: "var(--c-accent)", fontFamily: "var(--font-inter), sans-serif" }}>{edu.focus}</p>
+                <p className="text-xs" style={{ color: "var(--c-dim)", fontFamily: "var(--font-inter), sans-serif" }}>{edu.school}</p>
               </div>
             ))}
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { readThemeTokens, watchThemeTokens, type ThemeTokens } from "@/lib/theme";
 
 // Ambient "data fireflies" — slow-drifting glowing motes at three parallax
 // depths, reacting to scroll and mouse. Inspired by environmental portfolio
@@ -33,6 +34,7 @@ export default function DataFireflies() {
     let W = 0, H = 0;
     let flies: Fly[] = [];
     let scrollY = 0;
+    let tokens: ThemeTokens = readThemeTokens();
     let mx = 0.5, my = 0.5;         // eased mouse, viewport fraction
     let tmx = 0.5, tmy = 0.5;
     const t0 = performance.now() / 1000;
@@ -76,12 +78,12 @@ export default function DataFireflies() {
         const pulse = 0.55 + 0.45 * Math.sin(t * f.pulseSpeed + f.phase);
         const alpha = (0.10 + 0.26 * pulse) * d;
         const r = (0.8 + 1.3 * d) * (0.8 + 0.4 * pulse);
-        const [cr, cg, cb] = f.hue === "green" ? [0, 255, 65] : [0, 217, 255];
+        const rgb = f.hue === "green" ? tokens.accentRgb : tokens.accentAltRgb;
 
         // Soft halo
         const grad = ctx.createRadialGradient(px, py, 0, px, py, r * 5);
-        grad.addColorStop(0, `rgba(${cr},${cg},${cb},${(alpha * 0.5).toFixed(3)})`);
-        grad.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+        grad.addColorStop(0, `rgba(${rgb},${(alpha * 0.5).toFixed(3)})`);
+        grad.addColorStop(1, `rgba(${rgb},0)`);
         ctx.fillStyle = grad;
         ctx.beginPath();
         ctx.arc(px, py, r * 5, 0, Math.PI * 2);
@@ -90,7 +92,7 @@ export default function DataFireflies() {
         // Core
         ctx.beginPath();
         ctx.arc(px, py, r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${cr},${cg},${cb},${alpha.toFixed(3)})`;
+        ctx.fillStyle = `rgba(${rgb},${alpha.toFixed(3)})`;
         ctx.fill();
       }
     };
@@ -121,8 +123,10 @@ export default function DataFireflies() {
     window.addEventListener("mousemove", onMouse, { passive: true });
     window.addEventListener("resize", init);
     document.addEventListener("visibilitychange", onVisibility);
+    const unwatch = watchThemeTokens((t) => { tokens = t; });
 
     return () => {
+      unwatch();
       stop();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("mousemove", onMouse);

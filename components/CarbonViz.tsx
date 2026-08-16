@@ -122,7 +122,7 @@ function StatsStrip() {
     { value: `${(2030 - 2026)} yrs`, label: "to 2030 deadline", color: "#F59E0B" },
   ];
   return (
-    <div ref={ref} className="grid grid-cols-3 divide-x divide-[#003300]"
+    <div ref={ref} className="grid grid-cols-3 divide-x divide-[color:var(--c-border)]"
       style={{ borderTop: "1px solid #003300", borderBottom: "1px solid #003300" }}>
       {stats.map((s, i) => (
         <motion.div key={i} className="px-4 py-3.5 text-center"

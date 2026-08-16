@@ -12,6 +12,7 @@ import HarryPotterEggs from "@/components/HarryPotterEggs";
 import IntroLoader from "@/components/IntroLoader";
 import SmoothScroll from "@/components/SmoothScroll";
 import DataFireflies from "@/components/DataFireflies";
+import Starfield from "@/components/Starfield";
 import VisitLogger from "@/components/VisitLogger";
 
 export default function Home() {
@@ -26,6 +27,8 @@ export default function Home() {
       <TermColumns />
       {/* Ambient drifting motes with scroll/mouse parallax — environmental depth */}
       <DataFireflies />
+      {/* Interstellar-only: parallax starfield + accretion shimmer */}
+      <Starfield />
       <HarryPotterEggs />
       {/* Cinematic edge vignette for depth — center stays transparent */}
       <div className="cinematic-vignette" />

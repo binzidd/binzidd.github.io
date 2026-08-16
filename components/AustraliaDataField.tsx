@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { readThemeTokens, watchThemeTokens, type ThemeTokens } from "@/lib/theme";
 
 // ─── Australia coastline polygons (lon, lat) ────────────────────────────────
 const MAINLAND: [number, number][] = [
@@ -52,6 +53,7 @@ export default function AustraliaDataField() {
     let W = 0, H = 0, scale = 1, cx = 0, cy = 0;
     let tiltX = 0, tiltY = 0, tgtTX = 0, tgtTY = 0;
     let isMobile = false;
+    let tokens: ThemeTokens = readThemeTokens();
     const t0 = performance.now() / 1000;
 
     // Cached projected perimeters (recomputed on resize)
@@ -150,7 +152,7 @@ export default function AustraliaDataField() {
         ctx.lineDashOffset = 0;
 
         // Outer glow
-        ctx.strokeStyle = "rgba(0,255,65,0.08)";
+        ctx.strokeStyle = `rgba(${tokens.accentRgb},0.08)`;
         ctx.lineWidth = 3.5;
         ctx.lineJoin = "round";
         ctx.stroke();
@@ -159,7 +161,7 @@ export default function AustraliaDataField() {
         ctx.beginPath();
         tracePoly(MAINLAND);
         ctx.setLineDash([mDrawn, mainlandLen * 2]);
-        ctx.strokeStyle = "rgba(0,255,65,0.22)";
+        ctx.strokeStyle = `rgba(${tokens.accentRgb},0.22)`;
         ctx.lineWidth = 1;
         ctx.stroke();
 
@@ -177,7 +179,7 @@ export default function AustraliaDataField() {
         ctx.setLineDash([td, tasmaniaLen * 2]);
         ctx.lineDashOffset = 0;
 
-        ctx.strokeStyle = "rgba(0,255,65,0.08)";
+        ctx.strokeStyle = `rgba(${tokens.accentRgb},0.08)`;
         ctx.lineWidth = 3.5;
         ctx.lineJoin = "round";
         ctx.stroke();
@@ -185,7 +187,7 @@ export default function AustraliaDataField() {
         ctx.beginPath();
         tracePoly(TASMANIA);
         ctx.setLineDash([td, tasmaniaLen * 2]);
-        ctx.strokeStyle = "rgba(0,255,65,0.22)";
+        ctx.strokeStyle = `rgba(${tokens.accentRgb},0.22)`;
         ctx.lineWidth = 1;
         ctx.stroke();
 
@@ -202,7 +204,7 @@ export default function AustraliaDataField() {
             const ph = (t * 0.55 + off) % 1;
             ctx.beginPath();
             ctx.arc(px, py, 4 + ph * 28, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(0,255,65,${((1 - ph) * 0.28 * fade).toFixed(3)})`;
+            ctx.strokeStyle = `rgba(${tokens.accentRgb},${((1 - ph) * 0.28 * fade).toFixed(3)})`;
             ctx.lineWidth = 1;
             ctx.setLineDash([]);
             ctx.stroke();
@@ -211,12 +213,12 @@ export default function AustraliaDataField() {
 
         ctx.beginPath();
         ctx.arc(px, py, 3, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0,255,65,${(0.90 * fade).toFixed(3)})`;
+        ctx.fillStyle = `rgba(${tokens.accentRgb},${(0.90 * fade).toFixed(3)})`;
         ctx.setLineDash([]);
         ctx.fill();
 
         const lx = px + 14, ly = py - 14;
-        ctx.strokeStyle = `rgba(0,255,65,${(0.45 * fade).toFixed(3)})`;
+        ctx.strokeStyle = `rgba(${tokens.accentRgb},${(0.45 * fade).toFixed(3)})`;
         ctx.lineWidth = 1;
         ctx.setLineDash([]);
         ctx.beginPath();
@@ -225,7 +227,7 @@ export default function AustraliaDataField() {
         ctx.lineTo(lx + 8, ly);
         ctx.stroke();
         ctx.font = "bold 9px 'JetBrains Mono', monospace";
-        ctx.fillStyle = `rgba(0,255,65,${(0.75 * fade).toFixed(3)})`;
+        ctx.fillStyle = `rgba(${tokens.accentRgb},${(0.75 * fade).toFixed(3)})`;
         ctx.fillText("SYD // home_base", lx + 12, ly + 3);
       }
     };
@@ -260,6 +262,7 @@ export default function AustraliaDataField() {
       document.addEventListener("visibilitychange", onVisibility);
     }
     window.addEventListener("resize", onResize);
+    const unwatch = watchThemeTokens((t) => { tokens = t; });
 
     const io = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
@@ -270,6 +273,7 @@ export default function AustraliaDataField() {
 
     return () => {
       stop();
+      unwatch();
       io.disconnect();
       window.removeEventListener("mousemove", onMouse);
       window.removeEventListener("resize", onResize);

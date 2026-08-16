@@ -14,7 +14,7 @@ export async function generateMetadata(
   const p = PROJECT_META[slug];
   if (!p) return {};
   return {
-    title: `${p.title} — Binay Siddharth`,
+    title: `${p.title} - Binay Siddharth`,
     description: p.thesis,
   };
 }

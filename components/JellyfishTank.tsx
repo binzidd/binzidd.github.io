@@ -24,15 +24,18 @@
 
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { skillCategories } from "@/data/resume";
+import { readThemeTokens, watchThemeTokens, type ThemeTokens } from "@/lib/theme";
 
 const DT = 1 / 60;
 const MAX_STEPS = 5;
 
-const CATEGORY_COLOURS: Record<string, string> = {
-  "Generative AI": "#00FF41",
-  "Data & BI": "#29B5E8",
-  "Cloud & Infrastructure": "#FF9900",
-  Leadership: "#E97627",
+// Index into the themed categorical scale (--c-cat-1..4). Canvas can't read
+// CSS variables, so the concrete hex is resolved per frame from theme tokens.
+const CATEGORY_INDEX: Record<string, number> = {
+  "Generative AI": 0,
+  "Data & BI": 1,
+  "Cloud & Infrastructure": 2,
+  Leadership: 3,
 };
 
 function radiusForLevel(level: number) {
@@ -42,7 +45,7 @@ function radiusForLevel(level: number) {
 
 type Jelly = {
   label: string;
-  colour: string;
+  cat: number;
   x: number; y: number;
   vx: number; vy: number;
   r: number;
@@ -83,6 +86,7 @@ function drawJelly(
   j: Jelly,
   t: number,
   animated: boolean,
+  colour: string,
 ) {
   const pulsePhase = animated ? j.pulseT : Math.PI * 0.5;
   const breathe = 1 + 0.1 * Math.sin(pulsePhase);
@@ -94,8 +98,8 @@ function drawJelly(
 
   // Bioluminescent glow
   const glow = ctx.createRadialGradient(0, -bellH * 0.2, 0, 0, 0, bellR * 2.1);
-  glow.addColorStop(0, j.colour + "22");
-  glow.addColorStop(1, j.colour + "00");
+  glow.addColorStop(0, colour + "22");
+  glow.addColorStop(1, colour + "00");
   ctx.fillStyle = glow;
   ctx.beginPath();
   ctx.arc(0, 0, bellR * 2.1, 0, Math.PI * 2);
@@ -117,7 +121,7 @@ function drawJelly(
         : 0;
       ctx.lineTo(baseX + sway, bellH * 0.35 + len * frac);
     }
-    ctx.strokeStyle = j.colour;
+    ctx.strokeStyle = colour;
     ctx.lineWidth = 1.4;
     ctx.globalAlpha = 0.4;
     ctx.stroke();
@@ -139,12 +143,12 @@ function drawJelly(
   ctx.closePath();
 
   const bellGrad = ctx.createLinearGradient(0, -bellH * 1.5, 0, bellH * 0.2);
-  bellGrad.addColorStop(0, j.colour + "33");
-  bellGrad.addColorStop(1, j.colour + "0c");
+  bellGrad.addColorStop(0, colour + "33");
+  bellGrad.addColorStop(1, colour + "0c");
   ctx.fillStyle = bellGrad;
   ctx.fill();
   ctx.lineWidth = 1.25;
-  ctx.strokeStyle = j.colour + "aa";
+  ctx.strokeStyle = colour + "aa";
   ctx.stroke();
 
   // Label
@@ -195,7 +199,7 @@ export default function JellyfishTank() {
       skillCategories.flatMap((c) =>
         c.skills.map((s) => ({
           label: s.name,
-          colour: CATEGORY_COLOURS[c.name] ?? "#00FF41",
+          cat: CATEGORY_INDEX[c.name] ?? 0,
           r: radiusForLevel(s.level),
         }))
       ),
@@ -211,12 +215,13 @@ export default function JellyfishTank() {
 
     let W = wrap.clientWidth;
     let H = wrap.clientHeight;
+    let tokens: ThemeTokens = readThemeTokens();
     const t0 = performance.now() / 1000;
 
     const seedTank = () => {
       jelliesRef.current = seed.map((s) => ({
         label: s.label,
-        colour: s.colour,
+        cat: s.cat,
         x: 30 + Math.random() * Math.max(1, W - 60),
         y: 30 + Math.random() * Math.max(1, H - 60),
         vx: (Math.random() - 0.5) * 20,
@@ -262,18 +267,23 @@ export default function JellyfishTank() {
 
     const drawStatic = () => {
       ctx.clearRect(0, 0, W, H);
-      for (const j of jelliesRef.current) drawJelly(ctx, j, 0, false);
+      for (const j of jelliesRef.current) drawJelly(ctx, j, 0, false, tokens.cat[j.cat]);
     };
 
     seedTank();
     resize();
+
+    const unwatchTokens = watchThemeTokens((t) => {
+      tokens = t;
+      if (reduced) drawStatic();
+    });
 
     if (reduced) {
       layoutReduced();
       drawStatic();
       const ro = new ResizeObserver(resize);
       ro.observe(wrap);
-      return () => ro.disconnect();
+      return () => { unwatchTokens(); ro.disconnect(); };
     }
 
     let running = false;
@@ -297,10 +307,10 @@ export default function JellyfishTank() {
         j.vy += (Math.sin(t * 0.5 + j.phase * 2) * 0.7)
           * p.current * 18 * DT;
 
-        // Schooling — pull gently toward the centroid of same-colour neighbours
+        // Schooling: pull gently toward the centroid of same-category neighbours
         let cx = 0, cy = 0, n = 0;
         for (const other of jellies) {
-          if (other === j || other.colour !== j.colour) continue;
+          if (other === j || other.cat !== j.cat) continue;
           const dx = other.x - j.x, dy = other.y - j.y;
           const d2 = dx * dx + dy * dy;
           if (d2 < SCHOOL_RADIUS * SCHOOL_RADIUS) { cx += other.x; cy += other.y; n++; }
@@ -362,7 +372,7 @@ export default function JellyfishTank() {
         ctx.arc(bub.x, bub.y, bub.r, 0, Math.PI * 2);
         ctx.fill();
       }
-      for (const j of jelliesRef.current) drawJelly(ctx, j, t, true);
+      for (const j of jelliesRef.current) drawJelly(ctx, j, t, true, tokens.cat[j.cat]);
     };
 
     let last = performance.now();
@@ -461,15 +471,15 @@ export default function JellyfishTank() {
   }, [seed, reduced]);
 
   return (
-    <div className="rounded-2xl overflow-hidden" style={{ background: "#020c02", border: "1px solid #003300" }}>
+    <div className="rounded-2xl overflow-hidden" style={{ background: "var(--c-surface)", border: "1px solid var(--c-border)" }}>
       <div className="flex items-center justify-between px-5 pt-4 pb-3 flex-wrap gap-3">
         <div>
           <p className="text-[10px] font-semibold tracking-[0.15em] uppercase"
-             style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>
+             style={{ color: "var(--c-accent)", fontFamily: "var(--font-mono), monospace" }}>
             {"// skills.tank"}
           </p>
           <p className="text-xs mt-1" style={{ color: "#5A6570", fontFamily: "var(--font-inter), sans-serif" }}>
-            Bell size is depth, not a percentage. Grab one — or detune the water.
+            Bell size is depth, not a percentage. Grab one, or detune the water.
           </p>
         </div>
       </div>
@@ -485,7 +495,7 @@ export default function JellyfishTank() {
         <canvas ref={canvasRef} className="block w-full h-full touch-none cursor-grab active:cursor-grabbing" />
       </div>
 
-      <div className="px-5 py-4 flex flex-wrap gap-x-6 gap-y-3" style={{ borderTop: "1px solid #003300" }}>
+      <div className="px-5 py-4 flex flex-wrap gap-x-6 gap-y-3" style={{ borderTop: "1px solid var(--c-border)" }}>
         {SLIDERS.map(({ key, label }) => (
           <label key={key} className="flex items-center gap-2 text-[10px]"
             style={{ color: "#5A6570", fontFamily: "var(--font-mono), monospace" }}>
@@ -498,7 +508,7 @@ export default function JellyfishTank() {
               value={params[key]}
               onChange={(e) => setParams((prev) => ({ ...prev, [key]: parseFloat(e.target.value) }))}
               className="jelly-slider"
-              style={{ width: 90, accentColor: "#00FF41" }}
+              style={{ width: 90, accentColor: "var(--c-accent)" }}
               aria-label={label}
             />
           </label>
@@ -506,7 +516,7 @@ export default function JellyfishTank() {
         <button
           onClick={() => setParams(DEFAULT_PARAMS)}
           className="text-[10px] px-3 py-1 rounded-md ml-auto"
-          style={{ fontFamily: "var(--font-mono), monospace", color: "#00FF41", border: "1px solid #003300", background: "transparent" }}
+          style={{ fontFamily: "var(--font-mono), monospace", color: "var(--c-accent)", border: "1px solid var(--c-border)", background: "transparent" }}
         >
           reset()
         </button>
