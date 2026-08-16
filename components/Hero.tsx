@@ -9,18 +9,18 @@ import AustraliaDataField from "@/components/AustraliaDataField";
 import { smoothScrollTo } from "@/components/SmoothScroll";
 
 const roles = [
-  "Data & Analytics Lead",
-  "HCI-Driven Leader",
+  "Finance Engineering & Analytics",
   "Chapter Area Lead @ CBA",
-  "AI Engineering Lead",
+  "Agentic AI, Shipped to Production",
+  "12 Years in Data",
 ];
 
 // num animates from 0; post renders with the big digits, suffix stays small
 const stats = [
-  { num: 10,  post: "",  suffix: " yrs", label: "Analytics Experience" },
-  { num: 6,   post: "+", suffix: " yrs", label: "People Leadership" },
-  { num: 200, post: "+", suffix: "",     label: "GenAI Users Onboarded" },
-  { num: 3,   post: "×", suffix: "",     label: "AWS Certified" },
+  { num: 12,   post: "",  suffix: " yrs", label: "Years in Data" },
+  { num: 6,    post: "+", suffix: " yrs", label: "People Leadership" },
+  { num: 2000, post: "",  suffix: "",     label: "SQL Weaver Users" },
+  { num: 700,  post: "+", suffix: "",     label: "Metrics Governed" },
 ];
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];

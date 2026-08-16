@@ -1,34 +1,11 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { skillCategories, certifications, type SkillCategory, type Certification } from "@/data/resume";
 import MatrixDecoder from "@/components/MatrixDecoder";
 import HeadingReveal from "@/components/motion/HeadingReveal";
 import SceneDolly from "@/components/motion/SceneDolly";
-
-function SkillBar({ name, level, delay }: { name: string; level: number; delay: number }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-
-  return (
-    <div ref={ref} className="mb-4">
-      <div className="flex justify-between mb-1.5">
-        <span className="text-sm" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>{name}</span>
-        <span className="text-xs" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>{level}%</span>
-      </div>
-      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "#003300" }}>
-        <motion.div
-          className="h-full rounded-full"
-          style={{ background: "linear-gradient(90deg, #00FF41, #008F11)" }}
-          initial={{ width: 0 }}
-          animate={inView ? { width: `${level}%` } : { width: 0 }}
-          transition={{ duration: 1.0, delay, ease: [0.22, 1, 0.36, 1] }}
-        />
-      </div>
-    </div>
-  );
-}
+import SkillPhysics from "@/components/SkillPhysics";
 
 function SkillCategoryCard({ category, index }: { category: SkillCategory; index: number }) {
   const x = useMotionValue(0);
@@ -58,12 +35,24 @@ function SkillCategoryCard({ category, index }: { category: SkillCategory; index
       whileHover={{ boxShadow: "0 16px 40px rgba(0,255,65,0.05), 0 0 0 1px rgba(0,255,65,0.15)" }}
       className="rounded-2xl p-7"
     >
-      <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-5" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>
-        // {category.name.toLowerCase().replace(/ /g, "_")}
+      <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-5" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>{"// "}{category.name.toLowerCase().replace(/ /g, "_")}
       </p>
-      {category.skills.map((skill, si) => (
-        <SkillBar key={skill.name} name={skill.name} level={skill.level} delay={si * 0.07} />
-      ))}
+      <div className="flex flex-wrap gap-2">
+        {category.skills.map((skill) => (
+          <span
+            key={skill.name}
+            className="text-xs px-2.5 py-1 rounded-md"
+            style={{
+              color: "#8B949E",
+              background: "#001a00",
+              border: "1px solid #003300",
+              fontFamily: "var(--font-inter), sans-serif",
+            }}
+          >
+            {skill.name}
+          </span>
+        ))}
+      </div>
     </motion.div>
   );
 }
@@ -124,9 +113,14 @@ export default function Skills() {
           <p className="text-[10px] tracking-[0.25em] uppercase mb-3" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}><MatrixDecoder text="// capabilities.map" /></p>
           <h2 className="text-5xl md:text-6xl font-light mb-4" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}><HeadingReveal><MatrixDecoder text="Skills & Certifications" /></HeadingReveal></h2>
           <p className="text-sm max-w-lg" style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
-            A decade of deliberate depth across data, AI, and human-centred design.
+            Twelve years of deliberate depth across data, AI, and people leadership.
           </p>
         </motion.div>
+
+        {/* Rigid-body sim: mass encodes depth, replacing self-rated percentages */}
+        <div className="mb-12">
+          <SkillPhysics />
+        </div>
 
         {/* Skills grid — each card tilts in 3D on hover */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
@@ -137,7 +131,7 @@ export default function Skills() {
 
         {/* Certifications */}
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="mb-8">
-          <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-8" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>// certifications.list</p>
+          <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-8" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>{"// certifications.list"}</p>
         </motion.div>
 
         <motion.div
@@ -161,11 +155,11 @@ export default function Skills() {
           className="mt-16 rounded-2xl p-8"
           style={{ background: "#020c02", border: "1px solid #003300" }}
         >
-          <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-6" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>// education.records</p>
+          <p className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-6" style={{ color: "#00FF41", fontFamily: "var(--font-mono), monospace" }}>{"// education.records"}</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { degree: "Masters of IT", focus: "Human Computer Interaction", school: "The University of Sydney", period: "2015 – 2017" },
-              { degree: "Masters of IT Management", focus: "Software Engineering Management", school: "The University of Sydney", period: "2015 – 2017" },
+              { degree: "Master of Software Engineering", focus: "Dual degree with Software Engineering Management", school: "The University of Sydney", period: "2015 – 2017" },
+              { degree: "Master of Software Engineering Management", focus: "Dual degree with Software Engineering", school: "The University of Sydney", period: "2015 – 2017" },
               { degree: "Bachelor of Technology", focus: "Computer Science & Engineering", school: "ITER, India", period: "2008 – 2012" },
             ].map((edu) => (
               <div key={edu.degree}>

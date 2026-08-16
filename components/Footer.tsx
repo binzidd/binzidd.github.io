@@ -23,15 +23,6 @@ const links = [
     ),
   },
   {
-    label: "Tableau",
-    href: "https://public.tableau.com/app/profile/binay.siddharth",
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M11.654 3.324V.04h.692v3.284h3.269v.69h-3.269v3.27h-.692V4.014H8.369v-.69h3.285zm6.923 9.592v-2.169h.62v2.169h2.169v.615h-2.169v2.174h-.62v-2.174H16.4v-.615h2.177zM4.377 9.954v-2.17H5v2.17h2.169v.61H5v2.174h-.623v-2.174H2.208v-.61h2.169zm7.277 3.27v-2.816h-.777v2.816H8.062v.778h2.815v2.815h.777v-2.815h2.815v-.778h-2.815zm0 7.307v-2.215h-.777v2.215H8.062v.754h2.815V24h.777v-2.715h2.815v-.754h-2.815z" />
-      </svg>
-    ),
-  },
-  {
     label: "Email",
     href: "mailto:binay.siddharth@gmail.com",
     icon: (
