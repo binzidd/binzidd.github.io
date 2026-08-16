@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { logVisitorEvent } from "@/lib/visitorWebhook";
 
 // ── Boot sequence lines ──────────────────────────────────────────────────────────
 const BOOT_LINES = [
@@ -38,6 +39,13 @@ const CRUMBS: { key: Step; label: string }[] = [
 
 const STEP_ORDER: Step[] = ["boot", "name", "thanks"];
 
+const RELATIONSHIPS: { value: string; label: string }[] = [
+  { value: "friend",     label: "Friend of Binay" },
+  { value: "recruiter",  label: "Recruiter" },
+  { value: "researcher", label: "Researcher" },
+  { value: "other",      label: "Other" },
+];
+
 // ── Component ────────────────────────────────────────────────────────────────────
 export default function IntroLoader() {
   const [mounted,    setMounted]    = useState(false);
@@ -45,10 +53,15 @@ export default function IntroLoader() {
   const [step,       setStep]       = useState<Step>("boot");
   const [bootLines,  setBootLines]  = useState<number>(0);   // how many lines shown
   const [progress,   setProgress]   = useState(0);           // 0–1
-  const [nameVal,    setNameVal]    = useState("");
+  const [nameVal,      setNameVal]      = useState("");
+  const [relationship, setRelationship] = useState("");
+  const [contactUrl,   setContactUrl]   = useState("");
   const [vName,      setVName]      = useState("");
   const [exiting,    setExiting]    = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
+
+  const isOwner = nameVal.trim().toLowerCase().includes("binay");
+  const canLaunch = nameVal.trim() !== "" && (isOwner || (relationship !== "" && contactUrl.trim() !== ""));
 
   // ── Session gate ────────────────────────────────────────────────────
   useEffect(() => {
@@ -100,10 +113,20 @@ export default function IntroLoader() {
     setTimeout(() => setVisible(false), 700);
   }, []);
 
-  const goThanks = useCallback((name: string) => {
+  const goThanks = useCallback((name: string, relationship: string, contactUrl: string) => {
     const safe = name.slice(0, 80); // clamp length before storing
+    const safeUrl = contactUrl.slice(0, 200);
     setVName(safe);
-    if (safe) sessionStorage.setItem("visitorName", safe);
+    if (safe) {
+      sessionStorage.setItem("visitorName", safe);
+      logVisitorEvent({
+        type: "identify",
+        name: safe,
+        relationship,
+        contactUrl: safeUrl,
+        isOwner: safe.toLowerCase().includes("binay"),
+      });
+    }
     setStep("thanks");
     setTimeout(exit, 1600);
   }, [exit]);
@@ -221,14 +244,14 @@ export default function IntroLoader() {
                 <div className="mb-2 text-[12px]" style={{ color: "#00FF41" }}>
                   &gt; WHO_ARE_YOU:
                 </div>
-                <div className="flex items-center gap-2 mb-8" style={{ borderBottom: "1px solid #003300", paddingBottom: 6 }}>
+                <div className="flex items-center gap-2 mb-2" style={{ borderBottom: "1px solid #003300", paddingBottom: 6 }}>
                   <span className="text-[12px]" style={{ color: "#00FF41" }}>&gt;</span>
                   <input
                     ref={nameRef}
                     value={nameVal}
                     onChange={(e) => setNameVal(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter") goThanks(nameVal.trim());
+                      if (e.key === "Enter" && canLaunch) goThanks(nameVal.trim(), relationship, contactUrl.trim());
                     }}
                     placeholder="type your name..."
                     className="flex-1 bg-transparent outline-none text-[13px] placeholder:opacity-30"
@@ -239,21 +262,85 @@ export default function IntroLoader() {
                     style={{ background: "#00FF41", animation: "blink 1s step-end infinite" }}
                   />
                 </div>
-                <div className="flex gap-3">
+
+                <AnimatePresence initial={false}>
+                  {nameVal.trim() && isOwner && (
+                    <motion.p
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.25 }}
+                      className="text-[11px] mt-2 mb-2"
+                      style={{ color: "#008F11" }}
+                    >
+                      &gt; welcome back. skipping the paperwork.
+                    </motion.p>
+                  )}
+
+                  {nameVal.trim() && !isOwner && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      style={{ overflow: "hidden" }}
+                    >
+                      <div className="mt-4 mb-2 text-[12px]" style={{ color: "#00FF41" }}>
+                        &gt; RELATIONSHIP_TO_BINAY:
+                      </div>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {RELATIONSHIPS.map((r) => (
+                          <button
+                            key={r.value}
+                            type="button"
+                            onClick={() => setRelationship(r.value)}
+                            className="px-3 py-1.5 text-[11px] rounded-full transition-all"
+                            style={{
+                              background: relationship === r.value ? "rgba(0,255,65,0.15)" : "transparent",
+                              border: `1px solid ${relationship === r.value ? "#00FF41" : "#002200"}`,
+                              color: relationship === r.value ? "#00FF41" : "#006600",
+                            }}
+                          >
+                            {r.label}
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="mb-2 text-[12px]" style={{ color: "#00FF41" }}>
+                        &gt; CONTACT (linkedin / github url):
+                      </div>
+                      <div className="flex items-center gap-2 mb-2" style={{ borderBottom: "1px solid #003300", paddingBottom: 6 }}>
+                        <span className="text-[12px]" style={{ color: "#00FF41" }}>&gt;</span>
+                        <input
+                          value={contactUrl}
+                          onChange={(e) => setContactUrl(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" && canLaunch) goThanks(nameVal.trim(), relationship, contactUrl.trim());
+                          }}
+                          placeholder="https://linkedin.com/in/... or github.com/..."
+                          className="flex-1 bg-transparent outline-none text-[13px] placeholder:opacity-30"
+                          style={{ color: "#00FF41", caretColor: "#00FF41" }}
+                        />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="flex gap-3 mt-6">
                   <button
-                    onClick={() => goThanks(nameVal.trim())}
-                    disabled={!nameVal.trim()}
+                    onClick={() => goThanks(nameVal.trim(), relationship, contactUrl.trim())}
+                    disabled={!canLaunch}
                     className="px-4 py-1.5 text-[11px] rounded transition-all"
                     style={{
-                      background: nameVal.trim() ? "rgba(0,255,65,0.1)" : "transparent",
-                      border: `1px solid ${nameVal.trim() ? "rgba(0,255,65,0.4)" : "#002200"}`,
-                      color: nameVal.trim() ? "#00FF41" : "#003300",
+                      background: canLaunch ? "rgba(0,255,65,0.1)" : "transparent",
+                      border: `1px solid ${canLaunch ? "rgba(0,255,65,0.4)" : "#002200"}`,
+                      color: canLaunch ? "#00FF41" : "#003300",
                     }}
                   >
                     ./launch
                   </button>
                   <button
-                    onClick={() => goThanks("")}
+                    onClick={() => goThanks("", "", "")}
                     className="px-4 py-1.5 text-[11px] rounded transition-all"
                     style={{ background: "transparent", border: "1px solid #002200", color: "#003300" }}
                     onMouseEnter={(e) => { e.currentTarget.style.color = "#006600"; e.currentTarget.style.borderColor = "#003300"; }}

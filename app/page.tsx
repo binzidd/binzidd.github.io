@@ -12,12 +12,15 @@ import HarryPotterEggs from "@/components/HarryPotterEggs";
 import IntroLoader from "@/components/IntroLoader";
 import SmoothScroll from "@/components/SmoothScroll";
 import DataFireflies from "@/components/DataFireflies";
+import VisitLogger from "@/components/VisitLogger";
 
 export default function Home() {
   return (
     <>
       {/* Lenis-driven inertial scrolling — the whole page reads as one journey */}
       <SmoothScroll />
+      {/* Logs one visit per session — independent of the intro form outcome */}
+      <VisitLogger />
       {/* Fixed domain-vocabulary columns — DOM text, screen-blend, visible on mobile */}
       <IntroLoader />
       <TermColumns />
