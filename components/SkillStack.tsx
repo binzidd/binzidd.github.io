@@ -25,10 +25,10 @@ import { motion, useInView } from "framer-motion";
 import { skillCategories, type SkillCategory } from "@/data/resume";
 
 const CATEGORY_COLOURS: Record<string, string> = {
-  "Generative AI": "#00FF41",
-  "Data & BI": "#29B5E8",
-  "Cloud & Infrastructure": "#FF9900",
-  Leadership: "#E97627",
+  "Generative AI": "var(--c-cat-1)",
+  "Data & BI": "var(--c-cat-2)",
+  "Cloud & Infrastructure": "var(--c-cat-3)",
+  Leadership: "var(--c-cat-4)",
 };
 
 // level (0-100, never shown) -> bar fill (18%-100%) so the lightest tier is
@@ -61,7 +61,7 @@ function SkillRow({
       >
         {name}
       </span>
-      <div className="flex-1 h-[7px] rounded-full overflow-hidden" style={{ background: "#001a00" }}>
+      <div className="flex-1 h-[7px] rounded-full overflow-hidden" style={{ background: "var(--c-border-dim)" }}>
         <motion.div
           className="h-full rounded-full"
           style={{ background: colour }}
@@ -81,7 +81,7 @@ function SkillRow({
 }
 
 function CategoryStack({ category, index }: { category: SkillCategory; index: number }) {
-  const colour = CATEGORY_COLOURS[category.name] ?? "#00FF41";
+  const colour = CATEGORY_COLOURS[category.name] ?? "var(--c-cat-1)";
   // Fixed, designer-set order: deepest first. Not physics-dependent, not
   // reader-dependent — the same order every time, which is the point.
   const sorted = [...category.skills].sort((a, b) => b.level - a.level);
@@ -93,7 +93,7 @@ function CategoryStack({ category, index }: { category: SkillCategory; index: nu
       viewport={{ once: true, margin: "-40px" }}
       transition={{ delay: index * 0.08, duration: 0.5 }}
       className="rounded-2xl p-6"
-      style={{ background: "#020c02", border: "1px solid #003300" }}
+      style={{ background: "var(--c-surface)", border: "1px solid var(--c-border)" }}
     >
       <div className="flex items-center gap-2 mb-5">
         <span className="w-1.5 h-1.5 rounded-full" style={{ background: colour }} />
@@ -125,9 +125,9 @@ export default function SkillStack() {
       {/* Legend — stated once, not repeated per row */}
       <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 mb-6 text-[10px]"
         style={{ color: "#5A6570", fontFamily: "var(--font-mono), monospace" }}>
-        <span><span style={{ color: "#8B949E" }}>Core</span> — daily depth, load-bearing</span>
-        <span><span style={{ color: "#8B949E" }}>Advanced</span> — strong working fluency</span>
-        <span><span style={{ color: "#8B949E" }}>Working</span> — functional, reached for as needed</span>
+        <span><span style={{ color: "var(--c-muted)" }}>Core</span>: daily depth, load-bearing</span>
+        <span><span style={{ color: "var(--c-muted)" }}>Advanced</span>: strong working fluency</span>
+        <span><span style={{ color: "var(--c-muted)" }}>Working</span>: functional, reached for as needed</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

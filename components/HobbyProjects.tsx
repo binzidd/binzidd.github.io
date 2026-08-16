@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import MatrixDecoder from "@/components/MatrixDecoder";
+import { readThemeTokens, watchThemeTokens } from "@/lib/theme";
 
 // ─── Lazy viz imports ─────────────────────────────────────────────────────────
 const F1BarChartRace = dynamic(() => import("@/components/F1BarChartRace"), {
@@ -33,7 +34,7 @@ const AgentsViz = dynamic(() => import("@/components/AgentsViz"), {
 });
 const CarbonViz = dynamic(() => import("@/components/CarbonViz"), {
   ssr: false,
-  loading: () => <VizLoader bg="#020c02" border="#003300" color="#10B981" label="loading emissions data..." />,
+  loading: () => <VizLoader bg="var(--c-surface)" border="var(--c-border)" color="#10B981" label="loading emissions data..." />,
 });
 const LoopScoopViz = dynamic(() => import("@/components/LoopScoopViz"), {
   ssr: false,
@@ -54,11 +55,11 @@ function VizLoader({ bg = "#0A0E14", border = "#21262D", color = "#1a3a1a", labe
 
 // ─── Palette ──────────────────────────────────────────────────────────────────
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
-const MG  = "#00FF41";   // matrix green
-const MD  = "#008F11";   // dim green
-const MBG = "#000500";   // bg
-const MC  = "#020c02";   // card bg
-const MB  = "#003300";   // border
+const MG  = "var(--c-accent)";   // matrix green
+const MD  = "var(--c-accent-dim)";   // dim green
+const MBG = "var(--c-bg)";   // bg
+const MC  = "var(--c-surface)";   // card bg
+const MB  = "var(--c-border)";   // border
 
 // ─── Projects ─────────────────────────────────────────────────────────────────
 const projects = [
@@ -66,7 +67,7 @@ const projects = [
     id: "agents",
     slug: "agents",
     icon: "🤖",
-    title: "Story of Agents — From Chat AI to the Autonomous Enterprise",
+    title: "Story of Agents: From Chat AI to the Autonomous Enterprise",
     tags: ["Multi-Agent", "MCP", "LangGraph", "A2A", "LLM Observability"],
     githubUrl: "https://github.com/binzidd/storyofagents",
     story: (
@@ -105,12 +106,12 @@ const projects = [
     id: "budget",
     slug: "budget",
     icon: "🏛️",
-    title: "AU Federal Budget 2024-25 — Trace the Money",
+    title: "AU Federal Budget 2024-25: Trace the Money",
     tags: ["Gov Data", "Sankey", "SVG Viz", "Tax & Spending"],
     githubUrl: "https://github.com/binzidd/au-govt-budget-sankey",
     story: (
       <>
-        <span style={{ color: MG, fontWeight: 600 }}>$738.5B — where does it go?</span>{" "}
+        <span style={{ color: MG, fontWeight: 600 }}>$738.5B. Where does it go?</span>{" "}
         4-level interactive Sankey: revenue buckets → sources → spending portfolios → sub-programs.
         Hover any node or ribbon to trace a dollar&apos;s journey from your tax return to NDIS, hospitals,
         defence, or debt servicing.{" "}
@@ -123,16 +124,16 @@ const projects = [
     id: "f1",
     slug: "f1",
     icon: "🏎️",
-    title: "F1 2025 — Championship Bar Chart Race",
+    title: "F1 2025: Championship Bar Chart Race",
     tags: ["Data Viz", "React", "Framer Motion", "F1 2025"],
     githubUrl: "https://github.com/binzidd/f1-2025-championship-race",
     story: (
       <>
         <span style={{ color: "#3671C6", fontWeight: 600 }}>The story in data:</span>{" "}
         Verstappen started P5 after Round 2 with McLarens dominating. Wins in Japan, Miami, Imola,
-        Spain, Austria, Belgium, Netherlands — he clawed back the deficit. Monza masterclass,
+        Spain, Austria, Belgium, Netherlands. He clawed back the deficit. Monza masterclass,
         Norris DNF, Max leads for the first time all season.{" "}
-        <span style={{ color: MG }}>Press play and watch it unfold — bar by bar.</span>
+        <span style={{ color: MG }}>Press play and watch it unfold, bar by bar.</span>
       </>
     ),
     component: <F1BarChartRace />,
@@ -141,7 +142,7 @@ const projects = [
     id: "starlink",
     slug: "starlink",
     icon: "🛰️",
-    title: "Starlink Constellation — Satellite Growth & NSW Passes",
+    title: "Starlink Constellation: Satellite Growth & NSW Passes",
     tags: ["Space Data", "Orbital Mechanics", "React", "SVG Viz"],
     githubUrl: "https://github.com/binzidd/starlink-constellation-viz",
     story: (
@@ -159,7 +160,7 @@ const projects = [
     id: "banking",
     slug: "banking",
     icon: "🏦",
-    title: "Big 4 + Macquarie — Post-COVID Rate Cycle & Deposit Wars",
+    title: "Big 4 + Macquarie: Post-COVID Rate Cycle & Deposit Wars",
     tags: ["APRA Data", "Finance", "Rate Analysis", "Market Share"],
     githubUrl: "https://github.com/binzidd/au-banking-rate-analysis",
     story: (
@@ -177,13 +178,13 @@ const projects = [
     id: "moto",
     slug: "moto",
     icon: "🏍️",
-    title: "Yamaha MT-10 2023 — Hypernaked Class Head-to-Head",
+    title: "Yamaha MT-10 2023: Hypernaked Class Head-to-Head",
     tags: ["Spec Analysis", "Motorbikes", "Spider Chart", "Value Engineering"],
     githubUrl: "https://github.com/binzidd/mt10-hypernaked-showdown",
     story: (
       <>
         <span style={{ color: "#E8A020", fontWeight: 600 }}>The Dark Side of Japan:</span>{" "}
-        My MT-10&apos;s 998cc CP4 — same block as the YZF-R1 — vs Kawasaki Z H2, BMW S1000R,
+        My MT-10&apos;s 998cc CP4 (same block as the YZF-R1) vs Kawasaki Z H2, BMW S1000R,
         Ducati Streetfighter V4, KTM 1290 Super Duke R, Aprilia Tuono V4. Gauges, spec bars,
         spider chart, full electronics matrix.{" "}
         <span style={{ color: "#E8A020" }}>Best value-per-hp in the class.</span>
@@ -195,14 +196,14 @@ const projects = [
     id: "carbon",
     slug: "carbon",
     icon: "🌏",
-    title: "Australia's Carbon Story — Emissions, Targets & the EV Inflection",
+    title: "Australia's Carbon Story: Emissions, Targets & the EV Inflection",
     tags: ["Climate Data", "DCCEEW", "OWID", "EV Adoption", "Net Zero 2050"],
     githubUrl: "https://github.com/binzidd/au_carbon_emissions",
     story: (
       <>
         <span style={{ color: "#10B981", fontWeight: 600 }}>105 Mt gap. 4 years.</span>{" "}
         Australia peaked at 617.8 Mt CO₂-e in 2007 and is now at ~448 Mt. The legislated 2030 target
-        is 342.9 Mt. At current policy pace we arrive at 432 Mt — still 90 Mt short. EV sales grew
+        is 342.9 Mt. At current policy pace we arrive at 432 Mt, still 90 Mt short. EV sales grew
         195% in 2023 and the fleet inflection is modelled at 2026-27.{" "}
         <span style={{ color: "#10B981" }}>Auto-refreshed monthly from OWID.</span>
       </>
@@ -219,6 +220,13 @@ export default function HobbyProjects() {
   // Use a ref to fire the sequence exactly once - avoids cleanup bug from deps re-running
   const started = useRef(false);
   const [phase, setPhase] = useState<"idle" | "rain" | "reveal" | "done">("idle");
+
+  // MatrixRain paints to a <canvas>: ctx.fillStyle cannot parse var(--c-accent),
+  // so resolve the token to a concrete colour and keep it in sync with theme swaps.
+  // The layout applies data-theme in a blocking head script, so the lazy
+  // initialiser already sees the right theme on the first client render.
+  const [rainColor, setRainColor] = useState(() => readThemeTokens().accent);
+  useEffect(() => watchThemeTokens((t) => setRainColor(t.accent)), []);
 
   useEffect(() => {
     if (!inView || started.current) return;
@@ -247,7 +255,7 @@ export default function HobbyProjects() {
         animate={{ opacity: rainOpacity }}
         transition={{ duration: 1.4, ease: "easeInOut" }}
       >
-        {phase !== "idle" && <MatrixRain opacity={1} speed={1.1} color={MG} fontSize={13} />}
+        {phase !== "idle" && <MatrixRain opacity={1} speed={1.1} color={rainColor} fontSize={13} />}
       </motion.div>
 
       {/* ── Scan-line sweep on entrance ── */}
@@ -289,7 +297,7 @@ export default function HobbyProjects() {
 
             <h2
               className="text-5xl md:text-6xl font-light mb-4"
-              style={{ color: MG, fontFamily: "var(--font-cormorant), serif", textShadow: `0 0 20px ${MG}44` }}
+              style={{ color: MG, fontFamily: "var(--font-cormorant), serif", textShadow: "0 0 20px rgba(var(--c-accent-rgb),0.27)" }}
             >
               <MatrixDecoder text="Hobby Projects" trigger={revealed} delay={0.3} />
             </h2>
@@ -356,7 +364,7 @@ export default function HobbyProjects() {
                 <span className="text-3xl mt-1">{proj.icon}</span>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-base font-semibold mb-2"
-                    style={{ color: "#E6EDF3", fontFamily: "var(--font-inter), sans-serif" }}>
+                    style={{ color: "var(--c-text)", fontFamily: "var(--font-inter), sans-serif" }}>
                     {proj.title}
                   </h3>
                   <div className="flex flex-wrap items-center gap-2">
@@ -372,15 +380,15 @@ export default function HobbyProjects() {
                 {/* Number + links */}
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <span className="text-[10px] px-2 py-1 rounded-full hidden sm:inline"
-                    style={{ background: `${MG}12`, color: MG, border: `1px solid ${MG}30`, fontFamily: "var(--font-mono), monospace" }}>
+                    style={{ background: "rgba(var(--c-accent-rgb),0.07)", color: MG, border: "1px solid rgba(var(--c-accent-rgb),0.19)", fontFamily: "var(--font-mono), monospace" }}>
                     #{String(idx + 1).padStart(2, "0")}
                   </span>
                   <Link
                     href={`/hobbies/${proj.slug}/`}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-medium transition-all duration-200"
-                    style={{ background: `${MG}18`, color: MG, border: `1px solid ${MG}45`, fontFamily: "var(--font-mono), monospace", textDecoration: "none" }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = `${MG}30`; (e.currentTarget as HTMLAnchorElement).style.boxShadow = `0 0 14px ${MG}40`; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = `${MG}18`; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none"; }}
+                    style={{ background: "rgba(var(--c-accent-rgb),0.09)", color: MG, border: "1px solid rgba(var(--c-accent-rgb),0.27)", fontFamily: "var(--font-mono), monospace", textDecoration: "none" }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "rgba(var(--c-accent-rgb),0.19)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 0 14px rgba(var(--c-accent-rgb),0.25)"; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "rgba(var(--c-accent-rgb),0.09)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none"; }}
                   >
                     full_analysis →
                   </Link>
@@ -389,9 +397,9 @@ export default function HobbyProjects() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-medium transition-all duration-200"
-                    style={{ background: `${MG}10`, color: MD, border: `1px solid ${MB}`, fontFamily: "var(--font-mono), monospace", textDecoration: "none" }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = `${MG}18`; e.currentTarget.style.color = MG; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = `${MG}10`; e.currentTarget.style.color = MD; }}
+                    style={{ background: "rgba(var(--c-accent-rgb),0.06)", color: MD, border: `1px solid ${MB}`, fontFamily: "var(--font-mono), monospace", textDecoration: "none" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(var(--c-accent-rgb),0.09)"; e.currentTarget.style.color = MG; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(var(--c-accent-rgb),0.06)"; e.currentTarget.style.color = MD; }}
                   >
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
@@ -405,7 +413,7 @@ export default function HobbyProjects() {
               <motion.div
                 className="rounded-3xl overflow-hidden"
                 style={{ border: `1px solid ${MB}` }}
-                whileHover={{ boxShadow: `0 0 40px ${MG}12` }}
+                whileHover={{ boxShadow: "0 0 40px rgba(var(--c-accent-rgb),0.07)" }}
                 transition={{ duration: 0.3 }}
               >
                 {proj.component}
@@ -419,7 +427,7 @@ export default function HobbyProjects() {
                 transition={{ delay: revealed ? 0.8 + idx * 0.2 : 0, duration: 0.5 }}
               >
                 <p className="text-sm leading-relaxed"
-                  style={{ color: "#8B949E", fontFamily: "var(--font-inter), sans-serif" }}>
+                  style={{ color: "var(--c-muted)", fontFamily: "var(--font-inter), sans-serif" }}>
                   {proj.story}
                 </p>
               </motion.div>

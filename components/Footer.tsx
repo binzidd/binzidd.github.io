@@ -36,17 +36,17 @@ const links = [
 
 export default function Footer() {
   return (
-    <footer className="py-16 px-6" style={{ background: "#000500", borderTop: "1px solid #003300" }}>
+    <footer className="py-16 px-6" style={{ background: "var(--c-bg)", borderTop: "1px solid var(--c-border)" }}>
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-            <h3 className="text-3xl md:text-4xl font-light mb-2" style={{ color: "#E6EDF3", fontFamily: "var(--font-cormorant), serif" }}>
+            <h3 className="text-3xl md:text-4xl font-light mb-2" style={{ color: "var(--c-text)", fontFamily: "var(--font-cormorant), serif" }}>
               <HeadingReveal>Binay Siddharth</HeadingReveal>
             </h3>
-            <p className="text-xs mb-1" style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}>
-              Chapter Area Lead - FS Analytics
+            <p className="text-xs mb-1" style={{ color: "var(--c-dim)", fontFamily: "var(--font-mono), monospace" }}>
+              Chapter Area Lead (Executive Manager)
             </p>
-            <p className="text-xs" style={{ color: "#003300", fontFamily: "var(--font-mono), monospace" }}>
+            <p className="text-xs" style={{ color: "var(--c-border)", fontFamily: "var(--font-mono), monospace" }}>
               Commonwealth Bank of Australia · Sydney
             </p>
           </motion.div>
@@ -66,17 +66,17 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 title={link.label}
                 className="flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200"
-                style={{ background: "#020c02", color: "#006600", border: "1px solid #003300" }}
+                style={{ background: "var(--c-surface)", color: "var(--c-dim)", border: "1px solid var(--c-border)" }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(0,255,65,0.1)";
-                  e.currentTarget.style.color = "#00FF41";
-                  e.currentTarget.style.borderColor = "rgba(0,255,65,0.3)";
+                  e.currentTarget.style.background = "rgba(var(--c-accent-rgb),0.1)";
+                  e.currentTarget.style.color = "var(--c-accent)";
+                  e.currentTarget.style.borderColor = "rgba(var(--c-accent-rgb),0.3)";
                   e.currentTarget.style.transform = "translateY(-2px)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "#020c02";
-                  e.currentTarget.style.color = "#006600";
-                  e.currentTarget.style.borderColor = "#003300";
+                  e.currentTarget.style.background = "var(--c-surface)";
+                  e.currentTarget.style.color = "var(--c-dim)";
+                  e.currentTarget.style.borderColor = "var(--c-border)";
                   e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
@@ -92,17 +92,17 @@ export default function Footer() {
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.6 }}
           className="mt-12 pt-6 flex flex-col md:flex-row items-center justify-between gap-3"
-          style={{ borderTop: "1px solid #003300" }}
+          style={{ borderTop: "1px solid var(--c-border)" }}
         >
-          <p className="text-xs" style={{ color: "#003300", fontFamily: "var(--font-mono), monospace" }}>
+          <p className="text-xs" style={{ color: "var(--c-border)", fontFamily: "var(--font-mono), monospace" }}>
             © {new Date().getFullYear()} Binay Siddharth - built with Next.js & Framer Motion
           </p>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="flex items-center gap-1.5 text-xs transition-colors duration-200"
-            style={{ color: "#006600", fontFamily: "var(--font-mono), monospace" }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "#00FF41")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "#006600")}
+            style={{ color: "var(--c-dim)", fontFamily: "var(--font-mono), monospace" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--c-accent)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--c-dim)")}
           >
             scroll_to_top()
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none">

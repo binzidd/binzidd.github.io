@@ -82,7 +82,7 @@ function TermCol({ terms, dur, delay }: ColDef) {
               key={i}
               className="text-center px-1 overflow-hidden"
               style={{
-                color: `rgba(0,255,65,${alpha})`,
+                color: `rgba(var(--c-accent-rgb),${alpha})`,
                 fontFamily:
                   "var(--font-mono),'JetBrains Mono','Courier New',monospace",
                 fontSize: "9px",

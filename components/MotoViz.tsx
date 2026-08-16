@@ -345,7 +345,7 @@ export default function MotoViz() {
           <AnimatePresence mode="wait">
             <motion.div key="gauges" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
               <p className="text-xs tracking-widest uppercase mb-6 text-center" style={{ color: R.muted, fontFamily: "monospace" }}>
-                - YOUR MT-10's INSTRUMENT CLUSTER —
+                - YOUR MT-10's INSTRUMENT CLUSTER -
               </p>
               <div className="grid grid-cols-3 md:grid-cols-6 gap-4 mb-8 p-6 rounded-2xl"
                 style={{ background: R.surface, border: `1px solid ${R.border}`, backgroundImage: "repeating-linear-gradient(0deg, rgba(0,0,0,0.04) 0px, rgba(0,0,0,0.04) 1px, transparent 1px, transparent 4px)" }}>
@@ -431,7 +431,7 @@ export default function MotoViz() {
           <AnimatePresence mode="wait">
             <motion.div key="spider" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
               <p className="text-xs tracking-widest uppercase mb-4 text-center" style={{ color: R.muted, fontFamily: "monospace" }}>
-                - COMPOSITE PERFORMANCE SPIDER —
+                - COMPOSITE PERFORMANCE SPIDER -
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div className="p-4 rounded-2xl" style={{ background: R.surface, border: `1px solid ${R.border}` }}>
@@ -472,7 +472,7 @@ export default function MotoViz() {
           <AnimatePresence mode="wait">
             <motion.div key="electronics" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
               <p className="text-xs tracking-widest uppercase mb-6" style={{ color: R.muted, fontFamily: "monospace" }}>
-                - ELECTRONICS & RIDER AIDS COMPARISON —
+                - ELECTRONICS & RIDER AIDS COMPARISON -
               </p>
               <div className="overflow-x-auto -mx-2 px-2">
                 <table className="w-full text-xs" style={{ minWidth: 680 }}>

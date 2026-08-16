@@ -23,49 +23,114 @@
   --color-foreground: #E6EDF3;
 }
 
+/* ── Theme palettes ────────────────────────────────────────────────────────
+   Chrome only: backgrounds, borders, accents, body text. Data-encoding
+   colours inside the visualisations (F1 team liveries, emissions sectors,
+   bank brands) are semantic and deliberately NOT themed.
+
+   DOM components consume these directly in inline styles via var(--c-*).
+   Canvas components can't, so they resolve them through lib/theme.ts.       */
+:root,
+html[data-theme="matrix"] {
+  --c-bg:         #000500;
+  --c-surface:    #020c02;
+  --c-border:     #003300;
+  --c-accent:     #00FF41;
+  --c-accent-alt: #00D9FF;
+  --c-accent-dim: #008F11;
+  --c-dim:        #006600;
+  --c-text:       #E6EDF3;
+  --c-muted:      #8B949E;
+  --c-accent-rgb: 0, 255, 65;
+  --c-accent-alt-rgb: 0, 217, 255;
+  --c-surface-rgb: 2, 12, 2;
+  --c-bg-rgb: 0, 5, 0;
+  --c-border-dim: #002200;
+  /* Categorical scale for skill groups: decorative encoding, so it follows
+     the theme rather than staying a fixed set of hues. */
+  --c-cat-1: #00FF41;
+  --c-cat-2: #29B5E8;
+  --c-cat-3: #FF9900;
+  --c-cat-4: #E97627;
+  /* Ambient wash behind the page: faint green haze at the edges */
+  --c-ambient:
+    radial-gradient(ellipse 80% 50% at 20% 0%,   rgba(0,255,65,0.05), transparent 70%),
+    radial-gradient(ellipse 70% 50% at 85% 25%,  rgba(0,217,255,0.03), transparent 70%);
+}
+
+html[data-theme="interstellar"] {
+  --c-bg:         #03060f;
+  --c-surface:    #080e1d;
+  --c-border:     #1e2c4d;
+  --c-accent:     #E8B368;  /* Gargantua's accretion glow */
+  --c-accent-alt: #7FB2E5;  /* cold starlight */
+  --c-accent-dim: #9A7742;
+  --c-dim:        #4A6288;
+  --c-text:       #EAF2FF;
+  --c-muted:      #9DB0D0;
+  --c-accent-rgb: 232, 179, 104;
+  --c-accent-alt-rgb: 127, 178, 229;
+  --c-surface-rgb: 8, 14, 29;
+  --c-bg-rgb: 3, 6, 15;
+  --c-border-dim: #131c33;
+  /* Cohesive against deep navy: accretion amber, starlight blue, nebula
+     violet, ember rose. */
+  --c-cat-1: #E8B368;
+  --c-cat-2: #7FB2E5;
+  --c-cat-3: #A9A6E8;
+  --c-cat-4: #E0876A;
+  /* Ambient wash: warm accretion disc low-right, cold starlight upper-left */
+  --c-ambient:
+    radial-gradient(ellipse 70% 50% at 15% 5%,   rgba(127,178,229,0.07), transparent 70%),
+    radial-gradient(ellipse 90% 60% at 85% 80%,  rgba(232,179,104,0.06), transparent 70%);
+}
+
 :root {
-  --background: #000500;
-  --foreground: #E6EDF3;
+  --background: var(--c-bg);
+  --foreground: var(--c-text);
 }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 
 body {
-  background-color: #000500;
-  color: #E6EDF3;
+  background-color: var(--c-bg);
+  background-image: var(--c-ambient);
+  background-attachment: fixed;
+  color: var(--c-text);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.6s ease, color 0.6s ease;
 }
 
 /* Dot grid backgrounds */
 .dot-grid {
-  background-image: radial-gradient(circle, #003300 1px, transparent 1px);
+  background-image: radial-gradient(circle, var(--c-border) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 .grid-lines {
   background-image:
-    linear-gradient(rgba(0,255,65,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,255,65,0.025) 1px, transparent 1px);
+    linear-gradient(rgba(var(--c-accent-rgb),0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--c-accent-rgb),0.025) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
-::selection { background-color: rgba(0,255,65,0.25); color: #E6EDF3; }
+::selection { background-color: rgba(var(--c-accent-rgb),0.25); color: var(--c-text); }
 
 ::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #000500; }
-::-webkit-scrollbar-thumb { background: #003300; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(0,255,65,0.3); }
+::-webkit-scrollbar-track { background: var(--c-bg); }
+::-webkit-scrollbar-thumb { background: var(--c-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(var(--c-accent-rgb),0.3); }
 
 /* Glow card */
 .glow-card {
-  border: 1px solid #003300;
+  border: 1px solid var(--c-border);
   transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 .glow-card:hover {
-  border-color: rgba(0,255,65,0.25);
-  box-shadow: 0 0 32px rgba(0,255,65,0.06), 0 8px 32px rgba(0,0,0,0.5);
+  border-color: rgba(var(--c-accent-rgb),0.25);
+  box-shadow: 0 0 32px rgba(var(--c-accent-rgb),0.06), 0 8px 32px rgba(0,0,0,0.5);
   transform: translateY(-4px);
 }
 
@@ -91,8 +156,8 @@ body {
 
 /* Glow pulse */
 @keyframes glow-pulse {
-  0%,100% { box-shadow:0 0 8px rgba(0,255,65,0.3); }
-  50%      { box-shadow:0 0 20px rgba(0,255,65,0.6); }
+  0%,100% { box-shadow:0 0 8px rgba(var(--c-accent-rgb),0.3); }
+  50%      { box-shadow:0 0 20px rgba(var(--c-accent-rgb),0.6); }
 }
 .glow-pulse { animation: glow-pulse 2s ease-in-out infinite; }
 
@@ -111,7 +176,7 @@ body {
 /* Scroll progress */
 #scroll-progress {
   position: fixed; top: 0; left: 0; right: 0; height: 1px; z-index: 60;
-  background: #003300;
+  background: var(--c-border);
 }
 
 /* Apple-grade easing token — long-tail cubic used across motion primitives */
