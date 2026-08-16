@@ -9,7 +9,8 @@
 // public endpoint meant to be called from client JS, same as any form
 // action URL — so it's fine as a plain constant rather than a build secret.
 // It's blank until deployed; every call below no-ops until it's filled in.
-export const SHEETS_WEBHOOK_URL = "";
+export const SHEETS_WEBHOOK_URL =
+  "https://script.google.com/macros/s/AKfycbw2eqvPLJhpx8YB40nNBSvT2ncrT4UsqwvjgKNw-V0G4DGqCYbMxI_futv_zlQsbArapQ/exec";
 
 export type VisitorEvent =
   | { type: "visit"; path: string; referrer: string }
