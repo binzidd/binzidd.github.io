@@ -5,7 +5,9 @@
  * SETUP
  * 1. Go to sheets.google.com, create a new spreadsheet (e.g. "Portfolio
  *    Visitors"). Add a header row to the first sheet:
- *      Timestamp | Type | Name | Relationship | Contact URL | Is Owner | Path | Referrer | User Agent
+ *      Timestamp | Type | Name | Relationship | Contact URL | Contact Kind | Is Owner | Path | Referrer | User Agent
+ *    (Contact Kind is "linkedin" / "github" / "email" — whichever shape the
+ *    client-side check matched, so you can filter without re-parsing the URL.)
  * 2. Extensions > Apps Script. Delete the placeholder code and paste this
  *    whole file in.
  * 3. Deploy > New deployment > select type "Web app".
@@ -39,6 +41,7 @@ function doPost(e) {
     data.name || "",
     data.relationship || "",
     data.contactUrl || "",
+    data.contactKind || "",
     data.isOwner === true ? "yes" : "",
     data.path || "",
     data.referrer || "",

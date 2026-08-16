@@ -39,6 +39,22 @@ const CRUMBS: { key: Step; label: string }[] = [
 
 const STEP_ORDER: Step[] = ["boot", "name", "thanks"];
 
+// Lightweight shape-check, not live verification — a static site can't
+// resolve whether a profile actually exists without a backend to proxy the
+// request through (and CORS blocks that from client JS anyway). This just
+// keeps out empty/junk entries and confirms it's a LinkedIn/GitHub profile
+// link or a plausible email, which is "verification" at the static-site
+// ceiling.
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+function contactKind(value: string): "linkedin" | "github" | "email" | null {
+  const v = value.trim().toLowerCase();
+  if (!v) return null;
+  if (/linkedin\.com\/(in|company)\//.test(v)) return "linkedin";
+  if (/github\.com\/[a-z0-9-]+/i.test(v)) return "github";
+  if (EMAIL_RE.test(value.trim())) return "email";
+  return null;
+}
+
 const RELATIONSHIPS: { value: string; label: string }[] = [
   { value: "friend",     label: "Friend of Binay" },
   { value: "recruiter",  label: "Recruiter" },
@@ -61,7 +77,8 @@ export default function IntroLoader() {
   const nameRef = useRef<HTMLInputElement>(null);
 
   const isOwner = nameVal.trim().toLowerCase().includes("binay");
-  const canLaunch = nameVal.trim() !== "" && (isOwner || (relationship !== "" && contactUrl.trim() !== ""));
+  const contactMatch = contactKind(contactUrl);
+  const canLaunch = nameVal.trim() !== "" && (isOwner || (relationship !== "" && contactMatch !== null));
 
   // ── Session gate ────────────────────────────────────────────────────
   useEffect(() => {
@@ -124,6 +141,7 @@ export default function IntroLoader() {
         name: safe,
         relationship,
         contactUrl: safeUrl,
+        contactKind: contactKind(safeUrl),
         isOwner: safe.toLowerCase().includes("binay"),
       });
     }
@@ -307,9 +325,9 @@ export default function IntroLoader() {
                       </div>
 
                       <div className="mb-2 text-[12px]" style={{ color: "#00FF41" }}>
-                        &gt; CONTACT (linkedin / github url):
+                        &gt; CONTACT (linkedin / github / email):
                       </div>
-                      <div className="flex items-center gap-2 mb-2" style={{ borderBottom: "1px solid #003300", paddingBottom: 6 }}>
+                      <div className="flex items-center gap-2 mb-1" style={{ borderBottom: "1px solid #003300", paddingBottom: 6 }}>
                         <span className="text-[12px]" style={{ color: "#00FF41" }}>&gt;</span>
                         <input
                           value={contactUrl}
@@ -317,11 +335,16 @@ export default function IntroLoader() {
                           onKeyDown={(e) => {
                             if (e.key === "Enter" && canLaunch) goThanks(nameVal.trim(), relationship, contactUrl.trim());
                           }}
-                          placeholder="https://linkedin.com/in/... or github.com/..."
+                          placeholder="linkedin.com/in/... · github.com/... · you@email.com"
                           className="flex-1 bg-transparent outline-none text-[13px] placeholder:opacity-30"
                           style={{ color: "#00FF41", caretColor: "#00FF41" }}
                         />
                       </div>
+                      <p className="text-[10px] mb-2" style={{ color: contactUrl.trim() && !contactMatch ? "#CC5533" : "#003300" }}>
+                        {contactUrl.trim() && !contactMatch
+                          ? "needs a linkedin.com/in/…, github.com/…, or a real email"
+                          : "no verification service on a static site — this just confirms the shape"}
+                      </p>
                     </motion.div>
                   )}
                 </AnimatePresence>
