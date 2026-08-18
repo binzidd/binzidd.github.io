@@ -12,6 +12,7 @@ const navItems = [
   { label: "Skills", href: "#skills" },
   { label: "GitHub", href: "#github" },
   { label: "Hobbies", href: "#hobbies" },
+  { label: "Hire Me", href: "#consulting" },
 ];
 
 export default function Navigation() {
@@ -55,10 +56,10 @@ export default function Navigation() {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number,number,number,number] }}
-        className="fixed top-5 left-1/2 -translate-x-1/2 z-40"
+        className="fixed top-5 left-1/2 -translate-x-1/2 z-40 max-w-[calc(100vw-1.5rem)]"
       >
         <div
-          className="flex items-center gap-0.5 px-3 py-2 rounded-full transition-all duration-300"
+          className="nav-scroll flex items-center gap-0.5 px-3 py-2 rounded-full transition-all duration-300 overflow-x-auto"
           style={{
             background: scrolled ? "rgba(0,0,0,0.96)" : "rgba(0,0,0,0.78)",
             backdropFilter: "blur(20px)",

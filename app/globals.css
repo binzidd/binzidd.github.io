@@ -173,6 +173,15 @@ body {
   to   { transform: translateY(-50%); }
 }
 
+/* Nav pill: scrolls horizontally on narrow screens instead of clipping its
+   ends, with the scrollbar hidden so it still reads as a solid pill. */
+.nav-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior-x: contain;
+}
+.nav-scroll::-webkit-scrollbar { display: none; }
+
 /* Scroll progress */
 #scroll-progress {
   position: fixed; top: 0; left: 0; right: 0; height: 1px; z-index: 60;

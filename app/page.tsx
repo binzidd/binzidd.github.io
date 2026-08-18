@@ -5,6 +5,7 @@ import Projects from "@/components/Projects";
 import Skills from "@/components/Skills";
 import GitHubRepos from "@/components/GitHubRepos";
 import HobbyProjects from "@/components/HobbyProjects";
+import Consulting from "@/components/Consulting";
 import Footer from "@/components/Footer";
 import CommandPalette from "@/components/CommandPalette";
 import TermColumns from "@/components/TermColumns";
@@ -42,6 +43,7 @@ export default function Home() {
         <Skills />
         <GitHubRepos />
         <HobbyProjects />
+        <Consulting />
       </main>
       <Footer />
     </>

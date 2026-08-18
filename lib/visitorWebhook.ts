@@ -21,6 +21,15 @@ export type VisitorEvent =
       contactUrl: string;
       contactKind: "linkedin" | "github" | "email" | null;
       isOwner: boolean;
+    }
+  | {
+      type: "engage";
+      name: string;
+      email: string;
+      company: string;
+      engagement: string;
+      timeline: string;
+      brief: string;
     };
 
 /**
