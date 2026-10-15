@@ -14,11 +14,13 @@ import IntroLoader from "@/components/IntroLoader";
 import SmoothScroll from "@/components/SmoothScroll";
 import DataFireflies from "@/components/DataFireflies";
 import Starfield from "@/components/Starfield";
-import VisitLogger from "@/components/VisitLogger";
+import VisitLogger from "@/components/VisitLogger";import Dune3DScene from "@/components/Dune3DScene";
+
 
 export default function Home() {
   return (
-    <>
+    <><Dune3DScene />
+      
       {/* Lenis-driven inertial scrolling — the whole page reads as one journey */}
       <SmoothScroll />
       {/* Logs one visit per session — independent of the intro form outcome */}
