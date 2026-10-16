@@ -1,4 +1,5 @@
-"use client";
+"use client";// Photorealistic Three.js 3D visualization: NASA Blue Marble textures, atmospheric Fresnel scattering, rotating clouds, animated Starlink shells
+
 
 import { useState, useRef } from "react";
 import { motion, useInView, animate } from "framer-motion";
